@@ -1,6 +1,4 @@
-// PASTE YOUR FIREBASE CONFIG HERE
-// Get from: Firebase Console → Project Settings → Your Apps → Web App
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// RUDRAKSH SATTA MATKA - FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDVxg4EZHm4D2zMrz_ndLzcqx3wkhdPdVc",
   authDomain: "rudraksh-d74c3.firebaseapp.com",
@@ -14,3 +12,5 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+
+console.log("Firebase initialized for Rudraksh Satta Matka");
