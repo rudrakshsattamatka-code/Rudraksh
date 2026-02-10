@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Rudraksh Satta Matka</title>
+    <title>RUDRAKSH</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
@@ -14,419 +14,378 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
 
         :root {
             --primary-saffron: #FF9933;
             --secondary-saffron: #FF8C00;
-            --light-saffron: #FFF8F0;
             --white: #ffffff;
             --dark-saffron: #E67E22;
             --gray: #6b7280;
-            --light-gray: #f3f4f6;
-            --text-dark: #333333;
         }
 
         body {
-            background: linear-gradient(135deg, var(--light-saffron) 0%, var(--white) 100%);
+            background: #f8f9fa;
             min-height: 100vh;
-            color: var(--text-dark);
+            color: #333;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 15px;
         }
 
         /* Header Styles */
         header {
             background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
             padding: 10px 0;
-            box-shadow: 0 4px 12px rgba(255, 153, 51, 0.15);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            box-shadow: 0 2px 10px rgba(255, 153, 51, 0.2);
         }
 
-        .header-content {
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 10px;
         }
 
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Logo Section - Full Width */
         .logo-section {
-            flex: 1;
-            display: flex;
-            justify-content: center;
+            width: 100%;
+            text-align: center;
+            margin: 5px 0;
         }
 
         #logoImage {
             width: 100%;
-            max-width: 250px;
+            max-width: 400px;
             height: auto;
-            border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 5px;
         }
-
-        /* Dashboard Controls */
-        .dashboard-controls {
-            display: flex;
-            gap: 15px;
-        }
-
-        .control-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: var(--white);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-        }
-      /* User Info */
-.user-info {
-    background: var(--white);
-    padding: 30px;
-    border-radius: 16px;
-    margin: 20px 0;
-    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.08);
-    border: 1px solid #FFE0B2;
-    text-align: center;
-}
-
-.user-welcome {
-    color: var(--primary-saffron);
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.user-balance {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--dark-saffron);
+        /* Premium Title */
+.premium-title {
+    background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
     margin: 10px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.balance-label {
-    color: var(--gray);
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
-.wallet-controls {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.wallet-btn {
-    padding: 12px 25px;
-    background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron));
-    color: var(--white);
-    border: none;
-    border-radius: 30px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.wallet-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.3);
+.premium-title h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
 }
 
 /* Live Time Section */
 .live-section {
     background: var(--white);
-    padding: 20px;
-    border-radius: 16px;
-    margin: 20px 0;
-    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.08);
-    border: 1px solid #FFE0B2;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     text-align: center;
+    border-left: 5px solid var(--primary-saffron);
 }
 
 .live-badge {
-    background: linear-gradient(to right, #FF0000, #FF4500);
+    background: #FF0000;
     color: white;
-    padding: 8px 20px;
-    border-radius: 30px;
+    padding: 5px 15px;
+    border-radius: 4px;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 14px;
     display: inline-block;
-    margin-bottom: 15px;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.8; }
-    100% { opacity: 1; }
-}
-
-.time-display {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--primary-saffron);
     margin-bottom: 10px;
 }
 
+.time-display {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-saffron);
+    margin-bottom: 5px;
+    font-family: 'Courier New', monospace;
+}
+
 .date-display {
-    font-size: 18px;
+    font-size: 14px;
     color: var(--gray);
 }
 
-/* Markets Section */
+/* Markets Grid */
 .markets-section {
-    margin: 30px 0;
-}
-
-.section-title {
-    color: var(--primary-saffron);
-    font-size: 28px;
-    margin-bottom: 20px;
-    text-align: center;
+    margin: 20px 0;
 }
 
 .markets-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-      }
-      /* Market Card */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+/* Market Card */
 .market-card {
     background: var(--white);
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.08);
-    border: 2px solid #FFE0B2;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     cursor: pointer;
     transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
+    border-top: 4px solid var(--primary-saffron);
+    text-align: center;
 }
 
 .market-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(255, 153, 51, 0.15);
-    border-color: var(--primary-saffron);
-}
-
-.market-card:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron));
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.15);
 }
 
 .market-name {
     color: var(--primary-saffron);
-    font-size: 24px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.market-time {
+    color: var(--gray);
+    font-size: 16px;
+    margin-bottom: 10px;
+                                }
+        /* Daily Passing Section */
+.daily-passing {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-left: 5px solid #FF0000;
+}
+
+.daily-title {
+    color: #FF0000;
+    font-size: 20px;
     font-weight: 700;
     margin-bottom: 15px;
     text-align: center;
 }
 
-.market-status {
+.passing-text {
+    color: #333;
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 15px;
+    background: #fff8f0;
+    border-radius: 5px;
+    border: 1px solid #FFE0B2;
+}
+
+/* Market Results Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: 10px;
+    width: 95%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
+    color: white;
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #FFE0B2;
 }
 
-.status-badge {
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
 }
 
-.status-open {
-    background: #D4EDDA;
-    color: #155724;
-}
-
-.status-closed {
-    background: #F8D7DA;
-    color: #721C24;
-}
-
-.status-soon {
-    background: #FFF3CD;
-    color: #856404;
-}
-
-.market-arrow {
-    color: var(--secondary-saffron);
-    font-size: 18px;
-}
-
-/* Footer Controls */
-.footer-controls {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
-    padding: 15px 0;
-    box-shadow: 0 -4px 12px rgba(255, 153, 51, 0.15);
-    z-index: 100;
-}
-
-.footer-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-}
-
-.footer-btn {
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--white);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
+.close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
     cursor: pointer;
-    transition: all 0.3s;
+    padding: 0;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
 }
 
-.footer-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-2px);
-  }
-              /* Modal for Market Details */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
+.modal-body {
+    padding: 20px;
+}
 
-        .modal-content {
-            background: var(--white);
-            border-radius: 16px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
+/* Results Section */
+.results-section {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
 
-        .modal-header {
-            background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron));
-            color: white;
-            padding: 20px;
-            border-radius: 16px 16px 0 0;
-            text-align: center;
-        }
+.section-title {
+    color: var(--primary-saffron);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
+}
 
-        .modal-body {
-            padding: 30px;
-        }
+.result-item {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--primary-saffron);
+}
 
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
+.result-title {
+    color: var(--gray);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
 
-        /* Responsive Design */
+.result-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark-saffron);
+    text-align: center;
+    }
+                /* Responsive Design */
         @media (max-width: 768px) {
-            .header-content {
+            .header-top {
                 flex-direction: column;
-                gap: 15px;
+                gap: 10px;
             }
             
-            .dashboard-controls {
-                width: 100%;
-                justify-content: center;
+            .control-btn {
+                padding: 6px 15px;
+                font-size: 13px;
+            }
+            
+            #logoImage {
+                max-width: 300px;
             }
             
             .markets-grid {
                 grid-template-columns: 1fr;
             }
             
-            .wallet-controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .wallet-btn {
-                width: 100%;
-                max-width: 250px;
-            }
-            
-            .footer-buttons {
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
-            }
-            
-            .footer-btn {
-                width: 90%;
-                justify-content: center;
-            }
-            
-            #logoImage {
-                max-width: 200px;
-            }
-        }
-
-        @media (max-width: 480px) {
             .time-display {
                 font-size: 24px;
             }
             
-            .date-display {
-                font-size: 14px;
+            .premium-title h1 {
+                font-size: 20px;
             }
             
             .market-name {
                 font-size: 20px;
             }
+        }
+
+        @media (max-width: 480px) {
+            #logoImage {
+                max-width: 250px;
+            }
             
-            .user-welcome {
+            .time-display {
                 font-size: 20px;
             }
             
-            .user-balance {
-                font-size: 24px;
+            .date-display {
+                font-size: 12px;
             }
+            
+            .market-card {
+                padding: 15px;
+            }
+            
+            .market-name {
+                font-size: 18px;
+            }
+            
+            .passing-text {
+                font-size: 16px;
+                padding: 10px;
+            }
+        }
+
+        /* Footer Controls */
+        .footer-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(255, 153, 51, 0.2);
+            z-index: 100;
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 25px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .footer-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
@@ -434,55 +393,51 @@
     <!-- Header -->
     <header>
         <div class="container">
-            <div class="header-content">
-                <div class="logo-section">
-                    <!-- LOGO IMAGE -->
-                    <img id="logoImage" src="https://i.supaimg.com/2242c14d-f1da-4eb4-a998-70deaee422b2.jpg" alt="Rudraksh Logo">
-                </div>
-                <div class="dashboard-controls">
-                    <button class="control-btn" onclick="refreshDashboard()">
-                        <i class="fas fa-sync-alt"></i>
-                        REFRESH
-                    </button>
-                    <button class="control-btn" onclick="logoutUser()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        LOGOUT
-                    </button>
-                </div>
+            <div class="header-top">
+                <button class="control-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> BACK
+                </button>
+                <button class="control-btn" onclick="logoutUser()">
+                    <i class="fas fa-sign-out-alt"></i> LOGOUT
+                </button>
+            </div>
+            
+            <!-- Full Width Logo -->
+            <div class="logo-section">
+                <img id="logoImage" src="https://i.supaimg.com/2242c14d-f1da-4eb4-a998-70deaee422b2.jpg" alt="Shreematka Premium">
             </div>
         </div>
     </header>
-    <!-- User Info Section -->
+    <!-- Main Content -->
 <main class="container">
-    <div class="user-info">
-        <div class="user-welcome" id="userWelcome">Welcome, User!</div>
-        <div class="user-balance" id="userBalance">₹ 0.00</div>
-        <div class="balance-label">Available Balance</div>
-        <div class="wallet-controls">
-            <button class="wallet-btn" onclick="openDeposit()">
-                <i class="fas fa-plus-circle"></i> Deposit
-            </button>
-            <button class="wallet-btn" onclick="openWithdraw()">
-                <i class="fas fa-minus-circle"></i> Withdraw
-            </button>
-            <button class="wallet-btn" onclick="openHistory()">
-                <i class="fas fa-history"></i> History
-            </button>
-        </div>
-    </div>
-
     <!-- Live Time Section -->
     <div class="live-section">
-        <div class="live-badge">LIVE</div>
-        <div class="time-display" id="currentTime">11:29:03 AM</div>
+        <div class="live-badge">
+            <i class="fas fa-circle"></i> LIVE
+        </div>
+        <div class="time-display" id="currentTime">11:30:01 AM</div>
         <div class="date-display" id="currentDate">Tuesday, February 10, 2026</div>
     </div>
 
-    <!-- Markets Section -->
+    <!-- Premium Title -->
+    <div class="premium-title">
+        <h1>SHREEMATKA PREMIUM</h1>
+    </div>
+
+    <!-- Daily Passing Results (YOU CAN EDIT THIS TEXT BELOW) -->
+    <div class="daily-passing">
+        <div class="daily-title">DAILY PASSING RESULTS</div>
+        <div class="passing-text" id="dailyPassingText">
+            <!-- EDIT THIS TEXT: Update daily passing results here -->
+            Today's Special: 56-78-90 | Strong: 34, 67, 89 | Support: 12, 45, 79
+            <!-- You can edit the above line -->
+        </div>
+    </div>
+
+    <!-- Markets Grid -->
     <div class="markets-section">
-        <h2 class="section-title">Premium Markets</h2>
         <div class="markets-grid" id="marketsGrid">
-            <!-- Market cards will be generated by JavaScript -->
+            <!-- Markets will be loaded by JavaScript -->
         </div>
     </div>
 </main>
@@ -491,33 +446,31 @@
 <div class="footer-controls">
     <div class="container">
         <div class="footer-buttons">
-            <button class="footer-btn" onclick="refreshDashboard()">
-                <i class="fas fa-sync-alt"></i>
-                REFRESH
+            <button class="footer-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> BACK
             </button>
             <button class="footer-btn" onclick="logoutUser()">
-                <i class="fas fa-sign-out-alt"></i>
-                LOGOUT
+                <i class="fas fa-sign-out-alt"></i> LOGOUT
             </button>
         </div>
     </div>
 </div>
 
-<!-- Market Details Modal -->
+<!-- Market Results Modal -->
 <div id="marketModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="modalMarketName">Market Name</h2>
+            <h2 id="modalMarketName">Market Results</h2>
             <button class="close-modal" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
             <div id="modalContent">
-                <!-- Market details will be loaded here -->
+                <!-- Results will be loaded here -->
             </div>
         </div>
     </div>
-              </div>
-              <script>
+</div>
+<script>
     // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyDVxg4EZHm4D2zMrz_ndLzcqx3wkhdPdVc",
@@ -533,23 +486,78 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Markets Data
+    // ============================================================
+    // EDIT THIS SECTION TO UPDATE MARKET RESULTS (ONLY YOU CAN EDIT)
+    // ============================================================
+    
+    // Daily Passing Results - EDIT THIS TEXT
+    const dailyPassingResults = "Today's Special: 56-78-90 | Strong: 34, 67, 89 | Support: 12, 45, 79";
+    
+    // Market Results Data - EDIT THESE NUMBERS/LETTERS
+    const marketResults = {
+        "KALYAN": {
+            "OPEN - PANEL": "12 34 56 78 90",
+            "STRONG": "45 67 89",
+            "SUPPORT": "23 46 79",
+            "JODI - PANEL": "12-34 56-78 90-12"
+        },
+        "SRIDEVI": {
+            "OPEN - PANEL": "11 33 55 77 99",
+            "STRONG": "22 44 66",
+            "SUPPORT": "88 00 13",
+            "JODI - PANEL": "11-33 55-77 99-22"
+        },
+        "TIME BAZAR": {
+            "OPEN - PANEL": "01 23 45 67 89",
+            "STRONG": "10 32 54",
+            "SUPPORT": "76 98 21",
+            "JODI - PANEL": "01-23 45-67 89-01"
+        },
+        "MILAN DAY": {
+            "OPEN - PANEL": "02 24 46 68 80",
+            "STRONG": "12 34 56",
+            "SUPPORT": "78 90 13",
+            "JODI - PANEL": "02-24 46-68 80-02"
+        },
+        "SRIDEVI NIGHT": {
+            "OPEN - PANEL": "03 35 57 79 91",
+            "STRONG": "13 35 57",
+            "SUPPORT": "79 91 24",
+            "JODI - PANEL": "03-35 57-79 91-03"
+        },
+        "MILAN NIGHT": {
+            "OPEN - PANEL": "04 46 68 80 02",
+            "STRONG": "14 36 58",
+            "SUPPORT": "70 92 35",
+            "JODI - PANEL": "04-46 68-80 02-04"
+        },
+        "MAIN BAZAR": {
+            "OPEN - PANEL": "05 57 79 91 13",
+            "STRONG": "15 37 59",
+            "SUPPORT": "71 93 46",
+            "JODI - PANEL": "05-57 79-91 13-05"
+        }
+    };
+    // ============================================================
+    // END OF EDITABLE SECTION
+    // ============================================================
+
+    // Markets Data with timings
     const markets = [
-        { id: 1, name: "SRIDEVI", status: "open" },
-        { id: 2, name: "TIME BAZAR", status: "open" },
-        { id: 3, name: "MILAN DAY", status: "open" },
-        { id: 4, name: "KALYAN", status: "closed" },
-        { id: 5, name: "SRIDEVI NIGHT", status: "soon" },
-        { id: 6, name: "MILAN NIGHT", status: "soon" },
-        { id: 7, name: "MAIN BAZAR", status: "soon" }
+        { id: 1, name: "KALYAN", time: "2.00 PM" },
+        { id: 2, name: "SRIDEVI", time: "10.30 AM" },
+        { id: 3, name: "TIME BAZAR", time: "12.00 PM" },
+        { id: 4, name: "MILAN DAY", time: "1.30 PM" },
+        { id: 5, name: "SRIDEVI NIGHT", time: "6.00 PM" },
+        { id: 6, name: "MILAN NIGHT", time: "8.00 PM" },
+        { id: 7, name: "MAIN BAZAR", time: "8.30 PM" }
     ];
 
     // DOM Elements
     const marketsGrid = document.getElementById('marketsGrid');
     const currentTimeElement = document.getElementById('currentTime');
     const currentDateElement = document.getElementById('currentDate');
-    const userWelcomeElement = document.getElementById('userWelcome');
-    const userBalanceElement = document.getElementById('userBalance');
+    const dailyPassingText = document.getElementById('dailyPassingText');
     const marketModal = document.getElementById('marketModal');
     const modalMarketName = document.getElementById('modalMarketName');
     const modalContent = document.getElementById('modalContent');
@@ -557,28 +565,16 @@
     // Check if user is logged in
     auth.onAuthStateChanged((user) => {
         if (!user) {
-            // User not logged in, redirect to index.html
             window.location.href = 'index.html';
         } else {
-            // User logged in
-            displayUserInfo(user);
+            // Set daily passing text
+            dailyPassingText.textContent = dailyPassingResults;
+            
             loadMarkets();
             updateDateTime();
-            
-            // Update time every second
             setInterval(updateDateTime, 1000);
         }
     });
-
-    // Display User Info
-    function displayUserInfo(user) {
-        const userName = user.displayName || 'User';
-        userWelcomeElement.textContent = `Welcome, ${userName}!`;
-        
-        // For demo, set random balance
-        const randomBalance = (Math.random() * 10000).toFixed(2);
-        userBalanceElement.textContent = `₹ ${randomBalance}`;
-    }
 
     // Load Markets
     function loadMarkets() {
@@ -587,34 +583,13 @@
         markets.forEach(market => {
             const marketCard = document.createElement('div');
             marketCard.className = 'market-card';
-            marketCard.setAttribute('data-market', market.name);
-            marketCard.onclick = () => openMarketDetails(market);
-            
-            let statusText = '';
-            let statusClass = '';
-            
-            switch(market.status) {
-                case 'open':
-                    statusText = 'OPEN NOW';
-                    statusClass = 'status-open';
-                    break;
-                case 'closed':
-                    statusText = 'CLOSED';
-                    statusClass = 'status-closed';
-                    break;
-                case 'soon':
-                    statusText = 'COMING SOON';
-                    statusClass = 'status-soon';
-                    break;
-            }
+            marketCard.onclick = () => openMarketResults(market);
             
             marketCard.innerHTML = `
                 <div class="market-name">${market.name}</div>
-                <div class="market-status">
-                    <div class="status-badge ${statusClass}">${statusText}</div>
-                    <div class="market-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
+                <div class="market-time">${market.time}</div>
+                <div style="margin-top: 10px; color: var(--dark-saffron);">
+                    <i class="fas fa-chart-line"></i> View Results
                 </div>
             `;
             
@@ -647,88 +622,58 @@
         currentTimeElement.textContent = timeString;
         currentDateElement.textContent = dateString;
     }
-                        // Open Market Details
-        function openMarketDetails(market) {
-            modalMarketName.textContent = market.name;
+            // Open Market Results
+        function openMarketResults(market) {
+            modalMarketName.textContent = `${market.name} - ${market.time}`;
             
-            let marketContent = '';
+            // Get results for this market from marketResults object
+            const results = marketResults[market.name] || {
+                "OPEN - PANEL": "No results yet",
+                "STRONG": "No results yet",
+                "SUPPORT": "No results yet",
+                "JODI - PANEL": "No results yet"
+            };
             
-            switch(market.status) {
-                case 'open':
-                    marketContent = `
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <div style="font-size: 20px; color: var(--primary-saffron); margin-bottom: 10px;">
-                                ${market.name} MARKET IS OPEN
-                            </div>
-                            <div style="background: #D4EDDA; color: #155724; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
-                                <i class="fas fa-check-circle"></i> You can place bets now
-                            </div>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <h3 style="color: var(--primary-saffron); margin-bottom: 10px;">Place Your Bet</h3>
-                            <input type="number" placeholder="Enter amount" style="width: 100%; padding: 12px; border: 2px solid #FFE0B2; border-radius: 8px; margin-bottom: 10px;">
-                            <input type="text" placeholder="Enter number (00-99)" style="width: 100%; padding: 12px; border: 2px solid #FFE0B2; border-radius: 8px; margin-bottom: 20px;">
-                            <button style="width: 100%; padding: 12px; background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron)); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                                <i class="fas fa-coins"></i> Place Bet
-                            </button>
-                        </div>
-                    `;
-                    break;
+            let resultsHTML = `
+                <div class="results-section">
+                    <div class="section-title">LATEST RESULTS</div>
                     
-                case 'closed':
-                    marketContent = `
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <div style="font-size: 20px; color: var(--primary-saffron); margin-bottom: 10px;">
-                                ${market.name} MARKET IS CLOSED
-                            </div>
-                            <div style="background: #F8D7DA; color: #721C24; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
-                                <i class="fas fa-times-circle"></i> Market is currently closed
-                            </div>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <h3 style="color: var(--primary-saffron); margin-bottom: 10px;">Results</h3>
-                            <div style="background: #FFF8F0; padding: 15px; border-radius: 8px; text-align: center; font-size: 24px; font-weight: bold; color: var(--dark-saffron); margin-bottom: 10px;">
-                                56 - 89 - 23
-                            </div>
-                            <div style="color: var(--gray); text-align: center; font-size: 14px;">
-                                Last updated: 2 hours ago
-                            </div>
-                        </div>
-                    `;
-                    break;
+                    <div class="result-item">
+                        <div class="result-title">OPEN - PANEL</div>
+                        <div class="result-value">${results["OPEN - PANEL"]}</div>
+                    </div>
                     
-                case 'soon':
-                    marketContent = `
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <div style="font-size: 20px; color: var(--primary-saffron); margin-bottom: 10px;">
-                                ${market.name} MARKET OPENS SOON
-                            </div>
-                            <div style="background: #FFF3CD; color: #856404; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
-                                <i class="fas fa-clock"></i> Market will open soon
-                            </div>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <h3 style="color: var(--primary-saffron); margin-bottom: 10px;">Upcoming Market</h3>
-                            <div style="background: #FFF8F0; padding: 15px; border-radius: 8px;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                    <span>Opening Time:</span>
-                                    <span style="font-weight: bold; color: var(--dark-saffron)">6:00 PM</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                    <span>Closing Time:</span>
-                                    <span style="font-weight: bold; color: var(--dark-saffron)">7:00 PM</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between;">
-                                    <span>Result Time:</span>
-                                    <span style="font-weight: bold; color: var(--dark-saffron)">8:00 PM</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    break;
-            }
+                    <div class="result-item">
+                        <div class="result-title">STRONG</div>
+                        <div class="result-value">${results["STRONG"]}</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-title">SUPPORT</div>
+                        <div class="result-value">${results["SUPPORT"]}</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-title">JODI - PANEL</div>
+                        <div class="result-value">${results["JODI - PANEL"]}</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="closeModal()" 
+                            style="background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron)); 
+                                   color: white; 
+                                   border: none; 
+                                   padding: 10px 30px; 
+                                   border-radius: 5px; 
+                                   font-weight: 600; 
+                                   cursor: pointer;">
+                        <i class="fas fa-check"></i> OK
+                    </button>
+                </div>
+            `;
             
-            modalContent.innerHTML = marketContent;
+            modalContent.innerHTML = resultsHTML;
             marketModal.style.display = 'flex';
         }
 
@@ -737,17 +682,13 @@
             marketModal.style.display = 'none';
         }
 
-        // Refresh Dashboard
-        function refreshDashboard() {
-            // Refresh user balance
-            const randomBalance = (Math.random() * 10000).toFixed(2);
-            userBalanceElement.textContent = `₹ ${randomBalance}`;
-            
-            // Show refresh message
-            alert('Dashboard refreshed successfully!');
-            
-            // Close modal if open
-            closeModal();
+        // Go Back
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
         }
 
         // Logout User
@@ -755,23 +696,8 @@
             if (confirm('Are you sure you want to logout?')) {
                 auth.signOut().then(() => {
                     window.location.href = 'index.html';
-                }).catch((error) => {
-                    alert('Error logging out: ' + error.message);
                 });
             }
-        }
-
-        // Wallet Functions
-        function openDeposit() {
-            alert('Deposit feature will be added soon!');
-        }
-
-        function openWithdraw() {
-            alert('Withdraw feature will be added soon!');
-        }
-
-        function openHistory() {
-            alert('Game history feature will be added soon!');
         }
 
         // Close modal when clicking outside
