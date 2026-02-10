@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Rudraksh Satta Matka</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-saffron: #FF9933;
+            --secondary-saffron: #FF8C00;
+            --light-saffron: #FFF8F0;
+            --white: #ffffff;
+            --dark-saffron: #E67E22;
+            --gray: #6b7280;
+            --light-gray: #f3f4f6;
+            --text-dark: #333333;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-saffron) 0%, var(--white) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
+            padding: 10px 0;
+            box-shadow: 0 4px 12px rgba(255, 153, 51, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        #logoImage {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        /* Dashboard Controls */
+        .dashboard-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+      /* User Info */
+.user-info {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.08);
+    border: 1px solid #FFE0B2;
+    text-align: center;
+}
+
+.user-welcome {
+    color: var(--primary-saffron);
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.user-balance {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dark-saffron);
+    margin: 10px 0;
+}
+
+.balance-label {
+    color: var(--gray);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.wallet-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.wallet-btn {
+    padding: 12px 25px;
+    background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron));
+    color: var(--white);
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.wallet-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.3);
+}
+
+/* Live Time Section */
+.live-section {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 16px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.08);
+    border: 1px solid #FFE0B2;
+    text-align: center;
+}
+
+.live-badge {
+    background: linear-gradient(to right, #FF0000, #FF4500);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 18px;
+    display: inline-block;
+    margin-bottom: 15px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+.time-display {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary-saffron);
+    margin-bottom: 10px;
+}
+
+.date-display {
+    font-size: 18px;
+    color: var(--gray);
+}
+
+/* Markets Section */
+.markets-section {
+    margin: 30px 0;
+}
+
+.section-title {
+    color: var(--primary-saffron);
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.markets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+      }
+      /* Market Card */
+.market-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.08);
+    border: 2px solid #FFE0B2;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.market-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 153, 51, 0.15);
+    border-color: var(--primary-saffron);
+}
+
+.market-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron));
+}
+
+.market-name {
+    color: var(--primary-saffron);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.market-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #FFE0B2;
+}
+
+.status-badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-open {
+    background: #D4EDDA;
+    color: #155724;
+}
+
+.status-closed {
+    background: #F8D7DA;
+    color: #721C24;
+}
+
+.status-soon {
+    background: #FFF3CD;
+    color: #856404;
+}
+
+.market-arrow {
+    color: var(--secondary-saffron);
+    font-size: 18px;
+}
+
+/* Footer Controls */
+.footer-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
+    padding: 15px 0;
+    box-shadow: 0 -4px 12px rgba(255, 153, 51, 0.15);
+    z-index: 100;
+}
+
+.footer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.footer-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+  }
+              /* Modal for Market Details */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron));
+            color: white;
+            padding: 20px;
+            border-radius: 16px 16px 0 0;
+            text-align: center;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .dashboard-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .markets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wallet-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .wallet-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .footer-buttons {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .footer-btn {
+                width: 90%;
+                justify-content: center;
+            }
+            
+            #logoImage {
+                max-width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .time-display {
+                font-size: 24px;
+            }
+            
+            .date-display {
+                font-size: 14px;
+            }
+            
+            .market-name {
+                font-size: 20px;
+            }
+            
+            .user-welcome {
+                font-size: 20px;
+            }
+            
+            .user-balance {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <!-- LOGO IMAGE -->
+                    <img id="logoImage" src="https://i.supaimg.com/2242c14d-f1da-4eb4-a998-70deaee422b2.jpg" alt="Rudraksh Logo">
+                </div>
+                <div class="dashboard-controls">
+                    <button class="control-btn" onclick="refreshDashboard()">
+                        <i class="fas fa-sync-alt"></i>
+                        REFRESH
+                    </button>
+                    <button class="control-btn" onclick="logoutUser()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        LOGOUT
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- User Info Section -->
+<main class="container">
+    <div class="user-info">
+        <div class="user-welcome" id="userWelcome">Welcome, User!</div>
+        <div class="user-balance" id="userBalance">₹ 0.00</div>
+        <div class="balance-label">Available Balance</div>
+        <div class="wallet-controls">
+            <button class="wallet-btn" onclick="openDeposit()">
+                <i class="fas fa-plus-circle"></i> Deposit
+            </button>
+            <button class="wallet-btn" onclick="openWithdraw()">
+                <i class="fas fa-minus-circle"></i> Withdraw
+            </button>
+            <button class="wallet-btn" onclick="openHistory()">
+                <i class="fas fa-history"></i> History
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Time Section -->
+    <div class="live-section">
+        <div class="live-badge">LIVE</div>
+        <div class="time-display" id="currentTime">11:29:03 AM</div>
+        <div class="date-display" id="currentDate">Tuesday, February 10, 2026</div>
+    </div>
+
+    <!-- Markets Section -->
+    <div class="markets-section">
+        <h2 class="section-title">Premium Markets</h2>
+        <div class="markets-grid" id="marketsGrid">
+            <!-- Market cards will be generated by JavaScript -->
+        </div>
+    </div>
+</main>
+
+<!-- Footer Controls -->
+<div class="footer-controls">
+    <div class="container">
+        <div class="footer-buttons">
+            <button class="footer-btn" onclick="refreshDashboard()">
+                <i class="fas fa-sync-alt"></i>
+                REFRESH
+            </button>
+            <button class="footer-btn" onclick="logoutUser()">
+                <i class="fas fa-sign-out-alt"></i>
+                LOGOUT
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Market Details Modal -->
+<div id="marketModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalMarketName">Market Name</h2>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="modalContent">
+                <!-- Market details will be loaded here -->
+            </div>
+        </div>
+    </div>
+              </div>
+              <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVxg4EZHm4D2zMrz_ndLzcqx3wkhdPdVc",
+        authDomain: "rudraksh-d74c3.firebaseapp.com",
+        projectId: "rudraksh-d74c3",
+        storageBucket: "rudraksh-d74c3.firebasestorage.app",
+        messagingSenderId: "270620722307",
+        appId: "1:270620722307:web:5a6454b69e12c201f6c7b6",
+        measurementId: "G-406NQEK3XV"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Markets Data
+    const markets = [
+        { id: 1, name: "SRIDEVI", status: "open" },
+        { id: 2, name: "TIME BAZAR", status: "open" },
+        { id: 3, name: "MILAN DAY", status: "open" },
+        { id: 4, name: "KALYAN", status: "closed" },
+        { id: 5, name: "SRIDEVI NIGHT", status: "soon" },
+        { id: 6, name: "MILAN NIGHT", status: "soon" },
+        { id: 7, name: "MAIN BAZAR", status: "soon" }
+    ];
+
+    // DOM Elements
+    const marketsGrid = document.getElementById('marketsGrid');
+    const currentTimeElement = document.getElementById('currentTime');
+    const currentDateElement = document.getElementById('currentDate');
+    const userWelcomeElement = document.getElementById('userWelcome');
+    const userBalanceElement = document.getElementById('userBalance');
+    const marketModal = document.getElementById('marketModal');
+    const modalMarketName = document.getElementById('modalMarketName');
+    const modalContent = document.getElementById('modalContent');
+
+    // Check if user is logged in
+    auth.onAuthStateChanged((user) => {
+        if (!user) {
+            // User not logged in, redirect to index.html
+            window.location.href = 'index.html';
+        } else {
+            // User logged in
+            displayUserInfo(user);
+            loadMarkets();
+            updateDateTime();
+            
+            // Update time every second
+            setInterval(updateDateTime, 1000);
+        }
+    });
+
+    // Display User Info
+    function displayUserInfo(user) {
+        const userName = user.displayName || 'User';
+        userWelcomeElement.textContent = `Welcome, ${userName}!`;
+        
+        // For demo, set random balance
+        const randomBalance = (Math.random() * 10000).toFixed(2);
+        userBalanceElement.textContent = `₹ ${randomBalance}`;
+    }
+
+    // Load Markets
+    function loadMarkets() {
+        marketsGrid.innerHTML = '';
+        
+        markets.forEach(market => {
+            const marketCard = document.createElement('div');
+            marketCard.className = 'market-card';
+            marketCard.setAttribute('data-market', market.name);
+            marketCard.onclick = () => openMarketDetails(market);
+            
+            let statusText = '';
+            let statusClass = '';
+            
+            switch(market.status) {
+                case 'open':
+                    statusText = 'OPEN NOW';
+                    statusClass = 'status-open';
+                    break;
+                case 'closed':
+                    statusText = 'CLOSED';
+                    statusClass = 'status-closed';
+                    break;
+                case 'soon':
+                    statusText = 'COMING SOON';
+                    statusClass = 'status-soon';
+                    break;
+            }
+            
+            marketCard.innerHTML = `
+                <div class="market-name">${market.name}</div>
+                <div class="market-status">
+                    <div class="status-badge ${statusClass}">${statusText}</div>
+                    <div class="market-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            `;
+            
+            marketsGrid.appendChild(marketCard);
+        });
+    }
+
+    // Update Date and Time
+    function updateDateTime() {
+        const now = new Date();
+        
+        // Format time
+        const timeOptions = { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit',
+            hour12: true 
+        };
+        const timeString = now.toLocaleTimeString('en-US', timeOptions);
+        
+        // Format date
+        const dateOptions = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        const dateString = now.toLocaleDateString('en-US', dateOptions);
+        
+        currentTimeElement.textContent = timeString;
+        currentDateElement.textContent = dateString;
+    }
+                        // Open Market Details
+        function openMarketDetails(market) {
+            modalMarketName.textContent = market.name;
+            
+            let marketContent = '';
+            
+            switch(market.status) {
+                case 'open':
+                    marketContent = `
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 20px; color: var(--primary-saffron); margin-bottom: 10px;">
+                                ${market.name} MARKET IS OPEN
+                            </div>
+                            <div style="background: #D4EDDA; color: #155724; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+                                <i class="fas fa-check-circle"></i> You can place bets now
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: var(--primary-saffron); margin-bottom: 10px;">Place Your Bet</h3>
+                            <input type="number" placeholder="Enter amount" style="width: 100%; padding: 12px; border: 2px solid #FFE0B2; border-radius: 8px; margin-bottom: 10px;">
+                            <input type="text" placeholder="Enter number (00-99)" style="width: 100%; padding: 12px; border: 2px solid #FFE0B2; border-radius: 8px; margin-bottom: 20px;">
+                            <button style="width: 100%; padding: 12px; background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron)); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                                <i class="fas fa-coins"></i> Place Bet
+                            </button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'closed':
+                    marketContent = `
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 20px; color: var(--primary-saffron); margin-bottom: 10px;">
+                                ${market.name} MARKET IS CLOSED
+                            </div>
+                            <div style="background: #F8D7DA; color: #721C24; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+                                <i class="fas fa-times-circle"></i> Market is currently closed
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: var(--primary-saffron); margin-bottom: 10px;">Results</h3>
+                            <div style="background: #FFF8F0; padding: 15px; border-radius: 8px; text-align: center; font-size: 24px; font-weight: bold; color: var(--dark-saffron); margin-bottom: 10px;">
+                                56 - 89 - 23
+                            </div>
+                            <div style="color: var(--gray); text-align: center; font-size: 14px;">
+                                Last updated: 2 hours ago
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'soon':
+                    marketContent = `
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 20px; color: var(--primary-saffron); margin-bottom: 10px;">
+                                ${market.name} MARKET OPENS SOON
+                            </div>
+                            <div style="background: #FFF3CD; color: #856404; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+                                <i class="fas fa-clock"></i> Market will open soon
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: var(--primary-saffron); margin-bottom: 10px;">Upcoming Market</h3>
+                            <div style="background: #FFF8F0; padding: 15px; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span>Opening Time:</span>
+                                    <span style="font-weight: bold; color: var(--dark-saffron)">6:00 PM</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span>Closing Time:</span>
+                                    <span style="font-weight: bold; color: var(--dark-saffron)">7:00 PM</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Result Time:</span>
+                                    <span style="font-weight: bold; color: var(--dark-saffron)">8:00 PM</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            modalContent.innerHTML = marketContent;
+            marketModal.style.display = 'flex';
+        }
+
+        // Close Modal
+        function closeModal() {
+            marketModal.style.display = 'none';
+        }
+
+        // Refresh Dashboard
+        function refreshDashboard() {
+            // Refresh user balance
+            const randomBalance = (Math.random() * 10000).toFixed(2);
+            userBalanceElement.textContent = `₹ ${randomBalance}`;
+            
+            // Show refresh message
+            alert('Dashboard refreshed successfully!');
+            
+            // Close modal if open
+            closeModal();
+        }
+
+        // Logout User
+        function logoutUser() {
+            if (confirm('Are you sure you want to logout?')) {
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html';
+                }).catch((error) => {
+                    alert('Error logging out: ' + error.message);
+                });
+            }
+        }
+
+        // Wallet Functions
+        function openDeposit() {
+            alert('Deposit feature will be added soon!');
+        }
+
+        function openWithdraw() {
+            alert('Withdraw feature will be added soon!');
+        }
+
+        function openHistory() {
+            alert('Game history feature will be added soon!');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == marketModal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
