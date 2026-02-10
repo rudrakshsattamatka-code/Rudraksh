@@ -59,21 +59,13 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            position: relative;
         }
 
         #logoImage {
             height: 50px;
             width: auto;
             border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s;
             border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        #logoImage:hover {
-            transform: scale(1.05);
-            border-color: rgba(255, 255, 255, 0.6);
         }
 
         .logo-text h1 {
@@ -133,13 +125,6 @@
     object-fit: cover;
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-#bannerImage:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(30, 58, 138, 0.2);
 }
 
 /* Auth Section */
@@ -218,7 +203,7 @@
     outline: none;
     border-color: var(--secondary-blue);
     background: var(--white);
-    }
+}
         .btn {
     display: block;
     width: 100%;
@@ -306,7 +291,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
-        }
+    }
                 .feature-card {
             background: var(--white);
             padding: 30px;
@@ -393,36 +378,6 @@
             font-size: 14px;
         }
 
-        /* Admin Modal */
-        .admin-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: var(--white);
-            padding: 40px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-title {
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 24px;
-        }
-
         /* Responsive */
         @media (max-width: 992px) {
             .main-content {
@@ -465,7 +420,7 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo-section">
-                    <!-- Editable Logo Image - Password Protected -->
+                    <!-- LOGO IMAGE - You can change this URL -->
                     <img id="logoImage" src="https://via.placeholder.com/150x50/1e3a8a/ffffff?text=RUDRAKSH+LOGO" alt="Rudraksh Logo">
                     <div class="logo-text">
                         <h1>RUDRAKSH SATTAMATKA</h1>
@@ -485,33 +440,12 @@
             </div>
         </div>
     </header>
-    <!-- Admin Modal for Logo Change -->
-<div id="adminModal" class="admin-modal">
-    <div class="modal-content">
-        <h3 class="modal-title">Admin - Change Logo</h3>
-        <form id="adminForm">
-            <div class="form-group">
-                <label for="adminPassword">Admin Password</label>
-                <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password" required>
-            </div>
-            <div class="form-group">
-                <label for="newLogoUrl">New Logo Image URL</label>
-                <input type="url" id="newLogoUrl" class="form-control" placeholder="https://example.com/logo.png" required>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button type="submit" class="btn">Change Logo</button>
-                <button type="button" class="btn btn-secondary" onclick="closeAdminModal()">Cancel</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Main Content -->
+    <!-- Main Content -->
 <main class="container">
     <div class="main-content">
         <!-- Left Side - Authentication -->
         <div class="auth-section">
-            <!-- Editable Banner Image -->
+            <!-- BANNER IMAGE - You can change this URL -->
             <div class="banner-container">
                 <img id="bannerImage" src="https://via.placeholder.com/1000x300/3b82f6/ffffff?text=BANNER+IMAGE+HERE" alt="Banner Image">
             </div>
@@ -587,8 +521,8 @@
                     </form>
                 </div>
             </div>
-                                </div>
-                                        <!-- Right Side - Features -->
+        </div>
+                <!-- Right Side - Features -->
         <div class="features-section">
             <h2 class="section-title">Premium Benefits</h2>
             <div class="features-grid">
@@ -694,7 +628,6 @@
         </div>
         <div class="copyright">
             <p>&copy; 2023 Rudraksh Satta Matka. All rights reserved. | Call: 9328435505</p>
-            <p style="margin-top: 10px; font-size: 12px; color: #93c5fd;">Double-click on logo to change (Admin only)</p>
         </div>
     </div>
 </footer>
@@ -713,9 +646,6 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        
-        // Admin password for logo change (Change this to your own secure password)
-        const ADMIN_PASSWORD = "rudraksh@2024";
 
         // Form Switching Function
         function showForm(formType) {
@@ -751,17 +681,6 @@
             setTimeout(() => {
                 messageElement.style.display = 'none';
             }, 5000);
-        }
-
-        // Admin Modal Functions
-        function openAdminModal() {
-            document.getElementById('adminModal').style.display = 'flex';
-        }
-
-        function closeAdminModal() {
-            document.getElementById('adminModal').style.display = 'none';
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('newLogoUrl').value = '';
         }
 
         // Register Form Submission
@@ -887,67 +806,11 @@
                 });
         });
 
-        // Admin Form Submission for Logo Change
-        document.getElementById('adminForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const password = document.getElementById('adminPassword').value;
-            const newLogoUrl = document.getElementById('newLogoUrl').value;
-            
-            if (password !== ADMIN_PASSWORD) {
-                alert('Incorrect admin password!');
-                return;
-            }
-            
-            if (!newLogoUrl) {
-                alert('Please enter a valid image URL');
-                return;
-            }
-            
-            // Change logo image
-            document.getElementById('logoImage').src = newLogoUrl;
-            alert('Logo changed successfully!');
-            closeAdminModal();
-        });
-
         // Check if user is already logged in
         auth.onAuthStateChanged((user) => {
             if (user) {
                 // User is signed in, redirect to dashboard
                 window.location.href = 'dashboard.html';
-            }
-        });
-
-        // Function to change banner image (public, anyone can change)
-        document.getElementById('bannerImage').addEventListener('click', function() {
-            const newUrl = prompt('Enter new banner image URL:');
-            if (newUrl) {
-                document.getElementById('bannerImage').src = newUrl;
-            }
-        });
-
-        // Double-click on logo to open admin modal (only you can change)
-        let logoClickCount = 0;
-        let logoClickTimer;
-        
-        document.getElementById('logoImage').addEventListener('click', function() {
-            logoClickCount++;
-            
-            if (logoClickCount === 1) {
-                logoClickTimer = setTimeout(function() {
-                    logoClickCount = 0;
-                }, 500);
-            } else if (logoClickCount === 2) {
-                clearTimeout(logoClickTimer);
-                openAdminModal();
-                logoClickCount = 0;
-            }
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('adminModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAdminModal();
             }
         });
     </script>
