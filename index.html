@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rudraksh | Premium </title>
+    <title>Rudraksh Satta Matka | Premium Games</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
@@ -18,19 +18,20 @@
         }
 
         :root {
-            --primary-blue: #1e3a8a;
-            --secondary-blue: #3b82f6;
-            --light-blue: #eff6ff;
+            --primary-saffron: #FF9933;
+            --secondary-saffron: #FF8C00;
+            --light-saffron: #FFF8F0;
             --white: #ffffff;
-            --dark-blue: #1e40af;
+            --dark-saffron: #E67E22;
             --gray: #6b7280;
             --light-gray: #f3f4f6;
+            --text-dark: #333333;
         }
 
         body {
-            background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
+            background: linear-gradient(135deg, var(--light-saffron) 0%, var(--white) 100%);
             min-height: 100vh;
-            color: #333;
+            color: var(--text-dark);
         }
 
         .container {
@@ -41,9 +42,9 @@
 
         /* Header Styles */
         header {
-            background: linear-gradient(to right, var(--primary-blue), var(--dark-blue));
-            padding: 15px 0;
-            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+            background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
+            padding: 10px 0;
+            box-shadow: 0 4px 12px rgba(255, 153, 51, 0.15);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -56,29 +57,17 @@
         }
 
         .logo-section {
+            flex: 1;
             display: flex;
-            align-items: center;
-            gap: 15px;
+            justify-content: center;
         }
 
         #logoImage {
-            height: 50px;
-            width: auto;
-            border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .logo-text h1 {
-            color: var(--white);
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .logo-text p {
-            color: #a5b4fc;
-            font-size: 14px;
-            font-weight: 500;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
         }
 
         .contact-info {
@@ -92,7 +81,7 @@
             align-items: center;
             gap: 8px;
             color: var(--white);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             padding: 10px 15px;
             border-radius: 30px;
             text-decoration: none;
@@ -100,7 +89,7 @@
         }
 
         .contact-item:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .contact-item i {
@@ -109,22 +98,23 @@
         /* Main Content */
 .main-content {
     display: flex;
-    min-height: calc(100vh - 150px);
-    padding: 40px 0;
+    min-height: calc(100vh - 130px);
+    padding: 30px 0;
     gap: 40px;
 }
 
 /* Banner Image */
 .banner-container {
     margin-bottom: 30px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(255, 153, 51, 0.15);
 }
 
 #bannerImage {
     width: 100%;
-    height: 300px;
+    height: 250px;
     object-fit: cover;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
 }
 
 /* Auth Section */
@@ -137,14 +127,14 @@
     background: var(--white);
     border-radius: 16px;
     padding: 40px;
-    box-shadow: 0 10px 30px rgba(30, 58, 138, 0.1);
-    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgba(255, 153, 51, 0.1);
+    border: 1px solid #FFE0B2;
 }
 
 .auth-tabs {
     display: flex;
     margin-bottom: 30px;
-    border-bottom: 2px solid var(--light-gray);
+    border-bottom: 2px solid #FFE0B2;
 }
 
 .auth-tab {
@@ -160,8 +150,8 @@
 }
 
 .auth-tab.active {
-    color: var(--primary-blue);
-    border-bottom: 3px solid var(--primary-blue);
+    color: var(--primary-saffron);
+    border-bottom: 3px solid var(--primary-saffron);
 }
 
 .auth-form {
@@ -186,29 +176,29 @@
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: var(--primary-blue);
+    color: var(--primary-saffron);
 }
 
 .form-control {
     width: 100%;
     padding: 15px;
-    border: 2px solid #e5e7eb;
+    border: 2px solid #FFE0B2;
     border-radius: 10px;
     font-size: 16px;
     transition: border 0.3s;
-    background: var(--light-gray);
+    background: #FFF8F0;
 }
 
 .form-control:focus {
     outline: none;
-    border-color: var(--secondary-blue);
+    border-color: var(--secondary-saffron);
     background: var(--white);
-}
+                     }
         .btn {
     display: block;
     width: 100%;
     padding: 16px;
-    background: linear-gradient(to right, var(--primary-blue), var(--secondary-blue));
+    background: linear-gradient(to right, var(--primary-saffron), var(--secondary-saffron));
     color: var(--white);
     border: none;
     border-radius: 10px;
@@ -221,15 +211,15 @@
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.4);
 }
 
 .btn-secondary {
-    background: linear-gradient(to right, #64748b, #94a3b8);
+    background: linear-gradient(to right, #FFA726, #FFB74D);
 }
 
 .btn-secondary:hover {
-    box-shadow: 0 5px 15px rgba(100, 116, 139, 0.4);
+    box-shadow: 0 5px 15px rgba(255, 167, 38, 0.4);
 }
 
 .remember-forgot {
@@ -245,8 +235,12 @@
     gap: 8px;
 }
 
+.checkbox-container input {
+    accent-color: var(--primary-saffron);
+}
+
 .forgot-password {
-    color: var(--secondary-blue);
+    color: var(--secondary-saffron);
     text-decoration: none;
     font-weight: 500;
 }
@@ -264,15 +258,15 @@
 }
 
 .success {
-    background-color: #d1fae5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
+    background-color: #D4EDDA;
+    color: #155724;
+    border: 1px solid #C3E6CB;
 }
 
 .error {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background-color: #F8D7DA;
+    color: #721C24;
+    border: 1px solid #F5C6CB;
 }
 
 /* Features Section */
@@ -281,7 +275,7 @@
 }
 
 .section-title {
-    color: var(--primary-blue);
+    color: var(--primary-saffron);
     font-size: 28px;
     margin-bottom: 30px;
     text-align: center;
@@ -294,27 +288,27 @@
     }
                 .feature-card {
             background: var(--white);
-            padding: 30px;
+            padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px rgba(255, 153, 51, 0.08);
             text-align: center;
             transition: transform 0.3s;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #FFE0B2;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.1);
+            box-shadow: 0 8px 25px rgba(255, 153, 51, 0.15);
         }
 
         .feature-icon {
-            font-size: 40px;
-            color: var(--primary-blue);
+            font-size: 36px;
+            color: var(--primary-saffron);
             margin-bottom: 15px;
         }
 
         .feature-card h3 {
-            color: var(--primary-blue);
+            color: var(--primary-saffron);
             margin-bottom: 10px;
             font-size: 20px;
         }
@@ -322,14 +316,15 @@
         .feature-card p {
             color: var(--gray);
             line-height: 1.6;
+            font-size: 14px;
         }
 
         /* Footer */
         footer {
-            background: var(--primary-blue);
+            background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
             color: var(--white);
-            padding: 40px 0 20px;
-            margin-top: 50px;
+            padding: 30px 0 20px;
+            margin-top: 40px;
         }
 
         .footer-content {
@@ -337,18 +332,18 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 40px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .footer-section {
             flex: 1;
-            min-width: 250px;
+            min-width: 200px;
         }
 
         .footer-section h3 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #a5b4fc;
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #FFD8A6;
         }
 
         .footer-links {
@@ -356,13 +351,14 @@
         }
 
         .footer-links li {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .footer-links a {
-            color: #c7d2fe;
+            color: #FFE4C4;
             text-decoration: none;
             transition: color 0.3s;
+            font-size: 14px;
         }
 
         .footer-links a:hover {
@@ -373,9 +369,9 @@
         .copyright {
             text-align: center;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #a5b4fc;
-            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: #FFD8A6;
+            font-size: 13px;
         }
 
         /* Responsive */
@@ -410,6 +406,25 @@
             
             .footer-content {
                 flex-direction: column;
+                gap: 30px;
+            }
+            
+            #logoImage {
+                max-width: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 25px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            #logoImage {
+                max-width: 200px;
             }
         }
     </style>
@@ -419,13 +434,10 @@
     <header>
         <div class="container">
             <div class="header-content">
+                <!-- Logo Section (centered, full width logo) -->
                 <div class="logo-section">
                     <!-- LOGO IMAGE - You can change this URL -->
-                    <img id="logoImage" src="https://i.supaimg.com/2242c14d-f1da-4eb4-a998-70deaee422b2.jpg" alt="Rudraksh Logo">
-                    <div class="logo-text">
-                        <h1></h1>
-                        <p> </p>
-                    </div>
+                    <img id="logoImage" src="https://i.supaimg.com/2242c14d-f1da-4eb4-a998-70deaee422b2.jpg" alt="Rudraksh Satta Matka Logo">
                 </div>
                 <div class="contact-info">
                     <a href="tel:9328435505" class="contact-item">
@@ -434,7 +446,7 @@
                     </a>
                     <a href="https://wa.me/9328435505" target="_blank" class="contact-item">
                         <i class="fab fa-whatsapp"></i>
-                        <span>WhatsApp: 9328435505</span>
+                        <span>WhatsApp</span>
                     </a>
                 </div>
             </div>
@@ -495,7 +507,7 @@
                         </div>
                         <div class="form-group">
                             <label for="registerPassword">Password</label>
-                            <input type="password" id="registerPassword" class="form-control" placeholder="Create a strong password" minlength="6" required>
+                            <input type="password" id="registerPassword" class="form-control" placeholder="Create a strong password (min 6 characters)" minlength="6" required>
                         </div>
                         <div class="form-group">
                             <label for="confirmPassword">Confirm Password</label>
@@ -552,7 +564,7 @@
                         <i class="fas fa-bolt"></i>
                     </div>
                     <h3>Fast Service</h3>
-                    <p>Quick.</p>
+                    <p>Quick deposits and withdrawals. Get your winnings instantly in your account.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -571,22 +583,22 @@
             </div>
             
             <!-- Need Help Section -->
-            <div style="margin-top: 50px; background: var(--white); padding: 30px; border-radius: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-                <h3 style="color: var(--primary-blue); margin-bottom: 20px; text-align: center;">Need Immediate Help?</h3>
+            <div style="margin-top: 50px; background: var(--white); padding: 25px; border-radius: 16px; box-shadow: 0 5px 15px rgba(255, 153, 51, 0.08); border: 1px solid #FFE0B2;">
+                <h3 style="color: var(--primary-saffron); margin-bottom: 20px; text-align: center;">Need Immediate Help?</h3>
                 <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
                     <div style="text-align: center;">
-                        <div style="font-size: 24px; color: var(--secondary-blue); margin-bottom: 10px;">
+                        <div style="font-size: 24px; color: var(--secondary-saffron); margin-bottom: 10px;">
                             <i class="fas fa-phone"></i>
                         </div>
-                        <h4 style="color: var(--primary-blue); margin-bottom: 5px;">Call Us</h4>
-                        <p style="color: var(--gray); font-weight: 600;">9328435505</p>
+                        <h4 style="color: var(--primary-saffron); margin-bottom: 5px;">Call Us</h4>
+                        <p style="color: var(--gray); font-weight: 600; font-size: 16px;">9328435505</p>
                     </div>
                     <div style="text-align: center;">
                         <div style="font-size: 24px; color: #25D366; margin-bottom: 10px;">
                             <i class="fab fa-whatsapp"></i>
                         </div>
-                        <h4 style="color: var(--primary-blue); margin-bottom: 5px;">WhatsApp</h4>
-                        <p style="color: var(--gray); font-weight: 600;">9328435505</p>
+                        <h4 style="color: var(--primary-saffron); margin-bottom: 5px;">WhatsApp</h4>
+                        <p style="color: var(--gray); font-weight: 600; font-size: 16px;">9328435505</p>
                     </div>
                 </div>
             </div>
@@ -628,6 +640,7 @@
         </div>
         <div class="copyright">
             <p>&copy; 2023 Rudraksh Satta Matka. All rights reserved. | Call: 9328435505</p>
+            <p style="margin-top: 8px; font-size: 12px;">For assistance, call or WhatsApp us anytime</p>
         </div>
     </div>
 </footer>
@@ -812,6 +825,20 @@
                 // User is signed in, redirect to dashboard
                 window.location.href = 'dashboard.html';
             }
+        });
+
+        // Auto-focus on first input when switching forms
+        const authTabs = document.querySelectorAll('.auth-tab');
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                setTimeout(() => {
+                    const activeForm = document.querySelector('.auth-form.active');
+                    const firstInput = activeForm.querySelector('input');
+                    if (firstInput) {
+                        firstInput.focus();
+                    }
+                }, 100);
+            });
         });
     </script>
 </body>
