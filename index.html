@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RUDRAKSH | Login</title>
+    <title>RUDRAKSH | Premium Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(#0f2027, #2c5364);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: white;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,100 +20,83 @@
         .container {
             width: 100%;
             max-width: 500px;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0, 0, 0, 0.9);
             border-radius: 20px;
             overflow: hidden;
             border: 3px solid #ff9800;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
         }
         /* Header */
         .header {
             background: linear-gradient(to right, #ff9800, #ff5722);
             padding: 25px 20px;
             text-align: center;
+            position: relative;
         }
-        .logo {
+        .logo-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
         }
-        .logo i {
-            font-size: 3rem;
+        .logo-icon {
+            font-size: 3.5rem;
             color: white;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: spin 20s linear infinite;
         }
-        .spin { animation: spin 15s linear infinite; }
-        @keyframes spin { 
+        @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .logo-text h1 {
-            font-size: 2.2rem;
+        .main-heading {
+            font-size: 2.5rem;
             font-weight: 800;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-        .logo-text h2 {
-            font-size: 1.6rem;
+        .sub-heading {
+            font-size: 1.8rem;
             color: #ffeb3b;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-top: 5px;
         }
         .tagline {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             color: white;
             background: rgba(0,0,0,0.3);
-            padding: 10px 20px;
-            border-radius: 30px;
+            padding: 12px 25px;
+            border-radius: 50px;
             display: inline-block;
+            margin-top: 15px;
             border: 2px solid white;
-        }
-        .tagline i { margin: 0 8px; }
-        /* Contact Bar */
-        .contact-bar {
-            background: #1a237e;
-            padding: 15px;
-            border-bottom: 3px solid #ff9800;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-        }
-        .contact-item i { color: #ffeb3b; }
-        .contact-item a {
-            color: white;
-            text-decoration: none;
             font-weight: 600;
         }
-        .contact-item a:hover { color: #ff9800; }
-        /* Tabs */
-        .tabs {
-            display: flex;
-            background: #222;
-            margin: 20px;
-            border-radius: 10px;
-            overflow: hidden;
+        .tagline i {
+            margin: 0 10px;
+            color: #ffeb3b;
         }
-        .tab-btn {
-            flex: 1;
-            padding: 18px;
-            border: none;
-            background: transparent;
-            color: #aaa;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
+        /* User Photo Section - YOU CAN CHANGE THIS */
+        .user-photo-section {
+            margin-top: 20px;
+            text-align: center;
         }
-        .tab-btn.active {
-            background: #ff9800;
+        .user-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .photo-label {
+            display: block;
+            margin-top: 8px;
             color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -121,12 +104,23 @@
     <div class="container">
         <!-- HEADER -->
         <div class="header">
-            <div class="logo">
-                <i class="fas fa-dharmachakra spin"></i>
-                <div class="logo-text">
-                    <h1>RUDRAKSH</h1>
-                    <h2>SATTAMATKA ALL GAMES</h2>
-                    <p class="tagline"><i class="fas fa-hands-helping"></i> Welcome to Our Family</p>
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-dharmachakra"></i>
+                </div>
+                <h1 class="main-heading">RUDRAKSH</h1>
+                <h2 class="sub-heading">SATTAMATKA ALL GAMES</h2>
+                <div class="tagline">
+                    <i class="fas fa-hands-helping"></i>
+                    Welcome to Our Family
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                
+                <!-- YOUR PHOTO SECTION - EASY TO CHANGE -->
+                <div class="user-photo-section">
+                    <!-- TO CHANGE PHOTO: Replace "YOUR-PHOTO.jpg" with your photo filename -->
+                    <img src="YOUR-PHOTO.jpg" alt="Rudraksh Logo" class="user-photo">
+                    <span class="photo-label">Trusted Since 2024</span>
                 </div>
             </div>
         </div>
@@ -134,235 +128,296 @@
         <!-- CONTACT BAR -->
         <div class="contact-bar">
             <div class="contact-item">
-                <i class="fas fa-phone"></i> 
+                <i class="fas fa-phone-alt"></i>
                 <span>Call: <a href="tel:9328435505">9328435505</a></span>
             </div>
             <div class="contact-item">
-                <i class="fab fa-whatsapp"></i> 
+                <i class="fab fa-whatsapp"></i>
                 <span>WhatsApp: <a href="https://wa.me/919328435505">9328435505</a></span>
             </div>
             <div class="contact-item">
-                <i class="fas fa-headset"></i> 
+                <i class="fas fa-headset"></i>
                 <span>24/7 Support</span>
             </div>
         </div>
+        <style>
+    /* Contact Bar */
+    .contact-bar {
+        background: linear-gradient(to right, #1a237e, #283593);
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-around;
+        border-bottom: 3px solid #ff9800;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        font-size: 0.95rem;
+    }
+    .contact-item i {
+        color: #ffeb3b;
+        font-size: 1.1rem;
+    }
+    .contact-item a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .contact-item a:hover {
+        color: #ff9800;
+        text-decoration: underline;
+    }
+    /* Tabs */
+    .tabs {
+        display: flex;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 25px;
+        border-radius: 12px;
+        overflow: hidden;
+        padding: 5px;
+    }
+    .tab {
+        flex: 1;
+        padding: 18px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .tab.active {
+        background: linear-gradient(to right, #ff9800, #ff5722);
+        box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+    }
+    /* Forms Container */
+    .auth-container {
+        padding: 0 25px 25px 25px;
+    }
+    .form {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+    .form.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 
-        <!-- TABS -->
-        <div class="tabs">
-            <button id="loginTab" class="tab-btn active">LOGIN</button>
-            <button id="registerTab" class="tab-btn">REGISTER</button>
-        </div>
-        <!-- FORM CONTAINER -->
-<div class="form-container">
+<!-- TABS -->
+<div class="tabs">
+    <button id="loginTab" class="tab active">LOGIN</button>
+    <button id="registerTab" class="tab">REGISTER</button>
+</div>
+
+<!-- AUTH CONTAINER -->
+<div class="auth-container">
     <!-- LOGIN FORM -->
     <form id="loginForm" class="form active">
-        <h3><i class="fas fa-sign-in-alt"></i> Login to Account</h3>
+        <h3 class="form-title">
+            <i class="fas fa-sign-in-alt"></i> Member Login
+        </h3>
         
-        <div class="input-group">
-            <label><i class="fas fa-mobile-alt"></i> Mobile Number</label>
-            <input type="text" id="loginMobile" placeholder="10-digit mobile number" maxlength="10" required>
+        <div class="form-group">
+            <label for="loginMobile">
+                <i class="fas fa-mobile-alt"></i> Mobile Number
+            </label>
+            <input type="text" id="loginMobile" placeholder="Enter 10-digit mobile number" required>
         </div>
         
-        <div class="input-group">
-            <label><i class="fas fa-lock"></i> Password</label>
-            <input type="password" id="loginPassword" placeholder="Your password" required>
+        <div class="form-group">
+            <label for="loginPassword">
+                <i class="fas fa-lock"></i> Password
+            </label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required>
         </div>
         
-        <button type="submit" class="btn">
-            <i class="fas fa-sign-in-alt"></i> LOGIN NOW
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-sign-in-alt"></i> LOGIN TO ACCOUNT
         </button>
         
-        <p class="help-text">
-            Need help? Call <strong>9328435505</strong> or 
-            <a href="https://wa.me/919328435505" class="whatsapp-link">
-                <i class="fab fa-whatsapp"></i> WhatsApp
-            </a>
-        </p>
+        <div class="form-footer">
+            <a href="#" id="forgotPassword">Forgot Password?</a>
+        </div>
     </form>
-
-    <style>
-        .form-container { padding: 0 25px 25px 25px; }
-        .form { display: none; animation: fadeIn 0.5s; }
-        .form.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .form h3 {
-            color: #ff9800;
-            margin-bottom: 25px;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .input-group { margin-bottom: 22px; }
-        .input-group label {
-            display: block;
-            color: #4fc3f7;
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 1.05rem;
-        }
-        .input-group label i { margin-right: 10px; }
-        .input-group input {
-            width: 100%;
-            padding: 18px;
-            border: 2px solid #444;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.08);
-            color: white;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-        }
-        .input-group input:focus {
-            outline: none;
-            border-color: #ff9800;
-            background: rgba(255,255,255,0.12);
-        }
-        .btn {
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(to right, #ff9800, #ff5722);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.3rem;
-            font-weight: 800;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(255,152,0,0.4);
-        }
-        .help-text {
-            text-align: center;
-            margin-top: 25px;
-            color: #aaa;
-            font-size: 0.95rem;
-        }
-        .whatsapp-link {
-            color: #25D366;
-            text-decoration: none;
-            font-weight: 600;
-            margin-left: 5px;
-        }
-        .whatsapp-link:hover { text-decoration: underline; }
-    </style>
-        <!-- REGISTER FORM -->
-    <form id="registerForm" class="form">
-        <h3><i class="fas fa-user-plus"></i> Join Our Family</h3>
-        
-        <div class="input-group">
-            <label><i class="fas fa-user"></i> Full Name</label>
-            <input type="text" id="regName" placeholder="Your full name" required>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-mobile-alt"></i> Mobile Number</label>
-            <input type="text" id="regMobile" placeholder="10-digit number" maxlength="10" required>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-lock"></i> Create Password</label>
-            <input type="password" id="regPassword" placeholder="Min 6 characters" required>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-lock"></i> Confirm Password</label>
-            <input type="password" id="regConfirmPassword" placeholder="Type again" required>
-        </div>
-        
-        <div class="terms">
-            <input type="checkbox" id="agreeTerms" required>
-            <label for="agreeTerms">I agree to Terms & Conditions</label>
-        </div>
-        
-        <button type="submit" class="btn">
-            <i class="fas fa-user-plus"></i> CREATE ACCOUNT
-        </button>
-    </form>
-
-    <style>
-        .terms {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 25px 0;
-            padding: 18px;
-            background: rgba(255,152,0,0.1);
-            border-radius: 10px;
-            border-left: 4px solid #ff9800;
-        }
-        .terms input { width: 22px; height: 22px; }
-        .terms label {
-            color: #ddd;
-            font-size: 0.95rem;
-            cursor: pointer;
-        }
-        /* Notification */
-        #notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 18px 28px;
-            background: #4CAF50;
-            color: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            z-index: 1000;
-            display: none;
-            font-weight: 600;
-            animation: slideIn 0.3s;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    </style>
-</div> <!-- End of .form-container -->
-          <!-- FEATURES -->
-    <div class="features">
-        <h3><i class="fas fa-star"></i> Why Choose Rudraksh?</h3>
-        <div class="features-grid">
-            <div class="feature-card">
-                <i class="fas fa-gamepad"></i>
-                <h4>All Games Available</h4>
-                <p>Complete range of matka games</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-shield-alt"></i>
-                <h4>100% Secure</h4>
-                <p>Bank-level security</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-headset"></i>
-                <h4>24/7 Support</h4>
-                <p>Always available for you</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-trophy"></i>
-                <h4>Premium Experience</h4>
-                <p>Professional platform</p>
-            </div>
-        </div>
+    <!-- REGISTRATION FORM -->
+<form id="registerForm" class="form">
+    <h3 class="form-title">
+        <i class="fas fa-user-plus"></i> Join Premium Platform
+    </h3>
+    
+    <div class="form-group">
+        <label for="regName">
+            <i class="fas fa-user"></i> Full Name
+        </label>
+        <input type="text" id="regName" placeholder="Enter your full name" required>
     </div>
+    
+    <div class="form-group">
+        <label for="regMobile">
+            <i class="fas fa-mobile-alt"></i> Mobile Number
+        </label>
+        <input type="text" id="regMobile" placeholder="Enter 10-digit mobile number" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="regPassword">
+            <i class="fas fa-lock"></i> Create Password
+        </label>
+        <input type="password" id="regPassword" placeholder="Create a strong password" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="regConfirmPassword">
+            <i class="fas fa-lock"></i> Confirm Password
+        </label>
+        <input type="password" id="regConfirmPassword" placeholder="Confirm your password" required>
+    </div>
+    
+    <div class="terms">
+        <input type="checkbox" id="agreeTerms" required>
+        <label for="agreeTerms">
+            I agree to the Terms & Conditions
+        </label>
+    </div>
+    
+    <button type="submit" class="btn-submit">
+        <i class="fas fa-user-plus"></i> CREATE ACCOUNT
+    </button>
+</form>
+
+<style>
+    /* Form Styles */
+    .form-title {
+        color: #ff9800;
+        margin-bottom: 25px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .form-group {
+        margin-bottom: 22px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #4fc3f7;
+        font-size: 1.05rem;
+    }
+    .form-group label i {
+        margin-right: 10px;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 18px 20px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+    .form-group input:focus {
+        outline: none;
+        border-color: #ff9800;
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 15px rgba(255, 152, 0, 0.2);
+    }
+    .btn-submit {
+        width: 100%;
+        padding: 20px;
+        background: linear-gradient(to right, #ff9800, #ff5722);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.3rem;
+        font-weight: 800;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(255, 152, 0, 0.4);
+    }
+    .btn-submit i {
+        margin-right: 12px;
+        font-size: 1.4rem;
+    }
+    .form-footer {
+        text-align: center;
+        margin-top: 22px;
+    }
+    #forgotPassword {
+        color: #4fc3f7;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    #forgotPassword:hover {
+        text-decoration: underline;
+    }
+    .terms {
+        display: flex;
+        align-items: center;
+        margin: 25px 0;
+        padding: 18px;
+        background: rgba(255, 152, 0, 0.1);
+        border-radius: 10px;
+    }
+    .terms input {
+        margin-right: 12px;
+        transform: scale(1.3);
+    }
+    .terms label {
+        color: #ddd;
+        font-size: 0.95rem;
+    }
+</style>
+        <!-- FEATURES SECTION -->
+        <div class="features">
+            <h3><i class="fas fa-star"></i> Why Choose Rudraksh?</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> All Matka Games Available</li>
+                <li><i class="fas fa-check-circle"></i> 100% Secure Platform</li>
+                <li><i class="fas fa-check-circle"></i> 24/7 Customer Support</li>
+                <li><i class="fas fa-check-circle"></i> Premium Gaming Experience</li>
+                <li><i class="fas fa-check-circle"></i> Instant Account Setup</li>
+            </ul>
+        </div>
+    </div> <!-- End of auth-container -->
 
     <!-- FOOTER -->
-    <div class="footer">
-        <p><i class="fas fa-phone"></i> Support: <strong>9328435505</strong></p>
-        <p><i class="fab fa-whatsapp"></i> WhatsApp: <strong>9328435505</strong></p>
-        <p class="copyright">© 2024 Rudraksh Satta Matka</p>
-    </div>
+    <footer class="footer">
+        <div class="footer-contact">
+            <p><i class="fas fa-phone"></i> Call: <strong>9328435505</strong></p>
+            <p><i class="fab fa-whatsapp"></i> WhatsApp: <strong>9328435505</strong></p>
+            <p><i class="fas fa-clock"></i> Support: <strong>24/7 Available</strong></p>
+        </div>
+        <p class="copyright">
+            © 2024 Rudraksh Satta Matka. All rights reserved.
+        </p>
+    </footer>
 
     <style>
+        /* Features */
         .features {
+            margin-top: 30px;
             padding: 25px;
-            margin: 20px;
-            background: rgba(255,152,0,0.1);
+            background: rgba(255, 152, 0, 0.1);
             border-radius: 15px;
             border-left: 5px solid #ff9800;
         }
@@ -372,76 +427,118 @@
             font-size: 1.4rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+        .features ul {
+            list-style: none;
+            padding-left: 10px;
         }
-        .feature-card {
-            background: rgba(255,255,255,0.05);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border: 2px solid rgba(255,152,0,0.3);
-            transition: all 0.3s;
+        .features li {
+            padding: 12px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .feature-card:hover {
-            border-color: #ff9800;
-            transform: translateY(-5px);
+        .features li:last-child {
+            border-bottom: none;
         }
-        .feature-card i {
-            font-size: 2.2rem;
+        .features li i {
             color: #4caf50;
-            margin-bottom: 12px;
+            font-size: 1.2rem;
         }
-        .feature-card h4 {
-            color: #ff9800;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-        }
-        .feature-card p {
-            color: #ddd;
-            font-size: 0.9rem;
-        }
+        /* Footer */
         .footer {
-            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
             padding: 25px;
-            background: rgba(0,0,0,0.7);
+            text-align: center;
             border-top: 2px solid #ff9800;
         }
-        .footer p {
-            margin: 12px 0;
-            font-size: 1rem;
+        .footer-contact {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
             color: #ddd;
         }
-        .footer strong { color: #ff9800; }
-        .footer i { margin: 0 8px; color: #4fc3f7; }
+        .footer-contact strong {
+            color: #ff9800;
+        }
         .copyright {
             color: #aaa;
             font-size: 0.9rem;
             margin-top: 15px;
         }
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 18px 28px;
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
         /* Mobile Responsive */
         @media (max-width: 600px) {
-            .container { margin: 15px; border-radius: 15px; }
-            .logo-text h1 { font-size: 1.9rem; }
-            .logo-text h2 { font-size: 1.4rem; }
-            .contact-bar { flex-direction: column; gap: 12px; text-align: center; }
-            .features-grid { grid-template-columns: 1fr; }
-            .tab-btn { padding: 16px; font-size: 1rem; }
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            .main-heading {
+                font-size: 2rem;
+            }
+            .sub-heading {
+                font-size: 1.5rem;
+            }
+            .contact-bar {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+                padding: 15px;
+            }
+            .tabs {
+                margin: 20px;
+            }
+            .tab {
+                padding: 16px;
+                font-size: 1rem;
+            }
+            .auth-container {
+                padding: 0 20px 20px 20px;
+            }
+            .footer-contact {
+                flex-direction: column;
+                gap: 12px;
+            }
         }
     </style>
-</div> <!-- End of .container -->
+</div> <!-- End of container -->
 
 <!-- NOTIFICATION -->
-<div id="notification"></div>
+<div id="notification" class="notification"></div>
     <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script>
-        // 1. FIREBASE CONFIG (USE YOUR CONFIG)
+        // ================= FIREBASE CONFIG =================
         const firebaseConfig = {
             apiKey: "AIzaSyDVxg4EZHm4D2zMrz_ndLzcqx3wkhdPdVc",
             authDomain: "rudraksh-d74c3.firebaseapp.com",
@@ -451,20 +548,32 @@
             appId: "1:270620722307:web:5a6454b69e12c201f6c7b6"
         };
         
-        // 2. INITIALIZE FIREBASE
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         
-        // 3. SHOW NOTIFICATION
+        // ================= HOW TO CHANGE YOUR PHOTO =================
+        // TO CHANGE THE PHOTO:
+        // 1. Save your new photo in the SAME FOLDER as index.html
+        // 2. Rename it to EXACTLY: "YOUR-PHOTO.jpg"
+        // 3. Replace the old photo file
+        // OR: Change the filename in the HTML code above
+        
+        // ================= NOTIFICATION =================
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             notification.textContent = message;
-            notification.style.background = type === 'error' ? '#f44336' : '#4CAF50';
+            notification.style.background = type === 'error' 
+                ? 'linear-gradient(to right, #ff4444, #cc0000)' 
+                : 'linear-gradient(to right, #4CAF50, #2E7D32)';
             notification.style.display = 'block';
-            setTimeout(() => { notification.style.display = 'none'; }, 4000);
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 4000);
         }
         
-        // 4. TAB SWITCHING
+        // ================= TAB SWITCHING =================
         document.getElementById('loginTab').addEventListener('click', function() {
             this.classList.add('active');
             document.getElementById('registerTab').classList.remove('active');
@@ -479,32 +588,44 @@
             document.getElementById('loginForm').classList.remove('active');
         });
         
-        // 5. LOGIN FORM
+        // ================= LOGIN FORM =================
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
             const mobile = document.getElementById('loginMobile').value.trim();
             const password = document.getElementById('loginPassword').value;
             
             if (!/^[0-9]{10}$/.test(mobile)) {
-                showNotification('Enter 10-digit mobile number', 'error');
+                showNotification('Enter valid 10-digit mobile number', 'error');
                 return;
             }
             
             const email = mobile + '@rudrakshmatka.com';
             
             try {
-                showNotification('Logging in...');
-                await auth.signInWithEmailAndPassword(email, password);
-                showNotification('Login successful!');
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+                showNotification('Logging in...', 'success');
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                showNotification('Welcome back! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+                
             } catch (error) {
-                showNotification('Login failed: ' + error.message, 'error');
+                if (error.code === 'auth/user-not-found') {
+                    showNotification('Account not found. Please register.', 'error');
+                } else if (error.code === 'auth/wrong-password') {
+                    showNotification('Incorrect password.', 'error');
+                } else {
+                    showNotification('Login failed. Try again.', 'error');
+                }
             }
         });
         
-        // 6. REGISTER FORM (SAVES NAME)
+        // ================= REGISTRATION FORM =================
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
             const name = document.getElementById('regName').value.trim();
             const mobile = document.getElementById('regMobile').value.trim();
             const password = document.getElementById('regPassword').value;
@@ -512,30 +633,34 @@
             
             // Validation
             if (name.length < 3) {
-                showNotification('Name must be 3+ letters', 'error');
+                showNotification('Enter valid name (3+ letters)', 'error');
                 return;
             }
+            
             if (!/^[0-9]{10}$/.test(mobile)) {
-                showNotification('Enter 10-digit mobile', 'error');
+                showNotification('Enter 10-digit mobile number', 'error');
                 return;
             }
+            
             if (password.length < 6) {
-                showNotification('Password 6+ characters', 'error');
+                showNotification('Password must be 6+ characters', 'error');
                 return;
             }
+            
             if (password !== confirmPassword) {
-                showNotification('Passwords not match', 'error');
+                showNotification('Passwords do not match', 'error');
                 return;
             }
+            
             if (!document.getElementById('agreeTerms').checked) {
-                showNotification('Agree to terms', 'error');
+                showNotification('Please agree to Terms & Conditions', 'error');
                 return;
             }
             
             const email = mobile + '@rudrakshmatka.com';
             
             try {
-                showNotification('Creating account...');
+                showNotification('Creating premium account...', 'success');
                 
                 // 1. CREATE USER
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -546,49 +671,53 @@
                     displayName: name
                 });
                 
-                showNotification(`Welcome ${name}! Account created.`);
+                showNotification(`Welcome ${name} to Rudraksh Family! 🎉`, 'success');
                 
-                // 3. REDIRECT
+                // 3. REDIRECT TO DASHBOARD
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 3000);
                 
             } catch (error) {
                 if (error.code === 'auth/email-already-in-use') {
-                    showNotification('Mobile already registered', 'error');
+                    showNotification('Mobile number already registered. Please login.', 'error');
+                } else if (error.code === 'auth/weak-password') {
+                    showNotification('Password is too weak.', 'error');
                 } else {
-                    showNotification('Error: ' + error.message, 'error');
+                    showNotification('Registration failed. Try again.', 'error');
                 }
             }
         });
         
-        // 7. CHECK IF ALREADY LOGGED IN
+        // ================= FORGOT PASSWORD =================
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const mobile = prompt('Enter your registered mobile number:');
+            
+            if (mobile && /^[0-9]{10}$/.test(mobile)) {
+                const email = mobile + '@rudrakshmatka.com';
+                
+                auth.sendPasswordResetEmail(email)
+                    .then(() => {
+                        showNotification('Password reset link sent! Check your email.', 'success');
+                    })
+                    .catch((error) => {
+                        showNotification('Error: ' + error.message, 'error');
+                    });
+            } else if (mobile) {
+                showNotification('Please enter 10-digit number', 'error');
+            }
+        });
+        
+        // ================= CHECK LOGIN STATUS =================
         auth.onAuthStateChanged((user) => {
             if (user) {
                 window.location.href = 'dashboard.html';
             }
         });
         
-        // 8. ADD FORGOT PASSWORD
-        function forgotPassword() {
-            const mobile = prompt('Enter your mobile number:');
-            if (mobile && /^[0-9]{10}$/.test(mobile)) {
-                const email = mobile + '@rudrakshmatka.com';
-                auth.sendPasswordResetEmail(email)
-                    .then(() => showNotification('Reset link sent!'))
-                    .catch((error) => showNotification('Error: ' + error.message, 'error'));
-            }
-        }
-        
-        // Add forgot password link
-        const helpText = document.querySelector('.help-text');
-        const forgotLink = document.createElement('p');
-        forgotLink.innerHTML = `<a href="#" onclick="forgotPassword()" style="color: #2196F3; cursor: pointer;">Forgot Password?</a>`;
-        forgotLink.style.marginTop = '10px';
-        forgotLink.style.textAlign = 'center';
-        helpText.appendChild(forgotLink);
-        
-        console.log('Rudraksh App Ready');
+        console.log('Rudraksh Premium Platform loaded successfully!');
     </script>
 </body>
 </html>
