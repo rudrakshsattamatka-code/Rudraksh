@@ -3,648 +3,707 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RUDRAKSH</title>
+    <title>Shreematka Premium | Rudraksh</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for classic look -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
         }
 
         :root {
-            --primary-saffron: #FF9933;
-            --secondary-saffron: #FF8C00;
-            --white: #ffffff;
-            --dark-saffron: #E67E22;
-            --gray: #6b7280;
-            --green: #28a745;
-            --gold: #FFD700;
+            --gold-primary: #D4AF37;
+            --gold-secondary: #B8860B;
+            --gold-light: #F5E7A1;
+            --gold-dark: #8B7355;
+            --saffron-light: #FFE5B4;
+            --saffron-medium: #FF9933;
+            --saffron-dark: #E67E22;
+            --classic-cream: #FAF3E0;
+            --classic-white: #FFFFFF;
+            --classic-gray: #7D7D7D;
+            --classic-dark: #2C2C2C;
+            --elegant-border: #D2B48C;
         }
 
         body {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, var(--classic-cream) 0%, var(--classic-white) 100%);
             min-height: 100vh;
-            color: #333;
+            color: var(--classic-dark);
+            font-family: 'Montserrat', sans-serif;
+            padding-bottom: 80px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 15px;
+            padding: 0 20px;
         }
 
-        /* Header Styles */
-        header {
-            background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
-            padding: 10px 0;
-            box-shadow: 0 2px 10px rgba(255, 153, 51, 0.2);
+        /* Ultra Classic Header */
+        .classic-header {
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--saffron-dark) 100%);
+            padding: 15px 0;
+            border-bottom: 5px solid var(--gold-primary);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+            position: relative;
         }
 
-        .header-top {
+        .classic-header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--gold-primary), var(--gold-secondary), var(--gold-primary));
+        }
+
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
         }
 
-        .control-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--white);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 20px;
-            border-radius: 5px;
+        .classic-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .classic-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--classic-white);
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            padding: 10px 24px;
+            border-radius: 25px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(5px);
         }
 
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .classic-btn:hover {
+            background: rgba(212, 175, 55, 0.3);
+            border-color: var(--gold-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
-        /* Logo Section - Full Width */
-        .logo-section {
-            width: 100%;
+        /* Classic Logo */
+        .classic-logo {
             text-align: center;
-            margin: 5px 0;
+            margin: 20px 0;
+            position: relative;
         }
+
+        .classic-logo:before, .classic-logo:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold-primary), transparent);
+        }
+
+        .classic-logo:before { left: 0; }
+        .classic-logo:after { right: 0; }
 
         #logoImage {
             width: 100%;
             max-width: 400px;
             height: auto;
-            border-radius: 5px;
+            border: 3px solid var(--gold-primary);
+            border-radius: 10px;
+            padding: 10px;
+            background: var(--classic-white);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
         }
-        /* Premium Title */
-.premium-title {
-    background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    margin: 10px 0;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.premium-title h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
-}
-
-/* Live Time Section */
-.live-section {
-    background: var(--white);
-    padding: 15px;
-    border-radius: 8px;
-    margin: 10px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-align: center;
-    border-left: 5px solid var(--primary-saffron);
-}
-
-.live-badge {
-    background: #FF0000;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 14px;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-.time-display {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--primary-saffron);
-    margin-bottom: 5px;
-    font-family: 'Courier New', monospace;
-}
-
-.date-display {
-    font-size: 14px;
-    color: var(--gray);
-}
-
-/* Markets Grid */
-.markets-section {
-    margin: 20px 0;
-}
-
-.markets-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
-}
-
-/* Market Card */
-.market-card {
-    background: var(--white);
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: all 0.3s;
-    border-top: 4px solid var(--primary-saffron);
-    text-align: center;
-}
-
-.market-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.15);
-}
-
-.market-name {
-    color: var(--primary-saffron);
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.market-time {
-    color: var(--gray);
-    font-size: 16px;
-    margin-bottom: 10px;
-            }
-        /* Daily Passing Section */
-.daily-passing {
-    background: var(--white);
-    padding: 20px;
-    border-radius: 8px;
-    margin: 20px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    border-left: 5px solid #FF0000;
-}
-
-.daily-title {
-    color: #FF0000;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.passing-text {
-    color: #333;
-    font-size: 18px;
-    line-height: 1.6;
-    text-align: center;
-    padding: 15px;
-    background: #fff8f0;
-    border-radius: 5px;
-    border: 1px solid #FFE0B2;
-}
-
-/* Premium Game Contact Section */
-.premium-contact-section {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    color: white;
-    padding: 30px;
+        /* Classic Time Display */
+.classic-time-section {
+    background: var(--classic-white);
+    padding: 25px;
     border-radius: 15px;
-    margin: 30px 0;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin: 25px 0;
+    border: 2px solid var(--elegant-border);
+    box-shadow: 0 6px 20px rgba(139, 115, 85, 0.1);
+    text-align: center;
     position: relative;
     overflow: hidden;
-    border: 3px solid var(--gold);
 }
 
-.premium-contact-section:before {
+.classic-time-section:before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 5px;
-    background: linear-gradient(to right, var(--gold), var(--primary-saffron), var(--gold));
+    background: linear-gradient(to right, var(--gold-primary), var(--saffron-medium), var(--gold-primary));
 }
 
-.premium-header {
-    text-align: center;
-    margin-bottom: 25px;
+.live-badge-classic {
+    background: linear-gradient(135deg, #C41E3A, #DC143C);
+    color: white;
+    padding: 8px 25px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 16px;
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
 }
 
-.premium-header h2 {
-    font-size: 28px;
+.time-display-classic {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold-dark);
     margin-bottom: 10px;
-    color: var(--gold);
-    text-transform: uppercase;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.date-display-classic {
+    font-size: 18px;
+    color: var(--classic-gray);
+    font-weight: 400;
     letter-spacing: 1px;
 }
 
-.premium-header p {
-    font-size: 18px;
-    opacity: 0.9;
-}
-
-.ratio-badge {
-    display: inline-block;
-    background: linear-gradient(to right, var(--green), #20c997);
-    color: white;
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-}
-
-.contact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 25px;
-}
-
-.contact-card {
-    background: rgba(255, 255, 255, 0.1);
+/* Classic Premium Title */
+.classic-premium-title {
+    background: linear-gradient(135deg, var(--gold-light), var(--classic-white));
     padding: 25px;
-    border-radius: 10px;
+    border-radius: 15px;
+    margin: 25px 0;
+    border: 3px solid var(--gold-primary);
     text-align: center;
-    transition: transform 0.3s;
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    position: relative;
+    overflow: hidden;
 }
 
-.contact-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.15);
+.classic-premium-title:before {
+    content: '✦';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--gold-primary);
+    font-size: 24px;
+    background: var(--classic-cream);
+    padding: 0 20px;
+    z-index: 1;
 }
 
-.contact-icon {
-    font-size: 40px;
-    color: var(--gold);
-    margin-bottom: 15px;
+.classic-premium-title h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold-dark);
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 1.5px;
+    position: relative;
+    z-index: 2;
+    }
+        /* Classic Daily Passing Section */
+.classic-daily-passing {
+    background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
+    padding: 30px;
+    border-radius: 15px;
+    margin: 30px 0;
+    border: 2px solid var(--gold-primary);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+    position: relative;
 }
 
-.contact-title {
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: var(--gold);
-}
-
-.contact-number {
+.classic-daily-title {
+    color: var(--gold-dark);
     font-size: 22px;
     font-weight: 700;
-    color: white;
-    margin: 10px 0;
+    margin-bottom: 25px;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    position: relative;
+    padding-bottom: 15px;
 }
 
-.contact-note {
-    font-size: 14px;
-    opacity: 0.8;
-    margin-top: 10px;
+.classic-daily-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold-primary), transparent);
 }
-        /* Market Results Modal */
-.modal {
+
+.classic-passing-text {
+    color: var(--classic-dark);
+    font-size: 20px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    border: 1px solid var(--elegant-border);
+    min-height: 80px;
+    font-weight: 500;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Classic Markets Grid */
+.classic-markets-section {
+    margin: 40px 0;
+}
+
+.classic-markets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* Classic Market Card */
+.classic-market-card {
+    background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 6px 20px rgba(139, 115, 85, 0.1);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid var(--elegant-border);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.classic-market-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(212, 175, 55, 0.2);
+    border-color: var(--gold-primary);
+}
+
+.classic-market-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, var(--gold-primary), var(--saffron-medium));
+}
+
+.classic-market-name {
+    color: var(--gold-dark);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 1px;
+}
+
+.classic-market-time {
+    color: var(--classic-gray);
+    font-size: 16px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.view-results-classic {
+    color: var(--gold-primary);
+    font-weight: 600;
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px dashed var(--gold-primary);
+    border-radius: 8px;
+    background: rgba(212, 175, 55, 0.05);
+    transition: all 0.3s;
+}
+
+.classic-market-card:hover .view-results-classic {
+    background: rgba(212, 175, 55, 0.1);
+    border-style: solid;
+    }
+        /* Classic Modal */
+.classic-modal {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
-    z-index: 1000;
+    background: rgba(44, 44, 44, 0.9);
+    z-index: 2000;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(5px);
 }
 
-.modal-content {
-    background: var(--white);
-    border-radius: 10px;
+.classic-modal-content {
+    background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
+    border-radius: 20px;
     width: 95%;
-    max-width: 500px;
-    max-height: 90vh;
+    max-width: 450px;
+    max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    border: 3px solid var(--gold-primary);
+    position: relative;
 }
 
-.modal-header {
-    background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
+.classic-modal-header {
+    background: linear-gradient(135deg, var(--gold-dark), var(--saffron-dark));
     color: white;
-    padding: 15px;
-    border-radius: 10px 10px 0 0;
+    padding: 25px;
+    border-radius: 20px 20px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-family: 'Playfair Display', serif;
 }
 
-.modal-header h2 {
+.classic-modal-header h2 {
     margin: 0;
-    font-size: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
-.close-modal {
+.classic-close-modal {
     background: none;
     border: none;
     color: white;
-    font-size: 24px;
+    font-size: 28px;
     cursor: pointer;
     padding: 0;
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.3s;
 }
 
-.modal-body {
-    padding: 20px;
+.classic-close-modal:hover {
+    transform: rotate(90deg);
 }
 
-/* Results Section */
-.results-section {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
+.classic-modal-body {
+    padding: 30px;
+}
+
+/* Classic Results Section */
+.classic-results-section {
+    margin-bottom: 30px;
+}
+
+.classic-result-bar {
+    background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
+    padding: 25px;
+    border-radius: 12px;
     margin-bottom: 20px;
+    border: 2px solid var(--elegant-border);
+    box-shadow: 0 4px 15px rgba(139, 115, 85, 0.08);
+    position: relative;
+    overflow: hidden;
 }
 
-.section-title {
-    color: var(--primary-saffron);
-    font-size: 16px;
+.classic-result-bar:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--gold-primary), var(--gold-secondary));
+}
+
+.classic-result-title {
+    color: var(--gold-dark);
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 15px;
-    text-align: center;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.5px;
 }
 
-.result-item {
-    background: white;
-    padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    border-left: 3px solid var(--primary-saffron);
-}
-
-.result-title {
-    color: var(--gray);
-    font-size: 14px;
-    margin-bottom: 5px;
-}
-
-.result-value {
-    font-size: 20px;
+.classic-result-value {
+    font-size: 32px;
     font-weight: 700;
-    color: var(--dark-saffron);
+    color: var(--saffron-dark);
     text-align: center;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.05);
+    border-radius: 10px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 2px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header-top {
-        flex-direction: column;
-        gap: 10px;
+/* Classic Footer */
+.classic-footer-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--gold-dark), var(--saffron-dark));
+    padding: 15px 0;
+    border-top: 3px solid var(--gold-primary);
+    z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(212, 175, 55, 0.2);
+}
+
+.classic-footer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.classic-footer-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--classic-white);
+    border: 2px solid rgba(212, 175, 55, 0.5);
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    backdrop-filter: blur(5px);
+    min-width: 150px;
+}
+
+.classic-footer-btn:hover {
+    background: rgba(212, 175, 55, 0.3);
+    border-color: var(--gold-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
     }
-    
-    .control-btn {
-        padding: 6px 15px;
-        font-size: 13px;
-    }
-    
-    #logoImage {
-        max-width: 300px;
-    }
-    
-    .markets-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .time-display {
-        font-size: 24px;
-    }
-    
-    .premium-title h1 {
-        font-size: 20px;
-    }
-    
-    .market-name {
-        font-size: 20px;
-    }
-    
-    .contact-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .premium-header h2 {
-        font-size: 24px;
-    }
-    }
-                @media (max-width: 480px) {
+                /* Responsive Design */
+        @media (max-width: 992px) {
+            .classic-markets-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .classic-controls {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .classic-markets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #logoImage {
+                max-width: 300px;
+            }
+            
+            .classic-footer-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .classic-footer-btn {
+                width: 90%;
+                min-width: auto;
+            }
+            
+            .time-display-classic {
+                font-size: 28px;
+            }
+            
+            .date-display-classic {
+                font-size: 16px;
+            }
+            
+            .classic-result-value {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
             #logoImage {
                 max-width: 250px;
             }
             
-            .time-display {
-                font-size: 20px;
-            }
-            
-            .date-display {
-                font-size: 12px;
-            }
-            
-            .market-card {
-                padding: 15px;
-            }
-            
-            .market-name {
-                font-size: 18px;
-            }
-            
-            .passing-text {
-                font-size: 16px;
-                padding: 10px;
-            }
-            
-            .premium-contact-section {
+            .classic-market-card {
                 padding: 20px;
             }
             
-            .contact-number {
+            .classic-market-name {
+                font-size: 20px;
+            }
+            
+            .time-display-classic {
+                font-size: 24px;
+            }
+            
+            .classic-premium-title h1 {
+                font-size: 24px;
+            }
+            
+            .classic-passing-text {
                 font-size: 18px;
+                padding: 20px;
             }
         }
 
-        /* Footer Controls */
-        .footer-controls {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron));
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(255, 153, 51, 0.2);
-            z-index: 100;
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .footer-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        ::-webkit-scrollbar-track {
+            background: var(--classic-cream);
+            border-radius: 4px;
         }
 
-        .footer-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--white);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 25px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--gold-primary), var(--gold-secondary));
+            border-radius: 4px;
         }
 
-        .footer-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, var(--saffron-medium), var(--saffron-dark));
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
+    <!-- Ultra Classic Header -->
+    <header class="classic-header">
         <div class="container">
-            <div class="header-top">
-                <button class="control-btn" onclick="goBack()">
-                    <i class="fas fa-arrow-left"></i> BACK
-                </button>
-                <button class="control-btn" onclick="logoutUser()">
-                    <i class="fas fa-sign-out-alt"></i> LOGOUT
-                </button>
+            <div class="header-content">
+                <div class="classic-controls">
+                    <button class="classic-btn" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i> BACK
+                    </button>
+                    <button class="classic-btn" onclick="logoutUser()">
+                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                    </button>
+                </div>
             </div>
             
-            <!-- Full Width Logo -->
-            <div class="logo-section">
-                <img id="logoImage" src="https://i.supaimg.com/2242c14d-f1da-4eb4-a998-70deaee422b2.jpg" alt="Shreematka Premium">
+            <!-- Classic Logo -->
+            <div class="classic-logo">
+                <img id="logoImage" src="https://via.placeholder.com/400x100/D4AF37/2C2C2C?text=SHREEMATKA+PREMIUM" alt="Shreematka Premium">
             </div>
         </div>
     </header>
     <!-- Main Content -->
 <main class="container">
-    <!-- Live Time Section -->
-    <div class="live-section">
-        <div class="live-badge">
+    <!-- Classic Time Display -->
+    <div class="classic-time-section">
+        <div class="live-badge-classic">
             <i class="fas fa-circle"></i> LIVE
         </div>
-        <div class="time-display" id="currentTime">11:30:01 AM</div>
-        <div class="date-display" id="currentDate">Tuesday, February 10, 2026</div>
+        <div class="time-display-classic" id="currentTime">11:30:01 AM</div>
+        <div class="date-display-classic" id="currentDate">Tuesday, February 10, 2026</div>
     </div>
 
-    <!-- Premium Title -->
-    <div class="premium-title">
-        <h1>RUDRAKSH</h1>
+    <!-- Classic Premium Title -->
+    <div class="classic-premium-title">
+        <h1>SHREEMATKA PREMIUM</h1>
     </div>
 
-    <!-- Daily Passing Results -->
-    <div class="daily-passing">
-        <div class="daily-title">DAILY PASSING RESULTS</div>
-        <div class="passing-text" id="dailyPassingText">
-        KALYAN -
+    <!-- Classic Daily Passing Section -->
+    <div class="classic-daily-passing">
+        <div class="classic-daily-title">DAILY PASSING RESULTS</div>
+        <div class="classic-passing-text" id="dailyPassingText">
+            <!-- This will be filled by JavaScript -->
         </div>
     </div>
 
-    <!-- Markets Grid -->
-    <div class="markets-section">
-        <div class="markets-grid" id="marketsGrid">
+    <!-- Classic Markets Grid -->
+    <div class="classic-markets-section">
+        <div class="classic-markets-grid" id="marketsGrid">
             <!-- Markets will be loaded by JavaScript -->
-        </div>
-    </div>
-
-    <!-- Premium Game Contact Section -->
-    <div class="premium-contact-section">
-        <div class="premium-header">
-            <h2>PREMIUM GAME CONTACT</h2>
-            <p>Get Expert Tips & High Accuracy Results</p>
-            <div class="ratio-badge">
-                <i class="fas fa-chart-line"></i> PASSING RATIO: 95%
-            </div>
-        </div>
-        
-        <div class="contact-grid">
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="contact-title">CALL FOR PREMIUM GAMES</div>
-                <div class="contact-number">9328435505</div>
-                <div class="contact-note">24/7 Available | Expert Support</div>
-            </div>
-            
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fab fa-whatsapp"></i>
-                </div>
-                <div class="contact-title">WHATSAPP FOR TIPS</div>
-                <div class="contact-number">9328435505</div>
-                <div class="contact-note">Instant Replies | Live Results</div>
-            </div>
-            
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <div class="contact-title">PREMIUM BENEFITS</div>
-                <div style="text-align: left; margin-top: 10px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <i class="fas fa-check-circle" style="color: var(--green); margin-right: 10px;"></i>
-                        <span>95% Passing Accuracy</span>
-                    </div>
-                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <i class="fas fa-check-circle" style="color: var(--green); margin-right: 10px;"></i>
-                        <span>Expert Analysis & Tips</span>
-                    </div>
-                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <i class="fas fa-check-circle" style="color: var(--green); margin-right: 10px;"></i>
-                        <span>Support : 10.00 AM TO 6.00 PM</span>
-                    </div>
-                    <div style="display: flex; align-items: center;">
-                        <i class="fas fa-check-circle" style="color: var(--green); margin-right: 10px;"></i>
-                        <span>Instant Results Update</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 25px; padding: 15px; background: rgba(255, 215, 0, 0.1); border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
-            <div style="font-size: 16px; color: var(--gold); margin-bottom: 5px;">
-                <i class="fas fa-star"></i> TRUSTED BY THOUSANDS OF PLAYERS
-            </div>
-            <div style="font-size: 14px; opacity: 0.9;">
-                Join our premium members for guaranteed accurate results and expert guidance
-            </div>
         </div>
     </div>
 </main>
 
-<!-- Footer Controls -->
-<div class="footer-controls">
+<!-- Classic Footer Controls -->
+<div class="classic-footer-controls">
     <div class="container">
-        <div class="footer-buttons">
-            <button class="footer-btn" onclick="goBack()">
+        <div class="classic-footer-buttons">
+            <button class="classic-footer-btn" onclick="goBack()">
                 <i class="fas fa-arrow-left"></i> BACK
             </button>
-            <button class="footer-btn" onclick="logoutUser()">
+            <button class="classic-footer-btn" onclick="logoutUser()">
                 <i class="fas fa-sign-out-alt"></i> LOGOUT
             </button>
         </div>
     </div>
 </div>
 
-<!-- Market Results Modal -->
-<div id="marketModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
+<!-- Classic Market Results Modal -->
+<div id="marketModal" class="classic-modal">
+    <div class="classic-modal-content">
+        <div class="classic-modal-header">
             <h2 id="modalMarketName">Market Results</h2>
-            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <button class="classic-close-modal" onclick="closeModal()">&times;</button>
         </div>
-        <div class="modal-body">
-            <div id="modalContent">
-                <!-- Results will be loaded here -->
+        <div class="classic-modal-body">
+            <div class="classic-results-section">
+                <div class="classic-result-bar">
+                    <div class="classic-result-title">1. O.T.C</div>
+                    <div class="classic-result-value" id="resultOTC">123</div>
+                </div>
+                
+                <div class="classic-result-bar">
+                    <div class="classic-result-title">2. OPEN</div>
+                    <div class="classic-result-value" id="resultOpen">456</div>
+                </div>
+                
+                <div class="classic-result-bar">
+                    <div class="classic-result-title">3. JODI</div>
+                    <div class="classic-result-value" id="resultJodi">78</div>
+                </div>
+                
+                <div class="classic-result-bar">
+                    <div class="classic-result-title">4. PANEL</div>
+                    <div class="classic-result-value" id="resultPanel">901</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button onclick="closeModal()" 
+                        style="background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary)); 
+                               color: white; 
+                               border: none; 
+                               padding: 15px 40px; 
+                               border-radius: 30px; 
+                               font-weight: 600; 
+                               cursor: pointer;
+                               font-family: 'Montserrat', sans-serif;
+                               letter-spacing: 1px;
+                               font-size: 16px;
+                               box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+                               transition: all 0.3s;">
+                    <i class="fas fa-check"></i> CLOSE RESULTS
+                </button>
             </div>
         </div>
     </div>
@@ -666,55 +725,56 @@
         const auth = firebase.auth();
 
         // ============================================================
-        // EDIT THIS SECTION TO UPDATE MARKET RESULTS
+        // ULTRA CLASSIC EDIT SECTION
         // ============================================================
         
-        // Daily Passing Results - EDIT THIS TEXT
-        const dailyPassingResults = "Today's Special: 56-78-90 | Strong: 34, 67, 89 | Support: 12, 45, 79";
+        // DAILY PASSING RESULT - EDIT THIS TEXT
+        const dailyPassingResult = "Today's Special: 123-456-789 | Jodi: 45, 78, 90 | Panel: 234, 567, 891";
+        // Change the text above to update daily passing results
         
-        // Market Results Data - EDIT THESE NUMBERS/LETTERS
+        // Results for each market - EDIT THESE VALUES
         const marketResults = {
             "KALYAN": {
-                "": "O.T.C",
-                "OPEN": "** ",
-                "SUPPORT": "**",
-                "JODI": "**"
+                otc: "123",
+                open: "456",
+                jodi: "78",
+                panel: "901"
             },
             "SRIDEVI": {
-                "": "O.T.C",
-                "OPEN": "2,3",
-                "SUPPORT": "22,33",
-                "JODI": "22"
+                otc: "234",
+                open: "567",
+                jodi: "89",
+                panel: "012"
             },
             "TIME BAZAR": {
-                "OPEN - PANEL": "01 23 45 67 89",
-                "STRONG": "10 32 54",
-                "SUPPORT": "76 98 21",
-                "JODI - PANEL": "01-23 45-67 89-01"
+                otc: "345",
+                open: "678",
+                jodi: "90",
+                panel: "123"
             },
             "MILAN DAY": {
-                "OPEN - PANEL": "02 24 46 68 80",
-                "STRONG": "12 34 56",
-                "SUPPORT": "78 90 13",
-                "JODI - PANEL": "02-24 46-68 80-02"
+                otc: "456",
+                open: "789",
+                jodi: "01",
+                panel: "234"
             },
             "SRIDEVI NIGHT": {
-                "OPEN - PANEL": "03 35 57 79 91",
-                "STRONG": "13 35 57",
-                "SUPPORT": "79 91 24",
-                "JODI - PANEL": "03-35 57-79 91-03"
+                otc: "567",
+                open: "890",
+                jodi: "12",
+                panel: "345"
             },
             "MILAN NIGHT": {
-                "OPEN - PANEL": "04 46 68 80 02",
-                "STRONG": "14 36 58",
-                "SUPPORT": "70 92 35",
-                "JODI - PANEL": "04-46 68-80 02-04"
+                otc: "678",
+                open: "901",
+                jodi: "23",
+                panel: "456"
             },
             "MAIN BAZAR": {
-                "OPEN - PANEL": "05 57 79 91 13",
-                "STRONG": "15 37 59",
-                "SUPPORT": "71 93 46",
-                "JODI - PANEL": "05-57 79-91 13-05"
+                otc: "789",
+                open: "012",
+                jodi: "34",
+                panel: "567"
             }
         };
         // ============================================================
@@ -725,7 +785,7 @@
         const markets = [
             { id: 1, name: "KALYAN", time: "2.00 PM" },
             { id: 2, name: "SRIDEVI", time: "10.30 AM" },
-            { id: 3, name: "TIME BAZAR", time: "12.00 PM" },
+            { id: 3, name: "TIME BAZAR", time: "1.30 PM" },
             { id: 4, name: "MILAN DAY", time: "1.30 PM" },
             { id: 5, name: "SRIDEVI NIGHT", time: "6.00 PM" },
             { id: 6, name: "MILAN NIGHT", time: "8.00 PM" },
@@ -739,7 +799,10 @@
         const dailyPassingText = document.getElementById('dailyPassingText');
         const marketModal = document.getElementById('marketModal');
         const modalMarketName = document.getElementById('modalMarketName');
-        const modalContent = document.getElementById('modalContent');
+        const resultOTC = document.getElementById('resultOTC');
+        const resultOpen = document.getElementById('resultOpen');
+        const resultJodi = document.getElementById('resultJodi');
+        const resultPanel = document.getElementById('resultPanel');
 
         // Check if user is logged in
         auth.onAuthStateChanged((user) => {
@@ -747,7 +810,7 @@
                 window.location.href = 'index.html';
             } else {
                 // Set daily passing text
-                dailyPassingText.textContent = dailyPassingResults;
+                dailyPassingText.textContent = dailyPassingResult;
                 
                 loadMarkets();
                 updateDateTime();
@@ -761,14 +824,14 @@
             
             markets.forEach(market => {
                 const marketCard = document.createElement('div');
-                marketCard.className = 'market-card';
+                marketCard.className = 'classic-market-card';
                 marketCard.onclick = () => openMarketResults(market);
                 
                 marketCard.innerHTML = `
-                    <div class="market-name">${market.name}</div>
-                    <div class="market-time">${market.time}</div>
-                    <div style="margin-top: 10px; color: var(--dark-saffron);">
-                        <i class="fas fa-chart-line"></i> View Results
+                    <div class="classic-market-name">${market.name}</div>
+                    <div class="classic-market-time">${market.time}</div>
+                    <div class="view-results-classic">
+                        <i class="fas fa-chart-line"></i> VIEW RESULTS
                     </div>
                 `;
                 
@@ -806,54 +869,21 @@
         function openMarketResults(market) {
             modalMarketName.textContent = `${market.name} - ${market.time}`;
             
-            // Get results for this market from marketResults object
+            // Get results for this market
             const results = marketResults[market.name] || {
-                "": "O.T.C",
-                "OPEN": "No results yet",
-                "SUPPORT": "No results yet",
-                "JODI": "No results yet"
+                otc: "000",
+                open: "000",
+                jodi: "00",
+                panel: "000"
             };
             
-            let resultsHTML = `
-                <div class="results-section">
-                    <div class="section-title">LATEST RESULTS</div>
-                    
-                    <div class="result-item">
-                        <div class="result-title"></div>
-                        <div class="result-value">${results["O.T.C"]}</div>
-                    </div>
-                    
-                    <div class="result-item">
-                        <div class="result-title">STRONG</div>
-                        <div class="result-value">${results["STRONG"]}</div>
-                    </div>
-                    
-                    <div class="result-item">
-                        <div class="result-title">SUPPORT</div>
-                        <div class="result-value">${results["SUPPORT"]}</div>
-                    </div>
-                    
-                    <div class="result-item">
-                        <div class="result-title">JODI - PANEL</div>
-                        <div class="result-value">${results["JODI - PANEL"]}</div>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <button onclick="closeModal()" 
-                            style="background: linear-gradient(to right, var(--primary-saffron), var(--dark-saffron)); 
-                                   color: white; 
-                                   border: none; 
-                                   padding: 10px 30px; 
-                                   border-radius: 5px; 
-                                   font-weight: 600; 
-                                   cursor: pointer;">
-                        <i class="fas fa-check"></i> OK
-                    </button>
-                </div>
-            `;
+            // Update the result values in the modal
+            resultOTC.textContent = results.otc;
+            resultOpen.textContent = results.open;
+            resultJodi.textContent = results.jodi;
+            resultPanel.textContent = results.panel;
             
-            modalContent.innerHTML = resultsHTML;
+            // Show the modal
             marketModal.style.display = 'flex';
         }
 
