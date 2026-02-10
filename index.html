@@ -3,100 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RUDRAKSH | Premium Platform</title>
+    <title>RUDRAKSH - Premium Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1a237e;
+            --secondary: #ff9800;
+            --accent: #4fc3f7;
+            --dark: #0d1b2a;
+            --light: #f8f9fa;
+            --success: #4caf50;
+            --error: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: white;
+            background: linear-gradient(135deg, var(--dark) 0%, #1b263b 100%);
+            color: var(--light);
             min-height: 100vh;
-            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            line-height: 1.6;
         }
+        
         .container {
             width: 100%;
-            max-width: 500px;
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 20px;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
             overflow: hidden;
-            border: 3px solid #ff9800;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
+        
         /* Header */
         .header {
-            background: linear-gradient(to right, #ff9800, #ff5722);
-            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, #283593 100%);
+            padding: 35px 30px;
             text-align: center;
             position: relative;
+            overflow: hidden;
         }
-        .logo-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Q50,80 0,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
         }
+        
+        .logo-container {
+            position: relative;
+            z-index: 2;
+        }
+        
         .logo-icon {
             font-size: 3.5rem;
-            color: white;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: spin 20s linear infinite;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: float 6s ease-in-out infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
-        .main-heading {
-            font-size: 2.5rem;
+        
+        .logo-text h1 {
+            font-size: 2.4rem;
             font-weight: 800;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        .sub-heading {
-            font-size: 1.8rem;
-            color: #ffeb3b;
-            font-weight: 700;
-            margin-top: 5px;
+        
+        .logo-text h2 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 15px;
+            opacity: 0.9;
         }
+        
         .tagline {
-            font-size: 1.3rem;
-            color: white;
-            background: rgba(0,0,0,0.3);
-            padding: 12px 25px;
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 25px;
             border-radius: 50px;
             display: inline-block;
-            margin-top: 15px;
-            border: 2px solid white;
-            font-weight: 600;
-        }
-        .tagline i {
-            margin: 0 10px;
-            color: #ffeb3b;
-        }
-        /* User Photo Section - YOU CAN CHANGE THIS */
-        .user-photo-section {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .user-photo {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid white;
-            object-fit: cover;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .photo-label {
-            display: block;
-            margin-top: 8px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
@@ -104,189 +115,371 @@
     <div class="container">
         <!-- HEADER -->
         <div class="header">
-            <div class="logo-section">
+            <div class="logo-container">
                 <div class="logo-icon">
                     <i class="fas fa-dharmachakra"></i>
                 </div>
-                <h1 class="main-heading">RUDRAKSH</h1>
-                <h2 class="sub-heading">SATTAMATKA ALL GAMES</h2>
-                <div class="tagline">
-                    <i class="fas fa-hands-helping"></i>
-                    Welcome to Our Family
-                    <i class="fas fa-hands-helping"></i>
-                </div>
-                
-                <!-- YOUR PHOTO SECTION - EASY TO CHANGE -->
-                <div class="user-photo-section">
-                    <!-- TO CHANGE PHOTO: Replace "YOUR-PHOTO.jpg" with your photo filename -->
-                    <img src="YOUR-PHOTO.jpg" alt="Rudraksh Logo" class="user-photo">
-                    <span class="photo-label">Trusted Since 2024</span>
+                <div class="logo-text">
+                    <h1>RUDRAKSH</h1>
+                    <h2>SATTAMATKA ALL GAMES</h2>
+                    <div class="tagline">
+                        <i class="fas fa-hands-helping"></i>
+                        Welcome to Our Premium Family
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- Contact Bar -->
+<div class="contact-bar">
+    <div class="contact-item">
+        <i class="fas fa-phone-alt"></i>
+        <span>Call: <a href="tel:9328435505">9328435505</a></span>
+    </div>
+    <div class="contact-item">
+        <i class="fab fa-whatsapp"></i>
+        <span>WhatsApp: <a href="https://wa.me/919328435505">9328435505</a></span>
+    </div>
+    <div class="contact-item">
+        <i class="fas fa-headset"></i>
+        <span>24/7 Support</span>
+    </div>
+</div>
 
-        <!-- CONTACT BAR -->
-        <div class="contact-bar">
-            <div class="contact-item">
-                <i class="fas fa-phone-alt"></i>
-                <span>Call: <a href="tel:9328435505">9328435505</a></span>
-            </div>
-            <div class="contact-item">
-                <i class="fab fa-whatsapp"></i>
-                <span>WhatsApp: <a href="https://wa.me/919328435505">9328435505</a></span>
-            </div>
-            <div class="contact-item">
-                <i class="fas fa-headset"></i>
-                <span>24/7 Support</span>
-            </div>
-        </div>
-        <style>
+<style>
     /* Contact Bar */
     .contact-bar {
-        background: linear-gradient(to right, #1a237e, #283593);
-        padding: 15px 20px;
+        background: rgba(26, 35, 126, 0.9);
+        padding: 18px 25px;
         display: flex;
         justify-content: space-around;
-        border-bottom: 3px solid #ff9800;
+        border-bottom: 3px solid var(--secondary);
         flex-wrap: wrap;
         gap: 15px;
     }
+    
     .contact-item {
         display: flex;
         align-items: center;
         gap: 10px;
-        color: white;
         font-size: 0.95rem;
+        transition: transform 0.3s;
     }
+    
+    .contact-item:hover {
+        transform: translateY(-2px);
+    }
+    
     .contact-item i {
-        color: #ffeb3b;
+        color: var(--secondary);
         font-size: 1.1rem;
     }
+    
     .contact-item a {
         color: white;
         text-decoration: none;
         font-weight: 600;
+        transition: color 0.3s;
     }
+    
     .contact-item a:hover {
-        color: #ff9800;
-        text-decoration: underline;
+        color: var(--accent);
     }
+    
     /* Tabs */
     .tabs {
         display: flex;
-        background: rgba(255, 255, 255, 0.1);
-        margin: 25px;
+        background: rgba(255, 255, 255, 0.08);
+        margin: 30px;
         border-radius: 12px;
         overflow: hidden;
-        padding: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .tab {
+    
+    .tab-btn {
         flex: 1;
-        padding: 18px;
-        background: none;
+        padding: 20px;
         border: none;
-        color: white;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.7);
         font-size: 1.1rem;
-        font-weight: 700;
+        font-weight: 600;
         cursor: pointer;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
     }
-    .tab.active {
-        background: linear-gradient(to right, #ff9800, #ff5722);
+    
+    .tab-btn.active {
+        background: var(--secondary);
+        color: white;
         box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
     }
+    
     /* Forms Container */
-    .auth-container {
-        padding: 0 25px 25px 25px;
+    .form-container {
+        padding: 0 30px 30px;
     }
+    
     .form {
         display: none;
-        animation: fadeIn 0.5s ease;
+        animation: fadeIn 0.4s ease-out;
     }
+    
     .form.active {
         display: block;
     }
+    
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
 </style>
 
-<!-- TABS -->
+<!-- Tabs -->
 <div class="tabs">
-    <button id="loginTab" class="tab active">LOGIN</button>
-    <button id="registerTab" class="tab">REGISTER</button>
+    <button id="loginTab" class="tab-btn active">LOGIN</button>
+    <button id="registerTab" class="tab-btn">REGISTER</button>
 </div>
 
-<!-- AUTH CONTAINER -->
-<div class="auth-container">
+<!-- Forms Container -->
+<div class="form-container">
     <!-- LOGIN FORM -->
-    <form id="loginForm" class="form active">
-        <h3 class="form-title">
-            <i class="fas fa-sign-in-alt"></i> Member Login
-        </h3>
-        
-        <div class="form-group">
-            <label for="loginMobile">
-                <i class="fas fa-mobile-alt"></i> Mobile Number
-            </label>
-            <input type="text" id="loginMobile" placeholder="Enter 10-digit mobile number" required>
+<form id="loginForm" class="form active">
+    <h3 class="form-title">
+        <i class="fas fa-sign-in-alt"></i> Member Login
+    </h3>
+    
+    <div class="input-group">
+        <div class="input-label">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Mobile Number</span>
         </div>
-        
-        <div class="form-group">
-            <label for="loginPassword">
-                <i class="fas fa-lock"></i> Password
-            </label>
-            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+        <div class="input-wrapper">
+            <i class="input-icon fas fa-mobile-alt"></i>
+            <input type="text" id="loginMobile" class="input-field" placeholder="Enter 10-digit mobile number" maxlength="10" required>
         </div>
-        
-        <button type="submit" class="btn-submit">
-            <i class="fas fa-sign-in-alt"></i> LOGIN TO ACCOUNT
-        </button>
-        
-        <div class="form-footer">
-            <a href="#" id="forgotPassword">Forgot Password?</a>
+    </div>
+    
+    <div class="input-group">
+        <div class="input-label">
+            <i class="fas fa-lock"></i>
+            <span>Password</span>
         </div>
-    </form>
-    <!-- REGISTRATION FORM -->
+        <div class="input-wrapper">
+            <i class="input-icon fas fa-lock"></i>
+            <input type="password" id="loginPassword" class="input-field" placeholder="Enter your password" required>
+            <button type="button" class="toggle-password" data-target="loginPassword">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="remember-me">
+        <input type="checkbox" id="rememberLogin">
+        <label for="rememberLogin">Remember me</label>
+    </div>
+    
+    <button type="submit" class="btn-submit">
+        <i class="fas fa-sign-in-alt"></i> LOGIN TO ACCOUNT
+    </button>
+    
+    <div class="form-footer">
+        <a href="#" id="forgotPassword">Forgot Password?</a>
+    </div>
+</form>
+
+<style>
+    /* Form Styles */
+    .form-title {
+        color: var(--accent);
+        margin-bottom: 30px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .input-group {
+        margin-bottom: 25px;
+    }
+    
+    .input-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--accent);
+        font-weight: 600;
+        margin-bottom: 12px;
+        font-size: 1.05rem;
+    }
+    
+    .input-wrapper {
+        position: relative;
+    }
+    
+    .input-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.1rem;
+    }
+    
+    .input-field {
+        width: 100%;
+        padding: 18px 20px 18px 50px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: white;
+        font-size: 1.05rem;
+        transition: all 0.3s;
+    }
+    
+    .input-field:focus {
+        outline: none;
+        border-color: var(--secondary);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+    }
+    
+    .toggle-password {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        font-size: 1.1rem;
+    }
+    
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 20px 0;
+    }
+    
+    .remember-me input {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .remember-me label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+        cursor: pointer;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        padding: 20px;
+        background: linear-gradient(135deg, var(--secondary) 0%, #ff5722 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(255, 152, 0, 0.4);
+    }
+    
+    .form-footer {
+        text-align: center;
+        margin-top: 25px;
+    }
+    
+    #forgotPassword {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: color 0.3s;
+    }
+    
+    #forgotPassword:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+    }
+</style>
+<!-- REGISTRATION FORM -->
 <form id="registerForm" class="form">
     <h3 class="form-title">
         <i class="fas fa-user-plus"></i> Join Premium Platform
     </h3>
     
-    <div class="form-group">
-        <label for="regName">
-            <i class="fas fa-user"></i> Full Name
-        </label>
-        <input type="text" id="regName" placeholder="Enter your full name" required>
+    <div class="input-group">
+        <div class="input-label">
+            <i class="fas fa-user"></i>
+            <span>Full Name</span>
+        </div>
+        <div class="input-wrapper">
+            <i class="input-icon fas fa-user"></i>
+            <input type="text" id="regName" class="input-field" placeholder="Enter your full name" required>
+        </div>
     </div>
     
-    <div class="form-group">
-        <label for="regMobile">
-            <i class="fas fa-mobile-alt"></i> Mobile Number
-        </label>
-        <input type="text" id="regMobile" placeholder="Enter 10-digit mobile number" required>
+    <div class="input-group">
+        <div class="input-label">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Mobile Number</span>
+        </div>
+        <div class="input-wrapper">
+            <i class="input-icon fas fa-mobile-alt"></i>
+            <input type="text" id="regMobile" class="input-field" placeholder="10-digit mobile number" maxlength="10" required>
+        </div>
     </div>
     
-    <div class="form-group">
-        <label for="regPassword">
-            <i class="fas fa-lock"></i> Create Password
-        </label>
-        <input type="password" id="regPassword" placeholder="Create a strong password" required>
+    <div class="input-group">
+        <div class="input-label">
+            <i class="fas fa-lock"></i>
+            <span>Create Password</span>
+        </div>
+        <div class="input-wrapper">
+            <i class="input-icon fas fa-lock"></i>
+            <input type="password" id="regPassword" class="input-field" placeholder="Minimum 6 characters" required>
+            <button type="button" class="toggle-password" data-target="regPassword">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+        <div class="password-strength">
+            <div class="strength-bar"></div>
+            <span class="strength-text">Password strength: Weak</span>
+        </div>
     </div>
     
-    <div class="form-group">
-        <label for="regConfirmPassword">
-            <i class="fas fa-lock"></i> Confirm Password
-        </label>
-        <input type="password" id="regConfirmPassword" placeholder="Confirm your password" required>
+    <div class="input-group">
+        <div class="input-label">
+            <i class="fas fa-lock"></i>
+            <span>Confirm Password</span>
+        </div>
+        <div class="input-wrapper">
+            <i class="input-icon fas fa-lock"></i>
+            <input type="password" id="regConfirmPassword" class="input-field" placeholder="Re-enter password" required>
+            <button type="button" class="toggle-password" data-target="regConfirmPassword">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
     </div>
     
     <div class="terms">
         <input type="checkbox" id="agreeTerms" required>
         <label for="agreeTerms">
-            I agree to the Terms & Conditions
+            I agree to the <a href="#" class="terms-link">Terms & Conditions</a> and <a href="#" class="terms-link">Privacy Policy</a>
         </label>
     </div>
     
@@ -296,249 +489,324 @@
 </form>
 
 <style>
-    /* Form Styles */
-    .form-title {
-        color: #ff9800;
-        margin-bottom: 25px;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 12px;
+    /* Password Strength */
+    .password-strength {
+        margin-top: 12px;
     }
-    .form-group {
-        margin-bottom: 22px;
+    
+    .strength-bar {
+        height: 6px;
+        width: 0%;
+        background: var(--error);
+        border-radius: 3px;
+        margin-bottom: 6px;
+        transition: all 0.3s;
     }
-    .form-group label {
-        display: block;
-        margin-bottom: 10px;
-        font-weight: 600;
-        color: #4fc3f7;
-        font-size: 1.05rem;
+    
+    .strength-text {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
     }
-    .form-group label i {
-        margin-right: 10px;
-    }
-    .form-group input {
-        width: 100%;
-        padding: 18px 20px;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.08);
-        color: white;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-    }
-    .form-group input:focus {
-        outline: none;
-        border-color: #ff9800;
-        background: rgba(255, 255, 255, 0.12);
-        box-shadow: 0 0 15px rgba(255, 152, 0, 0.2);
-    }
-    .btn-submit {
-        width: 100%;
-        padding: 20px;
-        background: linear-gradient(to right, #ff9800, #ff5722);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 1.3rem;
-        font-weight: 800;
-        cursor: pointer;
-        margin-top: 15px;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    .btn-submit:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(255, 152, 0, 0.4);
-    }
-    .btn-submit i {
-        margin-right: 12px;
-        font-size: 1.4rem;
-    }
-    .form-footer {
-        text-align: center;
-        margin-top: 22px;
-    }
-    #forgotPassword {
-        color: #4fc3f7;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1rem;
-    }
-    #forgotPassword:hover {
-        text-decoration: underline;
-    }
+    
+    /* Terms */
     .terms {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
+        gap: 12px;
         margin: 25px 0;
-        padding: 18px;
-        background: rgba(255, 152, 0, 0.1);
-        border-radius: 10px;
+        padding: 22px;
+        background: rgba(255, 152, 0, 0.08);
+        border-radius: 12px;
+        border-left: 4px solid var(--secondary);
     }
+    
     .terms input {
-        margin-right: 12px;
-        transform: scale(1.3);
+        margin-top: 3px;
+        width: 20px;
+        height: 20px;
     }
+    
     .terms label {
-        color: #ddd;
+        color: rgba(255, 255, 255, 0.9);
         font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    .terms-link {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .terms-link:hover {
+        text-decoration: underline;
+    }
+    
+    /* Notification */
+    .notification {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        padding: 20px 30px;
+        background: var(--success);
+        color: white;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        display: none;
+        font-weight: 600;
+        animation: slideIn 0.4s ease-out;
+        max-width: 350px;
+    }
+    
+    .notification.error {
+        background: var(--error);
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateX(100px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
 </style>
-        <!-- FEATURES SECTION -->
-        <div class="features">
-            <h3><i class="fas fa-star"></i> Why Choose Rudraksh?</h3>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> All Matka Games Available</li>
-                <li><i class="fas fa-check-circle"></i> 100% Secure Platform</li>
-                <li><i class="fas fa-check-circle"></i> 24/7 Customer Support</li>
-                <li><i class="fas fa-check-circle"></i> Premium Gaming Experience</li>
-                <li><i class="fas fa-check-circle"></i> Instant Account Setup</li>
-            </ul>
-        </div>
-    </div> <!-- End of auth-container -->
+    </div> <!-- End of form-container -->
 
-    <!-- FOOTER -->
+    <!-- Features Section -->
+    <div class="features">
+        <h3 class="features-title">
+            <i class="fas fa-crown"></i> Premium Benefits
+        </h3>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Secure Platform</h4>
+                <p>Bank-level encryption for all transactions</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h4>All Games</h4>
+                <p>Complete range of matka games available</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h4>24/7 Support</h4>
+                <p>Dedicated customer support team</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h4>Fast Service</h4>
+                <p>Quick deposits and withdrawals</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Section -->
+    <div class="support-section">
+        <h3 class="support-title">
+            <i class="fas fa-headset"></i> Need Immediate Help?
+        </h3>
+        <div class="support-options">
+            <div class="support-option">
+                <i class="fas fa-phone"></i>
+                <div>
+                    <h4>Call Us</h4>
+                    <p class="support-number">9328435505</p>
+                </div>
+            </div>
+            <div class="support-option">
+                <i class="fab fa-whatsapp"></i>
+                <div>
+                    <h4>WhatsApp</h4>
+                    <p class="support-number">9328435505</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-contact">
-            <p><i class="fas fa-phone"></i> Call: <strong>9328435505</strong></p>
-            <p><i class="fab fa-whatsapp"></i> WhatsApp: <strong>9328435505</strong></p>
-            <p><i class="fas fa-clock"></i> Support: <strong>24/7 Available</strong></p>
+        <div class="footer-links">
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+            <a href="tel:9328435505">Contact</a>
+            <a href="https://wa.me/919328435505">WhatsApp</a>
         </div>
         <p class="copyright">
-            © 2024 Rudraksh Satta Matka. All rights reserved.
+            © 2024 Rudraksh Premium Platform. All rights reserved.<br>
+            <small>For entertainment purposes only</small>
         </p>
     </footer>
 
     <style>
         /* Features */
         .features {
-            margin-top: 30px;
-            padding: 25px;
-            background: rgba(255, 152, 0, 0.1);
-            border-radius: 15px;
-            border-left: 5px solid #ff9800;
+            padding: 30px;
+            margin: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .features h3 {
-            color: #ffeb3b;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
+        
+        .features-title {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 30px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 12px;
         }
-        .features ul {
-            list-style: none;
-            padding-left: 10px;
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
         }
-        .features li {
-            padding: 12px 0;
-            font-size: 1.05rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.07);
+            padding: 22px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
         }
-        .features li:last-child {
-            border-bottom: none;
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+            background: rgba(255, 255, 255, 0.1);
         }
-        .features li i {
-            color: #4caf50;
+        
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .benefit-card h4 {
+            color: var(--accent);
+            margin-bottom: 8px;
             font-size: 1.2rem;
         }
-        /* Footer */
-        .footer {
-            background: rgba(0, 0, 0, 0.7);
+        
+        .benefit-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* Support Section */
+        .support-section {
+            background: rgba(26, 35, 126, 0.8);
             padding: 25px;
+            margin: 20px;
+            border-radius: 18px;
             text-align: center;
-            border-top: 2px solid #ff9800;
+            border: 2px solid var(--secondary);
         }
-        .footer-contact {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .footer-contact p {
+        
+        .support-title {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
-            color: #ddd;
+            justify-content: center;
+            gap: 12px;
         }
-        .footer-contact strong {
-            color: #ff9800;
+        
+        .support-options {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
         }
-        .copyright {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-top: 15px;
-        }
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 18px 28px;
-            background: linear-gradient(to right, #4CAF50, #2E7D32);
-            color: white;
+        
+        .support-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            z-index: 1000;
-            display: none;
+            min-width: 200px;
+        }
+        
+        .support-option i {
+            font-size: 2rem;
+            color: var(--secondary);
+        }
+        
+        .support-option h4 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .support-number {
+            color: var(--accent);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--accent);
+            text-decoration: none;
             font-weight: 600;
-            animation: slideIn 0.3s ease;
+            font-size: 0.95rem;
+            transition: color 0.3s;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
         }
-        /* Mobile Responsive */
-        @media (max-width: 600px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
-            .main-heading {
-                font-size: 2rem;
-            }
-            .sub-heading {
-                font-size: 1.5rem;
-            }
-            .contact-bar {
-                flex-direction: column;
-                text-align: center;
-                gap: 12px;
-                padding: 15px;
-            }
-            .tabs {
-                margin: 20px;
-            }
-            .tab {
-                padding: 16px;
-                font-size: 1rem;
-            }
-            .auth-container {
-                padding: 0 20px 20px 20px;
-            }
-            .footer-contact {
-                flex-direction: column;
-                gap: 12px;
-            }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .copyright small {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
         }
     </style>
 </div> <!-- End of container -->
 
-<!-- NOTIFICATION -->
+<!-- Notification -->
 <div id="notification" class="notification"></div>
-    <!-- FIREBASE -->
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    
     <script>
-        // ================= FIREBASE CONFIG =================
+        // ================= FIREBASE CONFIGURATION =================
         const firebaseConfig = {
             apiKey: "AIzaSyDVxg4EZHm4D2zMrz_ndLzcqx3wkhdPdVc",
             authDomain: "rudraksh-d74c3.firebaseapp.com",
@@ -552,20 +820,11 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         
-        // ================= HOW TO CHANGE YOUR PHOTO =================
-        // TO CHANGE THE PHOTO:
-        // 1. Save your new photo in the SAME FOLDER as index.html
-        // 2. Rename it to EXACTLY: "YOUR-PHOTO.jpg"
-        // 3. Replace the old photo file
-        // OR: Change the filename in the HTML code above
-        
-        // ================= NOTIFICATION =================
+        // ================= NOTIFICATION SYSTEM =================
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             notification.textContent = message;
-            notification.style.background = type === 'error' 
-                ? 'linear-gradient(to right, #ff4444, #cc0000)' 
-                : 'linear-gradient(to right, #4CAF50, #2E7D32)';
+            notification.className = 'notification ' + (type === 'error' ? 'error' : '');
             notification.style.display = 'block';
             
             setTimeout(() => {
@@ -588,7 +847,59 @@
             document.getElementById('loginForm').classList.remove('active');
         });
         
-        // ================= LOGIN FORM =================
+        // ================= PASSWORD VISIBILITY TOGGLE =================
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            });
+        });
+        
+        // ================= PASSWORD STRENGTH CHECKER =================
+        document.getElementById('regPassword').addEventListener('input', function() {
+            const password = this.value;
+            const strengthBar = document.querySelector('.strength-bar');
+            const strengthText = document.querySelector('.strength-text');
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (strength === 0) {
+                strengthBar.style.width = '0%';
+                strengthBar.style.backgroundColor = 'var(--error)';
+                strengthText.textContent = 'Password strength: Weak';
+            } else if (strength === 1) {
+                strengthBar.style.width = '25%';
+                strengthBar.style.backgroundColor = 'var(--error)';
+                strengthText.textContent = 'Password strength: Weak';
+            } else if (strength === 2) {
+                strengthBar.style.width = '50%';
+                strengthBar.style.backgroundColor = 'var(--secondary)';
+                strengthText.textContent = 'Password strength: Fair';
+            } else if (strength === 3) {
+                strengthBar.style.width = '75%';
+                strengthBar.style.backgroundColor = '#ffeb3b';
+                strengthText.textContent = 'Password strength: Good';
+            } else {
+                strengthBar.style.width = '100%';
+                strengthBar.style.backgroundColor = 'var(--success)';
+                strengthText.textContent = 'Password strength: Strong';
+            }
+        });
+        
+        // ================= LOGIN FORM SUBMISSION =================
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -596,16 +907,16 @@
             const password = document.getElementById('loginPassword').value;
             
             if (!/^[0-9]{10}$/.test(mobile)) {
-                showNotification('Enter valid 10-digit mobile number', 'error');
+                showNotification('Please enter a valid 10-digit mobile number', 'error');
                 return;
             }
             
             const email = mobile + '@rudrakshmatka.com';
             
             try {
-                showNotification('Logging in...', 'success');
+                showNotification('Authenticating... Please wait');
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                showNotification('Welcome back! Redirecting...', 'success');
+                showNotification('Welcome back! Redirecting to dashboard...');
                 
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
@@ -613,16 +924,16 @@
                 
             } catch (error) {
                 if (error.code === 'auth/user-not-found') {
-                    showNotification('Account not found. Please register.', 'error');
+                    showNotification('Account not found. Please register first.', 'error');
                 } else if (error.code === 'auth/wrong-password') {
-                    showNotification('Incorrect password.', 'error');
+                    showNotification('Incorrect password. Please try again.', 'error');
                 } else {
-                    showNotification('Login failed. Try again.', 'error');
+                    showNotification('Login failed. Please try again.', 'error');
                 }
             }
         });
         
-        // ================= REGISTRATION FORM =================
+        // ================= REGISTRATION FORM SUBMISSION =================
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -633,17 +944,17 @@
             
             // Validation
             if (name.length < 3) {
-                showNotification('Enter valid name (3+ letters)', 'error');
+                showNotification('Please enter a valid name (minimum 3 characters)', 'error');
                 return;
             }
             
             if (!/^[0-9]{10}$/.test(mobile)) {
-                showNotification('Enter 10-digit mobile number', 'error');
+                showNotification('Please enter a valid 10-digit mobile number', 'error');
                 return;
             }
             
             if (password.length < 6) {
-                showNotification('Password must be 6+ characters', 'error');
+                showNotification('Password must be at least 6 characters', 'error');
                 return;
             }
             
@@ -653,38 +964,38 @@
             }
             
             if (!document.getElementById('agreeTerms').checked) {
-                showNotification('Please agree to Terms & Conditions', 'error');
+                showNotification('Please agree to the Terms & Conditions', 'error');
                 return;
             }
             
             const email = mobile + '@rudrakshmatka.com';
             
             try {
-                showNotification('Creating premium account...', 'success');
+                showNotification('Creating your premium account...');
                 
-                // 1. CREATE USER
+                // Create user account
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 
-                // 2. SAVE NAME TO PROFILE
+                // Save user's name to profile
                 await user.updateProfile({
                     displayName: name
                 });
                 
-                showNotification(`Welcome ${name} to Rudraksh Family! 🎉`, 'success');
+                showNotification(`Welcome ${name}! Your account has been created successfully.`, 'success');
                 
-                // 3. REDIRECT TO DASHBOARD
+                // Redirect to dashboard after 3 seconds
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 3000);
                 
             } catch (error) {
                 if (error.code === 'auth/email-already-in-use') {
-                    showNotification('Mobile number already registered. Please login.', 'error');
+                    showNotification('This mobile number is already registered. Please login.', 'error');
                 } else if (error.code === 'auth/weak-password') {
-                    showNotification('Password is too weak.', 'error');
+                    showNotification('Password is too weak. Please use a stronger password.', 'error');
                 } else {
-                    showNotification('Registration failed. Try again.', 'error');
+                    showNotification('Registration failed. Please try again.', 'error');
                 }
             }
         });
@@ -700,24 +1011,41 @@
                 
                 auth.sendPasswordResetEmail(email)
                     .then(() => {
-                        showNotification('Password reset link sent! Check your email.', 'success');
+                        showNotification('Password reset link has been sent to your email.', 'success');
                     })
                     .catch((error) => {
                         showNotification('Error: ' + error.message, 'error');
                     });
             } else if (mobile) {
-                showNotification('Please enter 10-digit number', 'error');
+                showNotification('Please enter a valid 10-digit mobile number', 'error');
             }
         });
         
         // ================= CHECK LOGIN STATUS =================
         auth.onAuthStateChanged((user) => {
             if (user) {
+                // User is already logged in, redirect to dashboard
                 window.location.href = 'dashboard.html';
             }
         });
         
-        console.log('Rudraksh Premium Platform loaded successfully!');
+        // ================= MOBILE RESPONSIVE ADJUSTMENTS =================
+        function adjustMobileLayout() {
+            if (window.innerWidth <= 600) {
+                document.querySelector('.benefits-grid').style.gridTemplateColumns = '1fr';
+                document.querySelector('.support-options').style.flexDirection = 'column';
+                document.querySelector('.support-option').style.minWidth = '100%';
+            } else {
+                document.querySelector('.benefits-grid').style.gridTemplateColumns = 'repeat(2, 1fr)';
+                document.querySelector('.support-options').style.flexDirection = 'row';
+                document.querySelector('.support-option').style.minWidth = '200px';
+            }
+        }
+        
+        window.addEventListener('resize', adjustMobileLayout);
+        window.addEventListener('load', adjustMobileLayout);
+        
+        console.log('Rudraksh Premium Platform initialized successfully');
     </script>
 </body>
 </html>
