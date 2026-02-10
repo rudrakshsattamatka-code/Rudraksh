@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shreematka Premium | Rudraksh</title>
+    <title>Rudraksh</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts for classic look -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -128,45 +128,45 @@
             background: var(--classic-white);
             box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
         }
+
         /* Classic Time Display */
-.classic-time-section {
-    background: var(--classic-white);
-    padding: 25px;
-    border-radius: 15px;
-    margin: 25px 0;
-    border: 2px solid var(--elegant-border);
-    box-shadow: 0 6px 20px rgba(139, 115, 85, 0.1);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
+        .classic-time-section {
+            background: var(--classic-white);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 2px solid var(--elegant-border);
+            box-shadow: 0 6px 20px rgba(139, 115, 85, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-.classic-time-section:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(to right, var(--gold-primary), var(--saffron-medium), var(--gold-primary));
-}
+        .classic-time-section:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--gold-primary), var(--saffron-medium), var(--gold-primary));
+        }
 
-.live-badge-classic {
-    background: linear-gradient(135deg, #C41E3A, #DC143C);
-    color: white;
-    padding: 8px 25px;
-    border-radius: 25px;
-    font-weight: 700;
-    font-size: 16px;
-    display: inline-block;
-    margin-bottom: 20px;
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: 1px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
-}
-
-.time-display-classic {
+        .live-badge-classic {
+            background: linear-gradient(135deg, #C41E3A, #DC143C);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+        }
+        .time-display-classic {
     font-size: 36px;
     font-weight: 700;
     color: var(--gold-dark);
@@ -217,8 +217,9 @@
     letter-spacing: 1.5px;
     position: relative;
     z-index: 2;
-    }
-        /* Classic Daily Passing Section */
+}
+
+/* Classic Daily Passing Section */
 .classic-daily-passing {
     background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
     padding: 30px;
@@ -336,8 +337,172 @@
 .classic-market-card:hover .view-results-classic {
     background: rgba(212, 175, 55, 0.1);
     border-style: solid;
-    }
-        /* Classic Modal */
+            }
+        /* Classic Contact Section */
+.classic-contact-section {
+    background: linear-gradient(135deg, var(--gold-dark), var(--saffron-dark));
+    padding: 40px;
+    border-radius: 20px;
+    margin: 50px 0 30px;
+    border: 3px solid var(--gold-primary);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.classic-contact-section:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(to right, var(--gold-primary), var(--gold-light), var(--gold-primary));
+}
+
+.classic-contact-header {
+    text-align: center;
+    margin-bottom: 35px;
+    position: relative;
+}
+
+.classic-contact-title {
+    color: var(--gold-light);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 1.5px;
+}
+
+.classic-contact-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 18px;
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+.classic-ratio-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 12px 35px;
+    border-radius: 30px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.classic-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.classic-contact-card {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.4s;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.classic-contact-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: var(--gold-primary);
+    box-shadow: 0 12px 25px rgba(212, 175, 55, 0.25);
+}
+
+.classic-contact-icon {
+    font-size: 42px;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+    height: 80px;
+    width: 80px;
+    line-height: 80px;
+    background: rgba(212, 175, 55, 0.15);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+}
+
+.classic-contact-card-title {
+    color: var(--gold-light);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif;
+}
+
+.classic-contact-number {
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+    margin: 15px 0;
+    letter-spacing: 1px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.classic-contact-note {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 15px;
+    font-weight: 400;
+}
+
+.classic-benefits-list {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.classic-benefit-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.classic-benefit-icon {
+    color: var(--gold-light);
+    margin-right: 15px;
+    font-size: 18px;
+}
+
+.classic-benefit-text {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.classic-trust-badge {
+    text-align: center;
+    margin-top: 35px;
+    padding: 20px;
+    background: rgba(212, 175, 55, 0.15);
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.classic-trust-title {
+    color: var(--gold-light);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.classic-trust-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+    font-weight: 400;
+}
+
+/* Classic Modal */
 .classic-modal {
     display: none;
     position: fixed;
@@ -403,100 +568,104 @@
 
 .classic-modal-body {
     padding: 30px;
-}
-
-/* Classic Results Section */
-.classic-results-section {
-    margin-bottom: 30px;
-}
-
-.classic-result-bar {
-    background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    border: 2px solid var(--elegant-border);
-    box-shadow: 0 4px 15px rgba(139, 115, 85, 0.08);
-    position: relative;
-    overflow: hidden;
-}
-
-.classic-result-bar:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 100%;
-    background: linear-gradient(to bottom, var(--gold-primary), var(--gold-secondary));
-}
-
-.classic-result-title {
-    color: var(--gold-dark);
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    font-family: 'Playfair Display', serif;
-    letter-spacing: 0.5px;
-}
-
-.classic-result-value {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--saffron-dark);
-    text-align: center;
-    padding: 15px;
-    background: rgba(212, 175, 55, 0.05);
-    border-radius: 10px;
-    border: 2px solid rgba(212, 175, 55, 0.3);
-    font-family: 'Playfair Display', serif;
-    letter-spacing: 2px;
-}
-
-/* Classic Footer */
-.classic-footer-controls {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, var(--gold-dark), var(--saffron-dark));
-    padding: 15px 0;
-    border-top: 3px solid var(--gold-primary);
-    z-index: 1000;
-    box-shadow: 0 -4px 20px rgba(212, 175, 55, 0.2);
-}
-
-.classic-footer-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-}
-
-.classic-footer-btn {
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--classic-white);
-    border: 2px solid rgba(212, 175, 55, 0.5);
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: 1px;
-    backdrop-filter: blur(5px);
-    min-width: 150px;
-}
-
-.classic-footer-btn:hover {
-    background: rgba(212, 175, 55, 0.3);
-    border-color: var(--gold-primary);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
     }
-                /* Responsive Design */
+                /* Classic Results Section */
+        .classic-results-section {
+            margin-bottom: 30px;
+        }
+
+        .classic-result-bar {
+            background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid var(--elegant-border);
+            box-shadow: 0 4px 15px rgba(139, 115, 85, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .classic-result-bar:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--gold-primary), var(--gold-secondary));
+        }
+
+        .classic-result-title {
+            color: var(--gold-dark);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.5px;
+        }
+
+        .classic-result-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--saffron-dark);
+            text-align: center;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 10px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
+        }
+
+        /* Classic Footer */
+        .classic-footer-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--gold-dark), var(--saffron-dark));
+            padding: 15px 0;
+            border-top: 3px solid var(--gold-primary);
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .classic-footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .classic-footer-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--classic-white);
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            backdrop-filter: blur(5px);
+            min-width: 150px;
+        }
+
+        .classic-footer-btn:hover {
+            background: rgba(212, 175, 55, 0.3);
+            border-color: var(--gold-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Responsive Design */
         @media (max-width: 992px) {
             .classic-markets-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .classic-contact-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             
@@ -514,6 +683,14 @@
         @media (max-width: 768px) {
             .classic-markets-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .classic-contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .classic-contact-section {
+                padding: 30px 20px;
             }
             
             #logoImage {
@@ -542,6 +719,15 @@
             .classic-result-value {
                 font-size: 28px;
             }
+            
+            .classic-contact-title {
+                font-size: 24px;
+            }
+            
+            .classic-ratio-badge {
+                font-size: 20px;
+                padding: 10px 25px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -568,6 +754,14 @@
             .classic-passing-text {
                 font-size: 18px;
                 padding: 20px;
+            }
+            
+            .classic-contact-number {
+                font-size: 22px;
+            }
+            
+            .classic-contact-card {
+                padding: 25px;
             }
         }
 
@@ -608,7 +802,7 @@
             
             <!-- Classic Logo -->
             <div class="classic-logo">
-                <img id="logoImage" src="https://via.placeholder.com/400x100/D4AF37/2C2C2C?text=SHREEMATKA+PREMIUM" alt="Shreematka Premium">
+                <img id="logoImage" src="https://i.supaimg.com/2242c14d-f1da-4eb4-a998-70deaee422b2.jpg" alt="Shreematka Premium">
             </div>
         </div>
     </header>
@@ -625,7 +819,7 @@
 
     <!-- Classic Premium Title -->
     <div class="classic-premium-title">
-        <h1>SHREEMATKA PREMIUM</h1>
+        <h1>RUDRAKSH</h1>
     </div>
 
     <!-- Classic Daily Passing Section -->
@@ -640,6 +834,71 @@
     <div class="classic-markets-section">
         <div class="classic-markets-grid" id="marketsGrid">
             <!-- Markets will be loaded by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Classic Contact Section -->
+    <div class="classic-contact-section">
+        <div class="classic-contact-header">
+            <div class="classic-contact-title">PREMIUM GAME CONTACT</div>
+            <div class="classic-contact-subtitle">Get Expert Tips & High Accuracy Results</div>
+            <div class="classic-ratio-badge">
+                <i class="fas fa-chart-line"></i> PASSING RATIO: 95%
+            </div>
+        </div>
+        
+        <div class="classic-contact-grid">
+            <div class="classic-contact-card">
+                <div class="classic-contact-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="classic-contact-card-title">CALL FOR PREMIUM GAMES</div>
+                <div class="classic-contact-number">9328435505</div>
+                <div class="classic-contact-note">Support : 10.00 AM TO 6.00 PM</div>
+            </div>
+            
+            <div class="classic-contact-card">
+                <div class="classic-contact-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="classic-contact-card-title">WHATSAPP FOR TIPS</div>
+                <div class="classic-contact-number">9328435505</div>
+                <div class="classic-contact-note">Instant Replies | Live Results</div>
+            </div>
+            
+            <div class="classic-contact-card">
+                <div class="classic-contact-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="classic-contact-card-title">PREMIUM BENEFITS</div>
+                <div class="classic-benefits-list">
+                    <div class="classic-benefit-item">
+                        <i class="fas fa-check-circle classic-benefit-icon"></i>
+                        <span class="classic-benefit-text">95% Passing Accuracy Guarantee</span>
+                    </div>
+                    <div class="classic-benefit-item">
+                        <i class="fas fa-check-circle classic-benefit-icon"></i>
+                        <span class="classic-benefit-text">Expert Analysis & Daily Tips</span>
+                    </div>
+                    <div class="classic-benefit-item">
+                        <i class="fas fa-check-circle classic-benefit-icon"></i>
+                        <span class="classic-benefit-text">Support : 10.00 AM TO 6.00 PM</span>
+                    </div>
+                    <div class="classic-benefit-item">
+                        <i class="fas fa-check-circle classic-benefit-icon"></i>
+                        <span class="classic-benefit-text">Instant Results & Updates</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="classic-trust-badge">
+            <div class="classic-trust-title">
+                <i class="fas fa-star"></i> TRUSTED BY THOUSANDS OF PLAYERS
+            </div>
+            <div class="classic-trust-text">
+                Join our premium members for guaranteed accurate results and expert guidance
+            </div>
         </div>
     </div>
 </main>
@@ -708,164 +967,164 @@
         </div>
     </div>
 </div>
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDVxg4EZHm4D2zMrz_ndLzcqx3wkhdPdVc",
-            authDomain: "rudraksh-d74c3.firebaseapp.com",
-            projectId: "rudraksh-d74c3",
-            storageBucket: "rudraksh-d74c3.firebasestorage.app",
-            messagingSenderId: "270620722307",
-            appId: "1:270620722307:web:5a6454b69e12c201f6c7b6",
-            measurementId: "G-406NQEK3XV"
-        };
+<script>
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVxg4EZHm4D2zMrz_ndLzcqx3wkhdPdVc",
+        authDomain: "rudraksh-d74c3.firebaseapp.com",
+        projectId: "rudraksh-d74c3",
+        storageBucket: "rudraksh-d74c3.firebasestorage.app",
+        messagingSenderId: "270620722307",
+        appId: "1:270620722307:web:5a6454b69e12c201f6c7b6",
+        measurementId: "G-406NQEK3XV"
+    };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-        // ============================================================
-        // ULTRA CLASSIC EDIT SECTION
-        // ============================================================
+    // ============================================================
+    // 🎯 EASY EDIT SECTION - CHANGE ANYTHING HERE
+    // ============================================================
+    
+    // 1. DAILY PASSING RESULT - EDIT THIS TEXT
+    const dailyPassingResult = "Today's Special:";
+    // You can edit the above text - put anything you want
+    
+    // 2. MARKET RESULTS - EDIT THESE VALUES
+    // You can put ANYTHING here: numbers, text, letters, symbols
+    const marketResults = {
+        "KALYAN": {
+            otc: "**",      // Edit O.T.C - Can be ANY text/numbers
+            open: "**",     // Edit OPEN - Can be ANY text/numbers
+            jodi: "**",      // Edit JODI - Can be ANY text/numbers
+            panel: "**"     // Edit PANEL - Can be ANY text/numbers
+        },
+        "SRIDEVI": {
+            otc: "**",      // Edit O.T.C
+            open: "**",     // Edit OPEN
+            jodi: "**",      // Edit JODI
+            panel: "**"     // Edit PANEL
+        },
+        "TIME BAZAR": {
+            otc: "**",      // Edit O.T.C
+            open: "**",     // Edit OPEN
+            jodi: "**",      // Edit JODI
+            panel: "**"     // Edit PANEL
+        },
+        "MILAN DAY": {
+            otc: "**",      // Edit O.T.C
+            open: "**",     // Edit OPEN
+            jodi: "**",      // Edit JODI
+            panel: "**"     // Edit PANEL
+        },
+        "SRIDEVI NIGHT": {
+            otc: "**",      // Edit O.T.C
+            open: "**",     // Edit OPEN
+            jodi: "**",      // Edit JODI
+            panel: "**"     // Edit PANEL
+        },
+        "MILAN NIGHT": {
+            otc: "**",      // Edit O.T.C
+            open: "**",     // Edit OPEN
+            jodi: "**",      // Edit JODI
+            panel: "**"     // Edit PANEL
+        },
+        "MAIN BAZAR": {
+            otc: "**",      // Edit O.T.C
+            open: "**",     // Edit OPEN
+            jodi: "**",      // Edit JODI
+            panel: "**"     // Edit PANEL
+        }
+    };
+    // ============================================================
+    // END OF EDITABLE SECTION
+    // ============================================================
+
+    // Markets Data with timings
+    const markets = [
+        { id: 1, name: "KALYAN", time: "2.00 PM" },
+        { id: 2, name: "SRIDEVI", time: "10.30 AM" },
+        { id: 3, name: "TIME BAZAR", time: "12.00 PM" },
+        { id: 4, name: "MILAN DAY", time: "1.30 PM" },
+        { id: 5, name: "SRIDEVI NIGHT", time: "6.00 PM" },
+        { id: 6, name: "MILAN NIGHT", time: "8.00 PM" },
+        { id: 7, name: "MAIN BAZAR", time: "8.30 PM" }
+    ];
+
+    // DOM Elements
+    const marketsGrid = document.getElementById('marketsGrid');
+    const currentTimeElement = document.getElementById('currentTime');
+    const currentDateElement = document.getElementById('currentDate');
+    const dailyPassingText = document.getElementById('dailyPassingText');
+    const marketModal = document.getElementById('marketModal');
+    const modalMarketName = document.getElementById('modalMarketName');
+    const resultOTC = document.getElementById('resultOTC');
+    const resultOpen = document.getElementById('resultOpen');
+    const resultJodi = document.getElementById('resultJodi');
+    const resultPanel = document.getElementById('resultPanel');
+
+    // Check if user is logged in
+    auth.onAuthStateChanged((user) => {
+        if (!user) {
+            window.location.href = 'index.html';
+        } else {
+            // Set daily passing text
+            dailyPassingText.textContent = dailyPassingResult;
+            
+            loadMarkets();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        }
+    });
+
+    // Load Markets
+    function loadMarkets() {
+        marketsGrid.innerHTML = '';
         
-        // DAILY PASSING RESULT - EDIT THIS TEXT
-        const dailyPassingResult = "Today's Special: 123-456-789 | Jodi: 45, 78, 90 | Panel: 234, 567, 891";
-        // Change the text above to update daily passing results
-        
-        // Results for each market - EDIT THESE VALUES
-        const marketResults = {
-            "KALYAN": {
-                otc: "123",
-                open: "456",
-                jodi: "78",
-                panel: "901"
-            },
-            "SRIDEVI": {
-                otc: "234",
-                open: "567",
-                jodi: "89",
-                panel: "012"
-            },
-            "TIME BAZAR": {
-                otc: "345",
-                open: "678",
-                jodi: "90",
-                panel: "123"
-            },
-            "MILAN DAY": {
-                otc: "456",
-                open: "789",
-                jodi: "01",
-                panel: "234"
-            },
-            "SRIDEVI NIGHT": {
-                otc: "567",
-                open: "890",
-                jodi: "12",
-                panel: "345"
-            },
-            "MILAN NIGHT": {
-                otc: "678",
-                open: "901",
-                jodi: "23",
-                panel: "456"
-            },
-            "MAIN BAZAR": {
-                otc: "789",
-                open: "012",
-                jodi: "34",
-                panel: "567"
-            }
-        };
-        // ============================================================
-        // END OF EDITABLE SECTION
-        // ============================================================
-
-        // Markets Data with timings
-        const markets = [
-            { id: 1, name: "KALYAN", time: "2.00 PM" },
-            { id: 2, name: "SRIDEVI", time: "10.30 AM" },
-            { id: 3, name: "TIME BAZAR", time: "1.30 PM" },
-            { id: 4, name: "MILAN DAY", time: "1.30 PM" },
-            { id: 5, name: "SRIDEVI NIGHT", time: "6.00 PM" },
-            { id: 6, name: "MILAN NIGHT", time: "8.00 PM" },
-            { id: 7, name: "MAIN BAZAR", time: "8.30 PM" }
-        ];
-
-        // DOM Elements
-        const marketsGrid = document.getElementById('marketsGrid');
-        const currentTimeElement = document.getElementById('currentTime');
-        const currentDateElement = document.getElementById('currentDate');
-        const dailyPassingText = document.getElementById('dailyPassingText');
-        const marketModal = document.getElementById('marketModal');
-        const modalMarketName = document.getElementById('modalMarketName');
-        const resultOTC = document.getElementById('resultOTC');
-        const resultOpen = document.getElementById('resultOpen');
-        const resultJodi = document.getElementById('resultJodi');
-        const resultPanel = document.getElementById('resultPanel');
-
-        // Check if user is logged in
-        auth.onAuthStateChanged((user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-            } else {
-                // Set daily passing text
-                dailyPassingText.textContent = dailyPassingResult;
-                
-                loadMarkets();
-                updateDateTime();
-                setInterval(updateDateTime, 1000);
-            }
+        markets.forEach(market => {
+            const marketCard = document.createElement('div');
+            marketCard.className = 'classic-market-card';
+            marketCard.onclick = () => openMarketResults(market);
+            
+            marketCard.innerHTML = `
+                <div class="classic-market-name">${market.name}</div>
+                <div class="classic-market-time">${market.time}</div>
+                <div class="view-results-classic">
+                    <i class="fas fa-chart-line"></i> VIEW RESULTS
+                </div>
+            `;
+            
+            marketsGrid.appendChild(marketCard);
         });
+    }
 
-        // Load Markets
-        function loadMarkets() {
-            marketsGrid.innerHTML = '';
-            
-            markets.forEach(market => {
-                const marketCard = document.createElement('div');
-                marketCard.className = 'classic-market-card';
-                marketCard.onclick = () => openMarketResults(market);
-                
-                marketCard.innerHTML = `
-                    <div class="classic-market-name">${market.name}</div>
-                    <div class="classic-market-time">${market.time}</div>
-                    <div class="view-results-classic">
-                        <i class="fas fa-chart-line"></i> VIEW RESULTS
-                    </div>
-                `;
-                
-                marketsGrid.appendChild(marketCard);
-            });
-        }
-
-        // Update Date and Time
-        function updateDateTime() {
-            const now = new Date();
-            
-            // Format time
-            const timeOptions = { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit',
-                hour12: true 
-            };
-            const timeString = now.toLocaleTimeString('en-US', timeOptions);
-            
-            // Format date
-            const dateOptions = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            const dateString = now.toLocaleDateString('en-US', dateOptions);
-            
-            currentTimeElement.textContent = timeString;
-            currentDateElement.textContent = dateString;
-        }
-
-        // Open Market Results
+    // Update Date and Time
+    function updateDateTime() {
+        const now = new Date();
+        
+        // Format time
+        const timeOptions = { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit',
+            hour12: true 
+        };
+        const timeString = now.toLocaleTimeString('en-US', timeOptions);
+        
+        // Format date
+        const dateOptions = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        const dateString = now.toLocaleDateString('en-US', dateOptions);
+        
+        currentTimeElement.textContent = timeString;
+        currentDateElement.textContent = dateString;
+    }
+            // Open Market Results
         function openMarketResults(market) {
             modalMarketName.textContent = `${market.name} - ${market.time}`;
             
