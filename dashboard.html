@@ -219,19 +219,19 @@
     z-index: 2;
 }
 
-/* Classic Daily Passing Section */
-.classic-daily-passing {
+/* Notice Board Section */
+.classic-notice-board {
     background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
     padding: 30px;
     border-radius: 15px;
     margin: 30px 0;
-    border: 2px solid var(--gold-primary);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+    border: 2px solid #FF0000;
+    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.15);
     position: relative;
 }
 
-.classic-daily-title {
-    color: var(--gold-dark);
+.classic-notice-title {
+    color: #FF0000;
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 25px;
@@ -241,46 +241,56 @@
     padding-bottom: 15px;
 }
 
-.classic-daily-title:after {
+.classic-notice-title:after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 25%;
     right: 25%;
     height: 2px;
-    background: linear-gradient(to right, transparent, var(--gold-primary), transparent);
+    background: linear-gradient(to right, transparent, #FF0000, transparent);
 }
 
-.classic-passing-text {
+.classic-notice-text {
     color: var(--classic-dark);
     font-size: 20px;
     line-height: 1.6;
     text-align: center;
     padding: 25px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 230, 230, 0.9);
     border-radius: 10px;
-    border: 1px solid var(--elegant-border);
+    border: 1px solid #FFB3B3;
     min-height: 80px;
     font-weight: 500;
     box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* Classic Markets Grid */
-.classic-markets-section {
+/* 7 Bars Grid */
+.bars-grid-section {
     margin: 40px 0;
 }
 
-.classic-markets-grid {
+.bars-grid-title {
+    color: var(--gold-dark);
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 1px;
+}
+
+.bars-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
 }
 
-/* Classic Market Card */
-.classic-market-card {
+/* Editable Bar Card */
+.bar-card {
     background: linear-gradient(135deg, var(--classic-white), var(--classic-cream));
     border-radius: 12px;
-    padding: 25px;
+    padding: 30px;
     box-shadow: 0 6px 20px rgba(139, 115, 85, 0.1);
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -288,15 +298,20 @@
     text-align: center;
     position: relative;
     overflow: hidden;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.classic-market-card:hover {
+.bar-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 35px rgba(212, 175, 55, 0.2);
     border-color: var(--gold-primary);
 }
 
-.classic-market-card:before {
+.bar-card:before {
     content: '';
     position: absolute;
     top: 0;
@@ -306,38 +321,39 @@
     background: linear-gradient(to right, var(--gold-primary), var(--saffron-medium));
 }
 
-.classic-market-name {
+.bar-text {
     color: var(--gold-dark);
     font-size: 24px;
     font-weight: 700;
-    margin-bottom: 8px;
     font-family: 'Playfair Display', serif;
     letter-spacing: 1px;
+    text-align: center;
+    word-break: break-word;
 }
 
-.classic-market-time {
+.bar-time {
     color: var(--classic-gray);
     font-size: 16px;
-    margin-bottom: 20px;
+    margin-top: 15px;
     font-weight: 500;
     letter-spacing: 1px;
 }
 
-.view-results-classic {
+.view-results-btn {
     color: var(--gold-primary);
     font-weight: 600;
-    margin-top: 15px;
-    padding: 10px;
+    margin-top: 20px;
+    padding: 10px 20px;
     border: 1px dashed var(--gold-primary);
     border-radius: 8px;
     background: rgba(212, 175, 55, 0.05);
     transition: all 0.3s;
 }
 
-.classic-market-card:hover .view-results-classic {
+.bar-card:hover .view-results-btn {
     background: rgba(212, 175, 55, 0.1);
     border-style: solid;
-            }
+    }
         /* Classic Contact Section */
 .classic-contact-section {
     background: linear-gradient(135deg, var(--gold-dark), var(--saffron-dark));
@@ -583,6 +599,7 @@
             box-shadow: 0 4px 15px rgba(139, 115, 85, 0.08);
             position: relative;
             overflow: hidden;
+            text-align: center;
         }
 
         .classic-result-bar:before {
@@ -595,16 +612,17 @@
             background: linear-gradient(to bottom, var(--gold-primary), var(--gold-secondary));
         }
 
-        .classic-result-title {
+        .result-headline {
             color: var(--gold-dark);
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             margin-bottom: 15px;
             font-family: 'Playfair Display', serif;
             letter-spacing: 0.5px;
+            text-align: center;
         }
 
-        .classic-result-value {
+        .result-text {
             font-size: 32px;
             font-weight: 700;
             color: var(--saffron-dark);
@@ -615,6 +633,7 @@
             border: 2px solid rgba(212, 175, 55, 0.3);
             font-family: 'Playfair Display', serif;
             letter-spacing: 2px;
+            word-break: break-word;
         }
 
         /* Classic Footer */
@@ -661,7 +680,7 @@
 
         /* Responsive Design */
         @media (max-width: 992px) {
-            .classic-markets-grid {
+            .bars-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             
@@ -681,7 +700,7 @@
         }
 
         @media (max-width: 768px) {
-            .classic-markets-grid {
+            .bars-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -716,7 +735,7 @@
                 font-size: 16px;
             }
             
-            .classic-result-value {
+            .result-text {
                 font-size: 28px;
             }
             
@@ -728,6 +747,10 @@
                 font-size: 20px;
                 padding: 10px 25px;
             }
+            
+            .bar-text {
+                font-size: 22px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -735,11 +758,11 @@
                 max-width: 250px;
             }
             
-            .classic-market-card {
-                padding: 20px;
+            .bar-card {
+                padding: 25px;
             }
             
-            .classic-market-name {
+            .bar-text {
                 font-size: 20px;
             }
             
@@ -751,7 +774,7 @@
                 font-size: 24px;
             }
             
-            .classic-passing-text {
+            .classic-notice-text {
                 font-size: 18px;
                 padding: 20px;
             }
@@ -762,6 +785,14 @@
             
             .classic-contact-card {
                 padding: 25px;
+            }
+            
+            .result-headline {
+                font-size: 18px;
+            }
+            
+            .result-text {
+                font-size: 26px;
             }
         }
 
@@ -822,18 +853,19 @@
         <h1>RUDRAKSH</h1>
     </div>
 
-    <!-- Classic Daily Passing Section -->
-    <div class="classic-daily-passing">
-        <div class="classic-daily-title">DAILY PASSING RESULTS</div>
-        <div class="classic-passing-text" id="dailyPassingText">
+    <!-- Notice Board Section -->
+    <div class="classic-notice-board">
+        <div class="classic-notice-title">NOTICE BOARD</div>
+        <div class="classic-notice-text" id="noticeBoardText">
             <!-- This will be filled by JavaScript -->
         </div>
     </div>
 
-    <!-- Classic Markets Grid -->
-    <div class="classic-markets-section">
-        <div class="classic-markets-grid" id="marketsGrid">
-            <!-- Markets will be loaded by JavaScript -->
+    <!-- 7 Editable Bars Grid -->
+    <div class="bars-grid-section">
+        <div class="bars-grid-title">PREMIUM MARKETS</div>
+        <div class="bars-grid" id="barsGrid">
+            <!-- 7 bars will be loaded by JavaScript -->
         </div>
     </div>
 
@@ -854,7 +886,7 @@
                 </div>
                 <div class="classic-contact-card-title">CALL FOR PREMIUM GAMES</div>
                 <div class="classic-contact-number">9328435505</div>
-                <div class="classic-contact-note">Support : 10.00 AM TO 6.00 PM</div>
+                <div class="classic-contact-note">Expert Support 10:00 AM TO 6:00 PM</div>
             </div>
             
             <div class="classic-contact-card">
@@ -882,7 +914,7 @@
                     </div>
                     <div class="classic-benefit-item">
                         <i class="fas fa-check-circle classic-benefit-icon"></i>
-                        <span class="classic-benefit-text">Support : 10.00 AM TO 6.00 PM</span>
+                        <span class="classic-benefit-text">Support : 10:00 AM TO 6:00 PM</span>
                     </div>
                     <div class="classic-benefit-item">
                         <i class="fas fa-check-circle classic-benefit-icon"></i>
@@ -917,33 +949,33 @@
     </div>
 </div>
 
-<!-- Classic Market Results Modal -->
-<div id="marketModal" class="classic-modal">
+<!-- Classic Results Modal -->
+<div id="resultsModal" class="classic-modal">
     <div class="classic-modal-content">
         <div class="classic-modal-header">
-            <h2 id="modalMarketName">Market Results</h2>
+            <h2 id="modalBarName">RESULTS</h2>
             <button class="classic-close-modal" onclick="closeModal()">&times;</button>
         </div>
         <div class="classic-modal-body">
             <div class="classic-results-section">
                 <div class="classic-result-bar">
-                    <div class="classic-result-title">O.T.C</div>
-                    <div class="classic-result-value" id="resultOTC">123</div>
+                    <div class="result-headline" id="resultHeadline1">HEADLINE 1</div>
+                    <div class="result-text" id="resultText1">TEXT 1</div>
                 </div>
                 
                 <div class="classic-result-bar">
-                    <div class="classic-result-title">OPEN</div>
-                    <div class="classic-result-value" id="resultOpen">456</div>
+                    <div class="result-headline" id="resultHeadline2">HEADLINE 2</div>
+                    <div class="result-text" id="resultText2">TEXT 2</div>
                 </div>
                 
                 <div class="classic-result-bar">
-                    <div class="classic-result-title">JODI</div>
-                    <div class="classic-result-value" id="resultJodi">78</div>
+                    <div class="result-headline" id="resultHeadline3">HEADLINE 3</div>
+                    <div class="result-text" id="resultText3">TEXT 3</div>
                 </div>
                 
                 <div class="classic-result-bar">
-                    <div class="classic-result-title">PANEL</div>
-                    <div class="classic-result-value" id="resultPanel">901</div>
+                    <div class="result-headline" id="resultHeadline4">HEADLINE 4</div>
+                    <div class="result-text" id="resultText4">TEXT 4</div>
                 </div>
             </div>
             
@@ -961,13 +993,13 @@
                                font-size: 16px;
                                box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
                                transition: all 0.3s;">
-                    <i class="fas fa-check"></i> CLOSE RESULTS
+                    <i class="fas fa-check"></i> CLOSE
                 </button>
             </div>
         </div>
     </div>
-</div>
-<script>
+    </div>
+    <script>
     // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyDVxg4EZHm4D2zMrz_ndLzcqx3wkhdPdVc",
@@ -987,115 +1019,151 @@
     // 🎯 EASY EDIT SECTION - CHANGE ANYTHING HERE
     // ============================================================
     
-    // 1. DAILY PASSING RESULT - EDIT THIS TEXT
-    const dailyPassingResult = "Today's Special:";
+    // 1. NOTICE BOARD TEXT - EDIT THIS TEXT
+    const noticeBoardText = "IMPORTANT: Today's special update for all premium members. Check results carefully!";
     // You can edit the above text - put anything you want
     
-    // 2. MARKET RESULTS - EDIT THESE VALUES
-    // You can put ANYTHING here: numbers, text, letters, symbols
-    const marketResults = {
-        "KALYAN": {
-            O.T.C: "O.T.C",      // Edit O.T.C - Can be ANY text/numbers
-            open: "**",     // Edit OPEN - Can be ANY text/numbers
-            jodi: "**",      // Edit JODI - Can be ANY text/numbers
-            panel: "**"     // Edit PANEL - Can be ANY text/numbers
+    // 2. 7 EDITABLE BARS - EDIT TEXT FOR EACH BAR
+    const barsData = [
+        { id: 1, text: "KALYAN MATKA", time: "2.00 PM" },
+        { id: 2, text: "SRIDEVI MORNING", time: "10.30 AM" },
+        { id: 3, text: "TIME BAZAR", time: "12.00 PM" },
+        { id: 4, text: "MILAN DAY", time: "1.30 PM" },
+        { id: 5, text: "SRIDEVI NIGHT", time: "6.00 PM" },
+        { id: 6, text: "MILAN NIGHT", time: "8.00 PM" },
+        { id: 7, text: "MAIN BAZAR", time: "8.30 PM" }
+    ];
+    // Edit the 'text' for each bar above - put ANY text you want
+    
+    // 3. RESULTS FOR EACH BAR - EDIT HEADLINES AND TEXT
+    const barResults = {
+        1: { // For bar 1 (KALYAN)
+            headline1: "O.T.C RESULT",
+            text1: "123",
+            headline2: "OPEN RESULT", 
+            text2: "456",
+            headline3: "JODI RESULT",
+            text3: "78",
+            headline4: "PANEL RESULT",
+            text4: "901"
         },
-        "SRIDEVI": {
-            : "O.T.C",      // Edit O.T.C
-            open: "8 ' 3 ' 1 ' 6",     // Edit OPEN
-            jodi: "**",      // Edit JODI
-            panel: "**"     // Edit PANEL
+        2: { // For bar 2 (SRIDEVI)
+            headline1: "O.T.C",
+            text1: "234",
+            headline2: "SECOND RESULT",
+            text2: "567",
+            headline3: "THIRD RESULT",
+            text3: "89",
+            headline4: "FOURTH RESULT",
+            text4: "012"
         },
-        "TIME BAZAR": {
-            O.T.C: "",      // Edit O.T.C
-            open: "**",     // Edit OPEN
-            jodi: "**",      // Edit JODI
-            panel: "**"     // Edit PANEL
+        3: { // For bar 3 (TIME BAZAR)
+            headline1: "TOP RESULT",
+            text1: "345",
+            headline2: "MIDDLE RESULT",
+            text2: "678",
+            headline3: "BOTTOM RESULT",
+            text3: "90",
+            headline4: "FINAL RESULT",
+            text4: "123"
         },
-        "MILAN DAY": {
-            O.T.C: "O.T.C",      // Edit O.T.C
-            open: "**",     // Edit OPEN
-            jodi: "**",      // Edit JODI
-            panel: "**"     // Edit PANEL
+        4: { // For bar 4 (MILAN DAY)
+            headline1: "WINNING NO.",
+            text1: "456",
+            headline2: "LUCKY NO.",
+            text2: "789",
+            headline3: "SPECIAL NO.",
+            text3: "01",
+            headline4: "BONUS NO.",
+            text4: "234"
         },
-        "SRIDEVI NIGHT": {
-            otc: "**",      // Edit O.T.C
-            open: "**",     // Edit OPEN
-            jodi: "**",      // Edit JODI
-            panel: "**"     // Edit PANEL
+        5: { // For bar 5 (SRIDEVI NIGHT)
+            headline1: "NIGHT OPEN",
+            text1: "567",
+            headline2: "NIGHT CLOSE",
+            text2: "890",
+            headline3: "NIGHT JODI",
+            text3: "12",
+            headline4: "NIGHT PANEL",
+            text4: "345"
         },
-        "MILAN NIGHT": {
-            otc: "**",      // Edit O.T.C
-            open: "**",     // Edit OPEN
-            jodi: "**",      // Edit JODI
-            panel: "**"     // Edit PANEL
+        6: { // For bar 6 (MILAN NIGHT)
+            headline1: "EVENING OTC",
+            text1: "678",
+            headline2: "EVENING OPEN",
+            text2: "901",
+            headline3: "EVENING JODI",
+            text3: "23",
+            headline4: "EVENING PANEL",
+            text4: "456"
         },
-        "MAIN BAZAR": {
-            otc: "**",      // Edit O.T.C
-            open: "**",     // Edit OPEN
-            jodi: "**",      // Edit JODI
-            panel: "**"     // Edit PANEL
+        7: { // For bar 7 (MAIN BAZAR)
+            headline1: "MAIN RESULT",
+            text1: "789",
+            headline2: "SPECIAL RESULT",
+            text2: "012",
+            headline3: "GOLDEN RESULT",
+            text3: "34",
+            headline4: "DIAMOND RESULT",
+            text4: "567"
         }
     };
+    // Edit headlines and text for each bar above
+    // You can put ANY text in headlines and values
     // ============================================================
     // END OF EDITABLE SECTION
     // ============================================================
 
-    // Markets Data with timings
-    const markets = [
-        { id: 1, name: "KALYAN", time: "2.00 PM" },
-        { id: 2, name: "SRIDEVI", time: "10.30 AM" },
-        { id: 3, name: "TIME BAZAR", time: "12.00 PM" },
-        { id: 4, name: "MILAN DAY", time: "1.30 PM" },
-        { id: 5, name: "SRIDEVI NIGHT", time: "6.00 PM" },
-        { id: 6, name: "MILAN NIGHT", time: "8.00 PM" },
-        { id: 7, name: "MAIN BAZAR", time: "8.30 PM" }
-    ];
-
     // DOM Elements
-    const marketsGrid = document.getElementById('marketsGrid');
+    const barsGrid = document.getElementById('barsGrid');
     const currentTimeElement = document.getElementById('currentTime');
     const currentDateElement = document.getElementById('currentDate');
-    const dailyPassingText = document.getElementById('dailyPassingText');
-    const marketModal = document.getElementById('marketModal');
-    const modalMarketName = document.getElementById('modalMarketName');
-    const resultOTC = document.getElementById('resultOTC');
-    const resultOpen = document.getElementById('resultOpen');
-    const resultJodi = document.getElementById('resultJodi');
-    const resultPanel = document.getElementById('resultPanel');
+    const noticeBoardTextElement = document.getElementById('noticeBoardText');
+    const resultsModal = document.getElementById('resultsModal');
+    const modalBarName = document.getElementById('modalBarName');
+    
+    // Result elements
+    const resultHeadline1 = document.getElementById('resultHeadline1');
+    const resultText1 = document.getElementById('resultText1');
+    const resultHeadline2 = document.getElementById('resultHeadline2');
+    const resultText2 = document.getElementById('resultText2');
+    const resultHeadline3 = document.getElementById('resultHeadline3');
+    const resultText3 = document.getElementById('resultText3');
+    const resultHeadline4 = document.getElementById('resultHeadline4');
+    const resultText4 = document.getElementById('resultText4');
 
     // Check if user is logged in
     auth.onAuthStateChanged((user) => {
         if (!user) {
             window.location.href = 'index.html';
         } else {
-            // Set daily passing text
-            dailyPassingText.textContent = dailyPassingResult;
+            // Set notice board text
+            noticeBoardTextElement.textContent = noticeBoardText;
             
-            loadMarkets();
+            loadBars();
             updateDateTime();
             setInterval(updateDateTime, 1000);
         }
     });
 
-    // Load Markets
-    function loadMarkets() {
-        marketsGrid.innerHTML = '';
+    // Load 7 Bars
+    function loadBars() {
+        barsGrid.innerHTML = '';
         
-        markets.forEach(market => {
-            const marketCard = document.createElement('div');
-            marketCard.className = 'classic-market-card';
-            marketCard.onclick = () => openMarketResults(market);
+        barsData.forEach(bar => {
+            const barCard = document.createElement('div');
+            barCard.className = 'bar-card';
+            barCard.onclick = () => openBarResults(bar);
             
-            marketCard.innerHTML = `
-                <div class="classic-market-name">${market.name}</div>
-                <div class="classic-market-time">${market.time}</div>
-                <div class="view-results-classic">
+            barCard.innerHTML = `
+                <div class="bar-text">${bar.text}</div>
+                <div class="bar-time">${bar.time}</div>
+                <div class="view-results-btn">
                     <i class="fas fa-chart-line"></i> VIEW RESULTS
                 </div>
             `;
             
-            marketsGrid.appendChild(marketCard);
+            barsGrid.appendChild(barCard);
         });
     }
 
@@ -1124,31 +1192,39 @@
         currentTimeElement.textContent = timeString;
         currentDateElement.textContent = dateString;
     }
-            // Open Market Results
-        function openMarketResults(market) {
-            modalMarketName.textContent = `${market.name} - ${market.time}`;
+                // Open Bar Results
+        function openBarResults(bar) {
+            modalBarName.textContent = bar.text;
             
-            // Get results for this market
-            const results = marketResults[market.name] || {
-                otc: "000",
-                open: "000",
-                jodi: "00",
-                panel: "000"
+            // Get results for this bar
+            const results = barResults[bar.id] || {
+                headline1: "HEADLINE 1",
+                text1: "TEXT 1",
+                headline2: "HEADLINE 2",
+                text2: "TEXT 2",
+                headline3: "HEADLINE 3",
+                text3: "TEXT 3",
+                headline4: "HEADLINE 4",
+                text4: "TEXT 4"
             };
             
             // Update the result values in the modal
-            resultOTC.textContent = results.otc;
-            resultOpen.textContent = results.open;
-            resultJodi.textContent = results.jodi;
-            resultPanel.textContent = results.panel;
+            resultHeadline1.textContent = results.headline1;
+            resultText1.textContent = results.text1;
+            resultHeadline2.textContent = results.headline2;
+            resultText2.textContent = results.text2;
+            resultHeadline3.textContent = results.headline3;
+            resultText3.textContent = results.text3;
+            resultHeadline4.textContent = results.headline4;
+            resultText4.textContent = results.text4;
             
             // Show the modal
-            marketModal.style.display = 'flex';
+            resultsModal.style.display = 'flex';
         }
 
         // Close Modal
         function closeModal() {
-            marketModal.style.display = 'none';
+            resultsModal.style.display = 'none';
         }
 
         // Go Back
@@ -1171,7 +1247,7 @@
 
         // Close modal when clicking outside
         window.onclick = function(event) {
-            if (event.target == marketModal) {
+            if (event.target == resultsModal) {
                 closeModal();
             }
         }
