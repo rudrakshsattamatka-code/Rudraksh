@@ -1,0 +1,589 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WIN777 - Funds & Passbook</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+            border: none;
+        }
+
+        body { 
+            background: #000000; /* Black */
+            color: #ffffff; /* White text */
+            padding-bottom: 90px; 
+            min-height: 100vh;
+        }
+
+        .app-container { 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #000000; /* Black */
+            min-height: 100vh; 
+            position: relative; 
+        }
+
+        /* Full Screen Android App Style Splash Screen */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000; /* Black */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 30px;
+        }
+
+        .loader-bar {
+            width: 120px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #FFD700; /* Yellow */
+            border-radius: 10px;
+            animation: loading 1.2s infinite linear;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0%; }
+            100% { left: 100%; }
+        }
+
+        /* Fixed Top Header Panel */
+        .sticky-top-panel {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 480px; 
+            margin: 0 auto;
+            min-height: 120px;
+            background: #111111; /* Dark Gray */
+            color: #fff; 
+            z-index: 1000;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+            padding: 12px 16px; 
+            border-bottom: 1px solid #FFD700; /* Yellow Border */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .header-action-line { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 12px; 
+            width: 100%; 
+        }
+
+        .menu-btn { 
+            background: none; 
+            border: none; 
+            color: #FFD700; /* Yellow */
+            font-size: 24px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+        }
+
+        .header-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            max-height: 36px;
+        }
+
+        .header-logo-img {
+            height: 34px;
+            max-width: 120px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .action-shortcuts { display: flex; gap: 6px; align-items: center; }
+        
+        .shortcut-btn { 
+            background: #FFD700; /* Yellow */
+            color: #000000; /* Black */
+            padding: 6px 10px; 
+            border-radius: 10px; 
+            font-size: 11px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            text-transform: uppercase;
+            border: 1px solid #FFA07A; /* Light Orange */
+        }
+
+        .balance-box { 
+            background: #000000; 
+            padding: 6px 10px; 
+            border-radius: 10px; 
+            color: #FFD700; /* Yellow */
+            font-weight: 800; 
+            font-size: 12px; 
+            cursor: pointer; 
+            border: 1px solid #FFD700;
+        }
+
+        .panel-info-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            border-top: 1px solid #333333; 
+            padding-top: 8px; 
+            margin-top: 10px;
+        }
+
+        .user-meta { display: flex; flex-direction: column; gap: 2px; }
+        .user-meta .name { font-size: 14px; font-weight: 700; color: #FFD700; /* Yellow */ }
+        .user-meta .phone { font-size: 11px; color: #aaaaaa; font-weight: 600; }
+        .funds-header-label { font-size: 11px; font-weight: 700; color: #FFA07A; /* Light Orange */ text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Scrollable Content Container */
+        .main-scroll-content { margin-top: 125px; padding: 14px; }
+        .section-title { font-size: 12px; font-weight: 700; color: #FFD700; text-transform: uppercase; letter-spacing: 0.8px; margin: 16px 4px 10px 4px; }
+
+        /* Card Elements */
+        .fund-card { 
+            background: #111111; /* Dark Gray */
+            border-radius: 18px; 
+            padding: 18px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 14px; 
+            margin-bottom: 14px; 
+            border: 1px solid #FFD700; /* Yellow border */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .fund-row-details { display: flex; justify-content: space-between; align-items: center; }
+        .fund-title { font-size: 15px; font-weight: 700; color: #ffffff; }
+        .fund-subtitle { font-size: 12px; color: #aaaaaa; margin-top: 2px; font-weight: 500; display: none; }
+        
+        .fund-action-btn { 
+            padding: 12px 24px; 
+            background: #FFD700; /* Yellow */
+            border: none; 
+            border-radius: 12px; 
+            color: #000000; /* Black */
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 12px; 
+            letter-spacing: 0.5px; 
+            text-transform: uppercase; 
+            text-decoration: none; 
+            text-align: center; 
+        }
+
+        .btn-withdraw-theme { background: #FFA07A; } /* Light Orange */
+
+        /* Form Inputs */
+        .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .form-row:last-child { margin-bottom: 0; }
+        .form-label { font-size: 11px; font-weight: 700; color: #aaaaaa; text-transform: uppercase; }
+        .form-input-field { background: #000000; border-radius: 12px; padding: 12px 14px; border: 1px solid #FFA07A; }
+        .form-input { 
+            width: 100%; 
+            background: transparent; 
+            border: none; 
+            outline: none; 
+            font-size: 14px; 
+            font-weight: 600; 
+            color: #ffffff; 
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        .form-input::placeholder { color: #888888; }
+
+        /* History List Elements */
+        .history-list { display: flex; flex-direction: column; gap: 8px; }
+        .history-item { 
+            background: #111111; 
+            border-radius: 14px; 
+            padding: 14px 16px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border: 1px solid #FFD700;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        .history-meta { display: flex; flex-direction: column; gap: 2px; }
+        .history-desc { font-size: 13px; font-weight: 700; color: #ffffff; }
+        .history-date { font-size: 11px; color: #aaaaaa; font-weight: 500; }
+        .history-amount { font-size: 15px; font-weight: 800; text-align: right; }
+        .amount-credit { color: #FFD700; } /* Yellow for credit */
+        .amount-debit { color: #ff4444; } /* Red for debit */
+
+        /* Navigation Dock */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #000000; 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            padding: 6px 10px 8px 10px; 
+            border-top: 1px solid #FFD700; 
+            z-index: 1000; 
+            height: 72px; 
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* RECTANGULAR BOTTOM NAV DESIGN */
+        .nav-item { 
+            text-align: center; 
+            cursor: pointer; 
+            font-size: 10px; 
+            flex: 1; 
+            font-weight: 800; 
+            text-decoration: none; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative;
+            top: -10px; 
+            background: #111111; 
+            color: #FFD700 !important; 
+            width: 68px;  
+            height: 52px; 
+            max-width: 68px; 
+            border-radius: 12px; /* Rectangular shape */
+            border: 1px solid #FFA07A; /* Light Orange Border */
+            text-transform: uppercase; 
+            transition: all 0.2s ease; 
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.15);
+        }
+
+        .nav-item:active { transform: scale(0.95); background: #FFD700; color: #000000 !important; }
+
+        .nav-item span { 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-top: 0; 
+            color: inherit;
+        }
+
+        /* Modal Overlays */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.85); 
+            z-index: 2000; 
+            justify-content: center; 
+            align-items: center; 
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content { 
+            background: #111111; 
+            border-radius: 20px; 
+            padding: 24px; 
+            width: 90%; 
+            max-width: 340px; 
+            color: #ffffff; 
+            border: 1px solid #FFD700;
+            box-shadow: 0 10px 25px rgba(255,215,0,0.2);
+        }
+
+        .modal-content h3 { color: #FFD700; margin-bottom: 16px; text-align: center; font-size: 18px; font-weight: 700; }
+        .modal-btn { 
+            width: 100%; 
+            padding: 14px; 
+            background: #FFD700; 
+            border: none; 
+            border-radius: 12px; 
+            color: #000000; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            font-size: 13px; 
+            text-transform: uppercase; 
+        }
+
+        .close-modal { background: #333333; color: #ffffff; }
+        .logout-btn { background: #ff4444; color: #fff; border: none; }
+    </style>
+</head>
+<body>
+
+<!-- Android App Style Splash Loader Screen -->
+<div id="splashScreen">
+    <img src="https://i.imgur.com/01g5mvk.png" alt="Logo" class="splash-logo">
+    <div class="loader-bar"></div>
+</div>
+
+<div class="app-container">
+    
+    <!-- Fixed Top Panel Layout -->
+    <div class="sticky-top-panel">
+        <div class="header-action-line">
+            <button class="menu-btn" onclick="showProfileModal()">☰</button>
+            <div class="header-logo-container">
+                <img src="https://i.imgur.com/01g5mvk.png" alt="WIN777 Logo" class="header-logo-img">
+            </div>
+            <div class="action-shortcuts">
+                <a href="deposit.html" class="shortcut-btn">Deposit</a>
+                <a href="withdraw.html" class="shortcut-btn">Withdraw</a>
+                <div class="balance-box" onclick="showBalance()">₹<span id="userBalance">0</span></div>
+            </div>
+        </div>
+        <div class="panel-info-row">
+            <div class="user-meta">
+                <div class="name" id="profileName">Loading...</div>
+                <div class="phone" id="profilePhone">Loading...</div>
+            </div>
+            <div class="funds-header-label">Wallet & Banking</div>
+        </div>
+    </div>
+    
+    <!-- Scrollable Base Layout Frame -->
+    <div class="main-scroll-content">
+        <div class="section-title">Funding Shortcuts</div>
+        
+        <div class="fund-card">
+            <div class="fund-row-details">
+                <div>
+                    <div class="fund-title">Deposit Funds</div>
+                </div>
+                <a href="deposit.html" class="fund-action-btn">Deposit</a>
+            </div>
+        </div>
+
+        <div class="fund-card">
+            <div class="fund-row-details">
+                <div>
+                    <div class="fund-title">Withdraw Cash</div>
+                </div>
+                <a href="withdraw.html" class="fund-action-btn btn-withdraw-theme">Withdraw</a>
+            </div>
+        </div>
+
+        <!-- Bank Details Form Card -->
+        <div class="section-title">Bank Account Details</div>
+        <div class="fund-card">
+            <div class="form-row">
+                <label class="form-label">Account Holder Name</label>
+                <div class="form-input-field"><input type="text" id="bankAccountHolder" class="form-input" placeholder="Enter holder name"></div>
+            </div>
+            <div class="form-row">
+                <label class="form-label">Bank Name</label>
+                <div class="form-input-field"><input type="text" id="bankName" class="form-input" placeholder="Enter bank name"></div>
+            </div>
+            <div class="form-row">
+                <label class="form-label">Account Number</label>
+                <div class="form-input-field"><input type="text" id="bankAccountNumber" class="form-input" placeholder="Enter account number" inputmode="numeric"></div>
+            </div>
+            <div class="form-row">
+                <label class="form-label">IFSC Code</label>
+                <div class="form-input-field"><input type="text" id="bankIfsc" class="form-input" placeholder="Enter 11-digit IFSC"></div>
+            </div>
+            <button class="add-btn fund-action-btn" style="width:100%; margin-top:4px;" onclick="saveBankDetails()">Update Bank Details</button>
+        </div>
+
+        <!-- Transaction History Component -->
+        <div class="section-title">Recent Transaction History</div>
+        <div class="history-list" id="transactionHistoryList">
+            <div style="text-align:center; padding:20px; color:#aaaaaa; font-size:13px; font-weight:500;">Loading statement entries...</div>
+        </div>
+    </div>
+    
+    <!-- Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="chart.html" class="nav-item"><span>Chart</span></a>
+        <a href="mybids.html" class="nav-item"><span>My Bids</span></a>
+        <a href="dashboard.html" class="nav-item nav-item-home"><span>Home</span></a>
+        <a href="funds.html" class="nav-item active"><span>Fund</span></a>
+        <a href="chat.html" class="nav-item"><span>Support</span></a>
+    </div>
+</div>
+
+<!-- Modal Dialog Boxes -->
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <h3>My Profile</h3>
+        <div id="profileInfo"></div>
+        <button class="modal-btn logout-btn" onclick="logout()">🚪 Logout</button>
+        <button class="modal-btn close-modal" onclick="closeProfileModal()">Close</button>
+    </div>
+</div>
+
+<script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5",
+        measurementId: "G-R9CZ493377"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth(), db = firebase.firestore();
+    
+    let currentUserData = null;
+
+    function hideSplashScreen() {
+        const splash = document.getElementById('splashScreen');
+        if (splash && splash.style.opacity !== '0') {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.visibility = 'hidden';
+            }, 300);
+        }
+    }
+    
+    async function loadUserData() {
+        const user = auth.currentUser;
+        if (!user) { window.location.href = 'index.html'; return; }
+        const doc = await db.collection('users').doc(user.uid).get();
+        if (doc.exists) { 
+            if (doc.data().blocked === true) {
+                alert('🚫 Your account has been blocked by Admin.');
+                await auth.signOut();
+                window.location.href = 'index.html';
+                return;
+            }
+            currentUserData = doc.data(); 
+            document.getElementById('userBalance').innerText = currentUserData.balance || 0; 
+            document.getElementById('profileName').innerHTML = currentUserData.name || 'User'; 
+            document.getElementById('profilePhone').innerHTML = currentUserData.phone ? `📞 ${currentUserData.phone}` : ''; 
+            
+            let b = currentUserData.bankDetails;
+            if (b) {
+                document.getElementById('bankAccountHolder').value = b.accountHolder || '';
+                document.getElementById('bankName').value = b.bankName || '';
+                document.getElementById('bankAccountNumber').value = b.accountNumber || '';
+                document.getElementById('bankIfsc').value = b.ifscCode || '';
+            }
+            loadTransactionHistory(user.uid);
+        }
+    }
+
+    async function saveBankDetails() {
+        let ah = document.getElementById('bankAccountHolder').value.trim();
+        let bn = document.getElementById('bankName').value.trim();
+        let an = document.getElementById('bankAccountNumber').value.trim();
+        let ifsc = document.getElementById('bankIfsc').value.trim();
+        
+        if(!ah || !bn || !an || !ifsc) { alert('⚠️ Please fill out all required banking fields.'); return; }
+        
+        try {
+            await db.collection('users').doc(auth.currentUser.uid).update({
+                bankDetails: { accountHolder: ah, bankName: bn, accountNumber: an, ifscCode: ifsc }
+            });
+            alert('✅ Banking registration details updated successfully!');
+        } catch(e) { alert('Error updating data references.'); }
+    }
+
+    async function loadTransactionHistory(uid) {
+        const container = document.getElementById('transactionHistoryList');
+        try {
+            const snapshot = await db.collection('transactions').where('userId', '==', uid).get();
+            if (snapshot.empty) { 
+                container.innerHTML = '<div style="text-align:center; padding:20px; color:#aaaaaa; font-size:13px;">No history records found.</div>'; 
+                hideSplashScreen();
+                return; 
+            }
+            
+            let list = [];
+            snapshot.forEach(doc => {
+                let data = doc.data();
+                let date = data.date?.toDate ? data.date.toDate() : (data.date?.seconds ? new Date(data.date.seconds * 1000) : new Date());
+                list.push({ ...data, ts: date });
+            });
+            list.sort((a,b) => b.ts - a.ts);
+
+            container.innerHTML = list.map(t => {
+                let isCredit = t.type === 'credit';
+                return `
+                    <div class="history-item">
+                        <div class="history-meta">
+                            <span class="history-desc">${t.description || (isCredit ? 'Deposit' : 'Withdrawal')}</span>
+                            <span class="history-date">${t.ts.toLocaleString()}</span>
+                        </div>
+                        <span class="history-amount ${isCredit ? 'amount-credit' : 'amount-debit'}">
+                            ${isCredit ? '+' : '-'} ₹${t.amount}
+                        </span>
+                    </div>`;
+            }).join('');
+            
+            hideSplashScreen();
+        } catch(e) { 
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#ff4444; font-size:13px;">Failed to parse logs.</div>'; 
+            hideSplashScreen();
+        }
+    }
+    
+    function showBalance() { alert(`💰 Wallet Balance: ₹${currentUserData?.balance || 0}`); }
+    
+    function showProfileModal() { 
+        if(currentUserData){ 
+            document.getElementById('profileInfo').innerHTML = `<div style="text-align:center; margin-bottom:14px;"><div style="font-size:18px; font-weight:700; color:#FFD700;">${currentUserData.name}</div><div style="color:#aaaaaa; font-size:13px; margin:2px 0 6px 0;">${currentUserData.phone}</div><div style="font-size:20px; font-weight:800; color:#FFA07A;">₹${currentUserData.balance}</div></div>`; 
+            document.getElementById('profileModal').style.display='flex'; 
+        } 
+    }
+
+    function closeProfileModal() { document.getElementById('profileModal').style.display='none'; }
+    function logout() { auth.signOut().then(() => { sessionStorage.clear(); window.location.href='index.html'; }); }
+    
+    auth.onAuthStateChanged(user => { 
+        if(!user) window.location.href='index.html'; 
+        else { loadUserData(); } 
+    });
+
+    setTimeout(hideSplashScreen, 2500);
+</script>
+</body>
+</html>
