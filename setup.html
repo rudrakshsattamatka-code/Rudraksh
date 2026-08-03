@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIN777 - System Setup</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        body { background: #000000; color: #ffffff; font-family: sans-serif; text-align: center; padding: 50px; }
+        .box { background: #111111; padding: 30px; border-radius: 15px; border: 1px solid #FFD700; max-width: 500px; margin: 0 auto; }
+        button { background: #FFD700; color: #000; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+        #logs { text-align: left; margin-top: 20px; background: #222; padding: 15px; border-radius: 8px; font-family: monospace; color: #00e676; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2 style="color: #FFD700;">WIN777 - Firebase Auto Setup</h2>
+        <p style="color: #aaaaaa; font-size: 14px;">Click the button below to initialize the database with default settings (Admin Password, UPI, Notice Board).</p>
+        
+        <button id="setupBtn" onclick="runSetup()">Run Setup Process</button>
+        
+        <div id="logs" style="display:none;"></div>
+    </div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function logMessage(msg) {
+        const logsDiv = document.getElementById('logs');
+        logsDiv.style.display = 'block';
+        logsDiv.innerHTML += `<div>> ${msg}</div>`;
+    }
+
+    async function runSetup() {
+        document.getElementById('setupBtn').disabled = true;
+        document.getElementById('setupBtn').innerText = "Processing...";
+        document.getElementById('logs').innerHTML = ""; // Clear logs
+        
+        try {
+            logMessage("Starting database initialization...");
+
+            // 1. Setup Admin Password
+            await db.collection('settings').doc('admin').set({
+                password: "Gani99@@"
+            });
+            logMessage("✅ Admin credentials set successfully.");
+
+            // 2. Setup UPI ID
+            await db.collection('settings').doc('upi').set({
+                upiId: "gogami@axl"
+            });
+            logMessage("✅ Default UPI ID set successfully.");
+
+            // 3. Setup Notice Board
+            await db.collection('settings').doc('notice').set({
+                text: "Welcome to WIN777 Premium Gaming Platform!",
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            logMessage("✅ Notice board initialized.");
+
+            logMessage("🎉 SETUP COMPLETE! You can now use the App and Admin Panel.");
+            logMessage("⚠️ IMPORTANT: Please delete this setup.html file from your hosting for security.");
+            
+            document.getElementById('setupBtn').innerText = "Setup Completed";
+            document.getElementById('setupBtn').style.background = "#00e676";
+            
+        } catch (error) {
+            logMessage(`<span style="color: #ff4444;">❌ Error: ${error.message}</span>`);
+            document.getElementById('setupBtn').disabled = false;
+            document.getElementById('setupBtn').innerText = "Retry Setup";
+        }
+    }
+</script>
+</body>
+</html>
