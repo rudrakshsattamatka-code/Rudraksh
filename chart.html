@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WIN777 - Panel Charts</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+            border: none;
+        }
+
+        body { 
+            background: #000000; /* Black */
+            color: #ffffff; /* White */
+            padding-bottom: 90px; 
+            min-height: 100vh;
+        }
+
+        .app-container { 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #000000; /* Black */
+            min-height: 100vh; 
+            padding: 16px; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        /* Full Screen Android App Style Splash Screen */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000; /* Black */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 30px;
+        }
+
+        .loader-bar {
+            width: 120px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #FFD700; /* Yellow */
+            border-radius: 10px;
+            animation: loading 1.2s infinite linear;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0%; }
+            100% { left: 100%; }
+        }
+
+        /* Compact Header Bar */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: #111111; /* Dark Gray */
+            border-radius: 14px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+            border: 1px solid #FFD700; /* Yellow */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #FFD700; /* Yellow */
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-title-text {
+            font-size: 15px;
+            font-weight: 800;
+            color: #FFD700; /* Yellow */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-pill {
+            background: #000000;
+            padding: 6px 14px;
+            border-radius: 12px;
+            color: #FFD700; /* Yellow */
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid #FFD700;
+        }
+
+        .section-title { 
+            font-size: 12px; 
+            font-weight: 700; 
+            color: #FFD700; /* Yellow */
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+            margin: 0 4px 14px 4px; 
+        }
+
+        /* Menu Selection List view container */
+        .menu-list-wrapper { display: flex; flex-direction: column; gap: 10px; }
+
+        .chart-list-item {
+            background: #111111; /* Dark Gray */
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            border: 1px solid #FFD700; /* Yellow */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .chart-list-item:active { background: #222222; }
+
+        .market-info-box { display: flex; flex-direction: column; gap: 2px; }
+
+        .market-name-label { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #FFD700; /* Yellow */
+            text-transform: uppercase; 
+            letter-spacing: 0.3px;
+        }
+
+        .market-sub-label { 
+            font-size: 11px; 
+            color: #aaaaaa; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+        }
+
+        .action-arrow-indicator {
+            width: 32px; 
+            height: 32px; 
+            background: #FFD700; /* Yellow */
+            border-radius: 10px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: #000000; 
+            font-size: 14px; 
+            font-weight: 800;
+            border: 1px solid #FFA07A; /* Light Orange */
+        }
+
+        /* Full Screen Embedded Chart Frame Container */
+        .chart-frame-view {
+            display: none;
+            position: fixed;
+            top: 70px; 
+            left: 0; 
+            right: 0; 
+            bottom: 70px;
+            background: #000000; /* Black */
+            z-index: 900;
+        }
+
+        .embedded-chart-iframe {
+            width: 100%; 
+            height: 100%; 
+            border: none;
+            background: #ffffff; /* Keep inner iframe white for external chart readability */
+        }
+
+        /* Navigation Dock */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #000000; /* Black */
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            padding: 6px 10px 8px 10px; 
+            border-top: 1px solid #FFD700; /* Yellow Border */
+            z-index: 1000; 
+            height: 72px; 
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* NEW RECTANGULAR BOTTOM NAV DESIGN */
+        .nav-item { 
+            text-align: center; 
+            cursor: pointer; 
+            font-size: 10px; 
+            flex: 1; 
+            font-weight: 800; 
+            text-decoration: none; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative;
+            top: -10px; 
+            background: #111111; 
+            color: #FFD700 !important; 
+            width: 68px;  
+            height: 52px; 
+            max-width: 68px; 
+            border-radius: 12px; /* Rectangular shape */
+            border: 1px solid #FFA07A; /* Light Orange Border */
+            text-transform: uppercase; 
+            transition: all 0.2s ease; 
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.15);
+        }
+        
+        .nav-item:active { transform: scale(0.95); background: #FFD700; color: #000000 !important; }
+        
+        .nav-item span { 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-top: 0; 
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Android App Style Splash Screen Loader -->
+<div id="splashScreen">
+    <img src="https://i.imgur.com/01g5mvk.png" alt="Logo" class="splash-logo">
+    <div class="loader-bar"></div>
+</div>
+
+<div class="app-container">
+    
+    <!-- App Header -->
+    <div class="app-header">
+        <button class="back-btn" onclick="handleBackAction()">←</button>
+        <span class="header-title-text" id="pageHeaderTitle">Panel Charts</span>
+        <div class="balance-pill" onclick="showBalance()">₹<span id="userBalance">0</span></div>
+    </div>
+    
+    <!-- Menu View Deck Elements -->
+    <div id="menuListView">
+        <div class="section-title">Select Market Record</div>
+        <div class="menu-list-wrapper" id="chartMenuContainer">
+            <!-- Injected via Script -->
+        </div>
+    </div>
+
+    <!-- Live Viewport Chart Document Node -->
+    <div class="chart-frame-view" id="chartFrameView">
+        <iframe src="" class="embedded-chart-iframe" id="chartIframe"></iframe>
+    </div>
+    
+    <!-- Bottom Navigation Dock -->
+    <div class="bottom-nav">
+        <a href="chart.html" class="nav-item"><span>Chart</span></a>
+        <a href="mybids.html" class="nav-item"><span>My Bids</span></a>
+        <a href="dashboard.html" class="nav-item nav-item-home"><span>Home</span></a>
+        <a href="funds.html" class="nav-item"><span>Fund</span></a>
+        <a href="chat.html" class="nav-item"><span>Support</span></a>
+    </div>
+</div>
+
+<script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5",
+        measurementId: "G-R9CZ493377"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    let currentUserData = null;
+    let isViewingChart = false;
+
+    function hideSplashScreen() {
+        const splash = document.getElementById('splashScreen');
+        if (splash && splash.style.opacity !== '0') {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.visibility = 'hidden';
+            }, 300);
+        }
+    }
+
+    const marketChartsData = [
+        { name: "sridevi", url: "https://dpbossss.boston/panel-chart-record/sridevi.php#" },
+        { name: "time bazar", url: "https://dpbossss.boston/panel-chart-record/time-bazar.php" },
+        { name: "madhur day", url: "https://dpbossss.boston/panel-chart-record/madhur-day.php" },
+        { name: "milan day", url: "https://dpbossss.boston/panel-chart-record/milan-day.php" },
+        { name: "rajdhani day", url: "https://dpbossss.boston/panel-chart-record/rajdhani-day.php" },
+        { name: "kalyan", url: "https://dpbossss.boston/panel-chart-record/kalyan.php" },
+        { name: "sridevi night", url: "https://dpbossss.boston/panel-chart-record/sridevi-night.php" },
+        { name: "madhur night", url: "https://dpbossss.boston/panel-chart-record/madhur-night.php" },
+        { name: "milan night", url: "https://dpbossss.boston/panel-chart-record/milan-night.php" },
+        { name: "rajdhani night", url: "https://dpbossss.boston/panel-chart-record/rajdhani-night.php" },
+        { name: "kalyan night", url: "https://dpbossss.boston/panel-chart-record/kalyan-night.php" },
+        { name: "main bazar", url: "https://dpbossss.boston/panel-chart-record/main-bazar.php" }
+    ];
+
+    function buildChartMenu() {
+        const container = document.getElementById('chartMenuContainer');
+        container.innerHTML = marketChartsData.map(m => `
+            <div class="chart-list-item" onclick="openChartIframe('${m.url}', '${m.name}')">
+                <div class="market-info-box">
+                    <span class="market-name-label">${m.name}</span>
+                    <span class="market-sub-label">Panel Chart History</span>
+                </div>
+                <div class="action-arrow-indicator">→</div>
+            </div>
+        `).join('');
+    }
+
+    function openChartIframe(url, name) {
+        document.getElementById('chartIframe').src = url;
+        document.getElementById('menuListView').style.display = 'none';
+        document.getElementById('chartFrameView').style.display = 'block';
+        document.getElementById('pageHeaderTitle').innerText = name.toUpperCase();
+        isViewingChart = true;
+    }
+
+    function handleBackAction() {
+        if (isViewingChart) {
+            document.getElementById('chartIframe').src = "";
+            document.getElementById('chartFrameView').style.display = 'none';
+            document.getElementById('menuListView').style.display = 'block';
+            document.getElementById('pageHeaderTitle').innerText = "Panel Charts";
+            isViewingChart = false;
+        } else {
+            window.location.href = 'dashboard.html';
+        }
+    }
+
+    async function loadUserData(){ 
+        const user = auth.currentUser;
+        if (!user) return;
+        
+        let doc = await db.collection('users').doc(user.uid).get(); 
+        if(doc.exists){ 
+            if (doc.data().blocked === true) {
+                alert('🚫 Your account has been blocked by Admin.');
+                await auth.signOut();
+                window.location.href = 'index.html';
+                return;
+            }
+
+            currentUserData = doc.data(); 
+            document.getElementById('userBalance').innerText = currentUserData.balance || 0; 
+        } 
+        hideSplashScreen();
+    }
+    
+    function showBalance(){ alert(`💰 Wallet Balance: ₹${currentUserData?.balance||0}`); }
+    
+    buildChartMenu();
+    
+    auth.onAuthStateChanged(async (user) => { 
+        if (!user) {
+            window.location.href = 'index.html'; 
+        } else { 
+            await loadUserData(); 
+        } 
+    });
+
+    setTimeout(hideSplashScreen, 2500);
+</script>
+</body>
+</html>
