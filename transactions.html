@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WIN777 - Transactions</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+            border: none;
+        }
+
+        body { 
+            background: #000000; /* Black */
+            color: #ffffff; /* White text */
+            padding-bottom: 90px; 
+            min-height: 100vh;
+        }
+
+        .app-container { 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #000000; /* Black */
+            min-height: 100vh; 
+            position: relative; 
+        }
+
+        /* Full Screen Android App Style Splash Screen */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000; /* Black */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 30px;
+        }
+
+        .loader-bar {
+            width: 120px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #FFD700; /* Yellow */
+            border-radius: 10px;
+            animation: loading 1.2s infinite linear;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0%; }
+            100% { left: 100%; }
+        }
+
+        /* Top Header Bar */
+        .header { 
+            background: #111111; /* Dark Gray */
+            padding: 12px 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            border-bottom: 1px solid #FFD700; /* Yellow */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .back-btn { 
+            background: none; 
+            border: none; 
+            font-size: 24px; 
+            color: #FFD700; /* Yellow */
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+        }
+
+        .header-logo-img {
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .title-text {
+            font-size: 14px;
+            font-weight: 800;
+            color: #FFD700; /* Yellow */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* History Cards */
+        .history-list {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-item { 
+            background: #111111; /* Dark Gray */
+            padding: 14px; 
+            border-radius: 14px; 
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: 1px solid #FFD700; /* Yellow Border */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .history-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #333333;
+            padding-bottom: 8px;
+        }
+
+        .history-id { 
+            color: #FFA07A; /* Light Orange */
+            font-size: 11px; 
+            font-family: monospace; 
+            font-weight: 700;
+        }
+
+        .history-amount { 
+            font-size: 16px; 
+            font-weight: 800; 
+        }
+
+        .amount-credit { color: #FFD700; } /* Yellow for Deposit */
+        .amount-debit { color: #ff4444; } /* Red for Withdraw */
+
+        .history-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-type { 
+            font-size: 10px; 
+            padding: 3px 8px; 
+            border-radius: 6px; 
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .type-deposit { background: rgba(255, 215, 0, 0.2); color: #FFD700; }
+        .type-withdraw { background: rgba(255, 68, 68, 0.2); color: #ff4444; }
+
+        .status-text {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .status-completed, .status-approved { color: #00e676; } /* Green */
+        .status-rejected { color: #ff4444; } /* Red */
+        .status-pending { color: #FFA07A; } /* Light Orange */
+
+        .history-date { 
+            color: #aaaaaa; 
+            font-size: 10px; 
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .no-data { 
+            text-align: center; 
+            color: #aaaaaa; 
+            padding: 60px 20px; 
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Bottom Fixed Navigation */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #000000; 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            padding: 6px 10px 8px 10px; 
+            border-top: 1px solid #FFD700; 
+            z-index: 1000; 
+            height: 72px; 
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* RECTANGULAR BOTTOM NAV DESIGN */
+        .nav-item { 
+            text-align: center; 
+            cursor: pointer; 
+            font-size: 10px; 
+            flex: 1; 
+            font-weight: 800; 
+            text-decoration: none; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative;
+            top: -10px; 
+            background: #111111; 
+            color: #FFD700 !important; 
+            width: 68px;  
+            height: 52px; 
+            max-width: 68px; 
+            border-radius: 12px; /* Rectangular shape */
+            border: 1px solid #FFA07A; /* Light Orange Border */
+            text-transform: uppercase; 
+            transition: all 0.2s ease; 
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.15);
+        }
+
+        .nav-item:active { transform: scale(0.95); background: #FFD700; color: #000000 !important; }
+
+        .nav-item span { 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-top: 0; 
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Android App Style Splash Screen Loader -->
+<div id="splashScreen">
+    <img src="https://i.imgur.com/01g5mvk.png" alt="Logo" class="splash-logo">
+    <div class="loader-bar"></div>
+</div>
+
+<div class="app-container">
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <span class="title-text">Transaction Statement</span>
+        <img src="https://i.imgur.com/01g5mvk.png" alt="WIN777 Logo" class="header-logo-img">
+    </div>
+
+    <div class="history-list" id="historyList">
+        <div style="text-align:center; padding:40px; color:#aaaaaa; font-size:12px;">Loading transactions...</div>
+    </div>
+
+    <!-- Navigation Dock -->
+    <div class="bottom-nav">
+        <a href="mybids.html" class="nav-item"><span>Passbook</span></a>
+        <a href="mybids.html" class="nav-item"><span>My Bids</span></a>
+        <a href="dashboard.html" class="nav-item nav-item-home"><span>Home</span></a>
+        <a href="funds.html" class="nav-item active"><span>Fund</span></a>
+        <a href="chat.html" class="nav-item"><span>Support</span></a>
+    </div>
+</div>
+
+<script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5",
+        measurementId: "G-R9CZ493377"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    function hideSplashScreen() {
+        const splash = document.getElementById('splashScreen');
+        if (splash && splash.style.opacity !== '0') {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.visibility = 'hidden';
+            }, 300);
+        }
+    }
+
+    async function loadHistory() {
+        let user = auth.currentUser;
+        if (!user) { window.location.href = 'index.html'; return; }
+
+        let userDoc = await db.collection('users').doc(user.uid).get();
+        if (userDoc.exists && userDoc.data().blocked === true) {
+            alert('🚫 Your account has been blocked by Admin.');
+            await auth.signOut();
+            window.location.href = 'index.html';
+            return;
+        }
+
+        try {
+            let transactionsSnap = await db.collection('transactions').where('userId', '==', user.uid).get();
+            let withdrawalsSnap = await db.collection('withdrawRequests').where('userId', '==', user.uid).get();
+
+            let items = [];
+
+            withdrawralsSnap.forEach(doc => {
+                let w = doc.data();
+                let date = w.date?.toDate ? w.date.toDate() : (w.date?.seconds ? new Date(w.date.seconds * 1000) : new Date(0));
+                items.push({
+                    id: doc.id,
+                    type: 'debit',
+                    category: 'Withdrawal',
+                    amount: w.amount,
+                    status: w.status || 'Pending',
+                    date: date
+                });
+            });
+
+            transactionsSnap.forEach(doc => {
+                let t = doc.data();
+                if (t.type === 'credit') {
+                    let date = t.date?.toDate ? t.date.toDate() : (t.date?.seconds ? new Date(t.date.seconds * 1000) : new Date(0));
+                    items.push({
+                        id: doc.id,
+                        type: 'credit',
+                        category: 'Deposit',
+                        amount: t.amount,
+                        status: t.status || 'Pending',
+                        date: date
+                    });
+                }
+            });
+
+            items.sort((a, b) => b.date - a.date);
+
+            let container = document.getElementById('historyList');
+
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-data">No transactions found</div>';
+                hideSplashScreen();
+                return;
+            }
+
+            let html = items.map(item => {
+                let isCredit = item.type === 'credit';
+                let statusLower = item.status.toLowerCase();
+                let statusClass = statusLower === 'completed' || statusLower === 'approved' ? 'status-completed' : (statusLower === 'rejected' ? 'status-rejected' : 'status-pending');
+
+                return `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <span class="history-id">REF: #${item.id.substring(0, 10).toUpperCase()}</span>
+                            <span class="history-amount ${isCredit ? 'amount-credit' : 'amount-debit'}">
+                                ${isCredit ? '+' : '-'} ₹${item.amount}
+                            </span>
+                        </div>
+                        <div class="history-row">
+                            <span class="history-type ${isCredit ? 'type-deposit' : 'type-withdraw'}">${item.category}</span>
+                            <span class="status-text ${statusClass}">${item.status}</span>
+                        </div>
+                        <div class="history-date">📅 ${item.date.getTime() > 0 ? item.date.toLocaleString() : 'Pending'}</div>
+                    </div>`;
+            }).join('');
+
+            container.innerHTML = html;
+            hideSplashScreen();
+        } catch (e) {
+            document.getElementById('historyList').innerHTML = `<div class="no-data" style="color:#ff4444;">Error loading statement: ${e.message}</div>`;
+            hideSplashScreen();
+        }
+    }
+
+    function goBack() { window.location.href = 'dashboard.html'; }
+
+    auth.onAuthStateChanged(user => { 
+        if (!user) window.location.href = 'index.html'; 
+        else loadHistory(); 
+    });
+
+    setTimeout(hideSplashScreen, 2500);
+</script>
+</body>
+</html>
