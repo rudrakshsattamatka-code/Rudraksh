@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WIN777 - Place Bets</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+            border: none;
+        }
+
+        body { 
+            background: #000000; /* Black Background */
+            color: #ffffff; /* White Text */
+            padding-top: 56px; 
+            padding-bottom: 75px; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            overscroll-behavior-y: none;
+        }
+
+        .app-container { 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #000000; /* Black */
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000; /* Black */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 30px;
+        }
+
+        .loader-bar {
+            width: 120px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #FFD700; /* Yellow Loader */
+            border-radius: 10px;
+            animation: loading 1.2s infinite linear;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0%; }
+            100% { left: 100%; }
+        }
+
+        .sticky-top-panel {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 480px; 
+            margin: 0 auto; 
+            height: 56px;
+            background: #000000; /* Black */
+            color: #ffffff; 
+            z-index: 1000;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 16px;
+            border-bottom: 1px solid #FFD700; /* Yellow Border */
+        }
+
+        .top-panel-back-arrow { 
+            background: none; 
+            border: none; 
+            color: #FFD700; /* Yellow */
+            font-size: 24px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+        }
+
+        .market-header-info { 
+            flex: 1; 
+            margin-left: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+
+        .market-meta-title { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #FFD700; /* Yellow */
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+
+        .balance-box-display { 
+            font-size: 14px; 
+            font-weight: 700; 
+            color: #FFD700; /* Yellow */
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            background: #111111;
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid #FFD700; /* Yellow Border */
+        }
+
+        .app-navigation-control-bar { 
+            display: flex; 
+            align-items: center; 
+            padding: 10px 16px; 
+            background: #111111; /* Dark Gray */
+            margin-top: 56px; 
+            flex-shrink: 0; 
+        }
+
+        .back-navigation-btn { 
+            background: none; 
+            border: none; 
+            color: #FFD700; /* Yellow */
+            font-size: 13px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 4px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+
+        .game-types-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+            padding: 4px 16px 16px 16px; 
+        }
+
+        .game-type-card { 
+            background: #111111; /* Dark Gray */
+            border-radius: 16px; 
+            padding: 18px 12px; 
+            text-align: center; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            min-height: 95px;
+            border: 1px solid #FFD700; /* Yellow Border */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            transition: transform 0.1s ease;
+        }
+
+        .game-type-card:active {
+            transform: scale(0.97);
+        }
+
+        .card-shape-icon { 
+            width: 36px; 
+            height: 36px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 26px; 
+            font-weight: bold; 
+        }
+
+        .icon-red { color: #ff4444; }
+        .icon-green { color: #00e676; }
+        .icon-blue { color: #2196f3; }
+        .icon-orange { color: #FFA07A; } /* Light Orange */
+        .icon-purple { color: #d500f9; }
+        
+        .game-card-name { 
+            font-size: 13px; 
+            font-weight: 700; 
+            color: #ffffff; 
+            text-transform: uppercase; 
+            letter-spacing: 0.3px; 
+        }
+
+        .bidding-panel { display: none; width: 100%; flex: 1; flex-direction: column; overflow: hidden; }
+        .bidding-panel-active { display: flex !important; }
+
+        .game-panel-content { padding: 4px 16px 6px 16px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+        
+        .native-image-row { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 12px; }
+        .native-image-label { font-size: 13px; color: #FFD700; font-weight: 600; flex-shrink: 0; width: 120px; text-align: left; } /* Yellow */
+        
+        .select-native-dropdown-wrapper { flex: 1; position: relative; background: #000000; border-radius: 12px; padding-right: 12px; border: 1px solid #FFA07A; } /* Light Orange */
+        .select-native-input { width: 100%; padding: 12px 14px; background: transparent; border: none; outline: none; font-size: 13.5px; font-weight: 700; color: #ffffff; appearance: none; -webkit-appearance: none; cursor: pointer; text-transform: uppercase; }
+        .select-native-dropdown-wrapper::after { content: '▼'; font-size: 9px; color: #FFA07A; position: absolute; right: 14px; top: 15px; pointer-events: none; }
+
+        .native-input-box-wrapper { flex: 1; background: #000000; border-radius: 12px; border: 1px solid #FFA07A; } /* Light Orange */
+        .native-form-input-field { 
+            width: 100%; 
+            padding: 12px; 
+            background: transparent; 
+            border: none; 
+            outline: none; 
+            font-size: 14.5px; 
+            font-weight: 600; 
+            color: #ffffff; 
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        .native-add-more-btn { 
+            align-self: flex-end; 
+            background: #FFD700; /* Yellow */
+            color: #000000; /* Black Text */
+            border: none; 
+            padding: 12px 36px; 
+            border-radius: 12px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 2px; 
+            text-transform: uppercase;
+        }
+
+        .native-add-more-btn:active { background: #FFA07A; } /* Light Orange */
+
+        .table-metadata-header-row { display: flex; justify-content: space-between; padding: 8px 16px; background: #111111; width: 100%; flex-shrink: 0; margin-top: 6px; }
+        .meta-col-label { font-size: 12px; font-weight: 700; color: #FFD700; flex: 1; text-align: center; text-transform: uppercase; } /* Yellow */
+        .meta-col-label:first-child { text-align: left; padding-left: 8px; }
+        .meta-col-label:last-child { text-align: right; padding-right: 24px; }
+
+        .isolated-scroll-bids-window { 
+            flex: 1; 
+            overflow-y: auto !important; 
+            background: #000000; /* Black */
+            width: 100%; 
+            display: block;
+            -webkit-overflow-scrolling: touch; 
+            overscroll-behavior-y: contain;
+        }
+        .bids-section { display: flex; flex-direction: column; padding-bottom: 20px; }
+        
+        .bid-item { background: transparent; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333333; }
+        .bid-info { display: flex; width: 100%; justify-content: space-between; align-items: center; }
+        .bid-value { font-size: 14px; font-weight: 700; color: #ffffff; flex: 1; text-align: left; }
+        .bid-points { font-size: 14px; color: #FFA07A; font-weight: 700; flex: 1; text-align: center; } /* Light Orange */
+        .bid-resolved-type-label { font-size: 13px; color: #aaaaaa; font-weight: 600; flex: 1; text-align: right; }
+        .remove-bid { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 16px; padding-left: 14px; font-weight: bold; }
+
+        .digit-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 2px 16px; width: 100%; flex-shrink: 0; }
+        .digit-btn { background: #111111; border-radius: 10px; padding: 12px 0; text-align: center; font-size: 16px; font-weight: 700; color: #ffffff; cursor: pointer; border: 1px solid #FFA07A; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        .digit-btn:active { background: #FFD700; color: #000000; }
+
+        .fixed-bottom-summary-deck {
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 480px; 
+            margin: 0 auto;
+            background: #000000; /* Black */
+            border-top: 1px solid #FFD700; /* Yellow */
+            padding: 8px 20px 12px 24px; 
+            z-index: 1000;
+            display: none; 
+            align-items: center; 
+            justify-content: space-between; 
+            height: 65px; 
+            flex-shrink: 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+
+        .summary-metrics-tray { display: flex; gap: 30px; }
+        .summary-block { display: flex; flex-direction: column; align-items: center; }
+        .summary-label { font-size: 11px; color: #aaaaaa; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+        .summary-value { font-size: 16px; font-weight: 800; color: #FFD700; } /* Yellow */
+        
+        .submit-btn { 
+            background: #FFD700; /* Yellow */
+            color: #000000; /* Black Text */
+            border: none; 
+            padding: 12px 36px; 
+            border-radius: 12px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            text-transform: uppercase;
+        }
+
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .message { text-align: center; padding: 8px; border-radius: 8px; font-size: 13px; font-weight: 600; margin: 4px 16px; flex-shrink: 0; }
+        .error { background: rgba(239, 68, 68, 0.2); color: #ff4444; }
+        .success { background: rgba(16, 185, 129, 0.2); color: #00e676; }
+
+        /* Stylish Confirmation Popup Modal */
+        #confirmPopupModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+            backdrop-filter: blur(3px);
+        }
+        .popup-card {
+            background: #111111; /* Dark Gray */
+            width: 100%;
+            max-width: 320px;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(255,215,0,0.2);
+            border: 1px solid #FFD700;
+            animation: popupScale 0.2s ease-in-out;
+        }
+        @keyframes popupScale {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .popup-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFD700; /* Yellow */
+            margin-bottom: 8px;
+        }
+        .popup-desc {
+            font-size: 14px;
+            color: #aaaaaa;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .popup-btn-cancel, .popup-btn-confirm {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .popup-btn-cancel {
+            background: #333333;
+            color: #ffffff;
+            border: none;
+        }
+        .popup-btn-confirm {
+            background: #FFD700; /* Yellow */
+            color: #000000;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="splashScreen">
+    <img src="https://i.imgur.com/01g5mvk.png" alt="Logo" class="splash-logo">
+    <div class="loader-bar"></div>
+</div>
+
+<!-- Stylish Confirmation Popup Modal -->
+<div id="confirmPopupModal">
+    <div class="popup-card">
+        <div class="popup-title">Confirm Bet</div>
+        <div class="popup-desc" id="popupDescText">Are you sure you want to place these bets?</div>
+        <div class="popup-buttons">
+            <button class="popup-btn-cancel" onclick="closeConfirmPopup()">Cancel</button>
+            <button class="popup-btn-confirm" onclick="executeConfirmedSubmit()">Yes, Place</button>
+        </div>
+    </div>
+</div>
+
+<div class="app-container">
+    
+    <div class="sticky-top-panel">
+        <button class="top-panel-back-arrow" onclick="handleNavigationHeaderBack()">←</button>
+        <div class="market-header-info">
+            <div class="market-meta-title" id="marketName">MARKET</div>
+            <div class="balance-box-display">
+                ₹<span id="userBalance">0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-navigation-control-bar">
+        <button class="back-navigation-btn" id="headerBackBtn" onclick="handleNavigationHeaderBack()">← Markets</button>
+    </div>
+
+    <div id="gameSelectionScreen" style="display: block; overflow-y: auto; flex: 1; overscroll-behavior-y: contain;">
+        <div class="game-types-grid" id="gameTypesGrid"></div>
+    </div>
+
+    <div id="biddingPanel" class="bidding-panel">
+        <div id="gamePanel" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;"></div>
+        <div id="message" class="message hidden"></div>
+    </div>
+
+    <div class="fixed-bottom-summary-deck" id="bottomSummaryDeck">
+        <div class="summary-metrics-tray">
+            <div class="summary-block"><span class="summary-label">Bids</span><span class="summary-value" id="totalBids">0</span></div>
+            <div class="summary-block"><span class="summary-label">Points</span><span class="summary-value" id="totalPoints">0</span></div>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="triggerSubmitConfirmation()">Submit</button>
+    </div>
+</div>
+
+<script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5",
+        measurementId: "G-R9CZ493377"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth(), db = firebase.firestore();
+    
+    let currentUser = null, currentMarket = '', currentMarketId = '', currentStatus = 'open', currentGameType = '', bids = [];
+    let marketOpenEndTime = null, marketCloseEndTime = null, isSubmitting = false, selectedOpenClose = 'Open';
+    let serverTimeOffset = 0;
+
+    function hideSplashScreen() {
+        const splash = document.getElementById('splashScreen');
+        if (splash && splash.style.opacity !== '0') {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.visibility = 'hidden';
+            }, 300);
+        }
+    }
+
+    const validSinglePanaList = ['128','137','146','236','245','290','380','470','489','560','579','678','129','138','147','156','237','246','345','390','480','570','589','679','120','139','148','157','238','247','256','346','490','580','670','689','130','149','158','167','239','248','257','347','356','590','680','789','140','159','168','230','249','258','267','348','357','456','690','780','123','150','169','178','240','259','268','349','358','367','457','790','124','160','278','179','250','269','340','359','368','458','467','890','125','134','170','189','260','279','350','369','468','378','459','567','126','135','180','234','270','289','360','379','450','469','478','568','127','136','145','190','235','280','370','389','460','479','569','578'];
+    const validDoublePanaList = ['100','119','155','227','335','344','399','588','669','110','200','228','255','366','499','660','688','778','166','229','300','337','355','445','599','779','788','112','220','266','338','400','446','455','699','770','113','122','177','339','366','447','500','799','889','600','114','277','330','448','466','556','880','899','115','133','188','223','377','449','557','566','700','116','224','233','288','440','477','558','800','990','117','144','199','225','388','559','577','667','900','118','226','244','299','334','488','550','668','677'];
+    const validTriplePanaList = ['111','222','333','444','555','666','777','888','999','000'];
+
+    const familyJodiGroups = [
+        ['12','17','21','26','62','67','71','76'], ['13','18','31','36','63','68','81','86'],
+        ['14','19','41','46','64','69','91','96'], ['01','06','10','15','51','56','60','65'],
+        ['23','28','32','37','73','78','82','87'], ['24','29','42','47','74','79','92','97'],
+        ['02','07','20','25','52','57','70','75'], ['34','39','43','48','84','89','93','98'],
+        ['03','08','30','35','53','58','80','85'], ['04','09','40','45','54','59','90','95']
+    ];
+
+    const redJodiGroups = [
+        ['05','00','50','55'], ['11','16','61','66'], ['22','27','72','77'],
+        ['38','33','83','88'], ['49','44','94','99']
+    ];
+
+    const familyPanaGroups = [
+        ['111','116','166','666'], ['112','117','126','167','266','667'], ['113','118','136','168','366','668'],
+        ['114','119','146','169','466','669'], ['110','115','156','160','566','660'], ['122','127','177','226','267','677'],
+        ['123','128','137','178','236','268','367','678'], ['124','129','147','179','246','269','467','679'],
+        ['120','125','157','170','256','260','567','670'], ['133','138','188','336','368','688'],
+        ['134','139','148','189','346','369','468','689'], ['130','135','158','180','356','360','568','680'],
+        ['144','149','199','446','469','699'], ['140','145','159','190','456','460','569','690'],
+        ['100','150','155','556','560','600'], ['222','227','277','777'], ['223','228','237','278','377','778'],
+        ['224','229','247','279','477','779'], ['220','225','257','270','577','770'], ['233','238','288','337','378','788'],
+        ['234','239','248','289','347','379','478','789'], ['230','235','258','280','357','370','578','780'],
+        ['244','249','299','447','479','799'], ['240','245','259','290','457','470','579','790'],
+        ['200','250','255','557','570','700'], ['333','338','388','888'], ['334','339','348','389','488','889'],
+        ['330','335','358','380','588','880'], ['344','349','399','448','489','899'], ['340','345','359','390','458','480','589','890'],
+        ['300','350','355','558','580','800'], ['444','449','499','999'], ['440','445','459','490','599','990'],
+        ['400','450','455','559','590','900'], ['000','500','550','555']
+    ];
+
+    const allGameTypes = [
+        { name: 'Single Digit', availableInOpen: true, availableInClose: true, shape: '▪️', color: 'icon-red' },
+        { name: 'Family Red Jodi', availableInOpen: true, availableInClose: false, shape: '⁜', color: 'icon-red' },
+        { name: 'Jodi', availableInOpen: true, availableInClose: false, shape: '🎲', color: 'icon-green' },
+        { name: 'Family Jodi', availableInOpen: true, availableInClose: false, shape: '🎲', color: 'icon-green' },
+        { name: 'Single Pana', availableInOpen: true, availableInClose: true, shape: '♠', color: 'icon-blue' },
+        { name: 'Family Pana', availableInOpen: true, availableInClose: true, shape: '♠', color: 'icon-blue' },
+        { name: 'Double Pana', availableInOpen: true, availableInClose: true, shape: '♣', color: 'icon-orange' },
+        { name: 'Half Sangam A', availableInOpen: true, availableInClose: false, shape: '▲', color: 'icon-orange' },
+        { name: 'Triple Pana', availableInOpen: true, availableInClose: true, shape: '✦', color: 'icon-purple' },
+        { name: 'Half Sangam B', availableInOpen: true, availableInClose: false, shape: '▼', color: 'icon-purple' },
+        { name: 'Full Sangam', availableInOpen: true, availableInClose: false, shape: '✪', color: 'icon-green' }
+    ];
+
+    async function syncServerOffset() {
+        try {
+            const docRef = db.collection('settings').doc('servertime');
+            await docRef.set({ timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            const doc = await docRef.get();
+            if (doc.exists && doc.data().timestamp) {
+                const sTime = doc.data().timestamp.toDate().getTime();
+                serverTimeOffset = sTime - Date.now();
+            }
+        } catch(e) {
+            serverTimeOffset = 0;
+        }
+    }
+
+    function isBettingAllowedFast() {
+        if (currentStatus === 'holiday') return { allowed: false, message: '⚠️ Market Closed due to holiday.' };
+        
+        const nowServer = new Date(Date.now() + serverTimeOffset);
+        const curMin = nowServer.getHours() * 60 + nowServer.getMinutes();
+        
+        let evaluatedTimeLimit = marketOpenEndTime;
+        if (currentStatus === 'close') {
+            evaluatedTimeLimit = marketCloseEndTime;
+        } else if (currentGameType && ['Single Digit', 'Single Pana', 'Double Pana', 'Triple Pana', 'Family Pana'].includes(currentGameType)) {
+            evaluatedTimeLimit = (selectedOpenClose === 'Open') ? marketOpenEndTime : marketCloseEndTime;
+        }
+
+        if (evaluatedTimeLimit && curMin >= evaluatedTimeLimit) {
+            return { allowed: false, message: '⚠️ Time over for bidding! Market has been closed.' };
+        }
+        return { allowed: true };
+    }
+
+    function timeToMinutes(t) { if (!t) return null; const p = t.split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); }
+
+    function renderGameTypeSelection() {
+        const games = (currentStatus === 'open') ? allGameTypes.filter(g => g.availableInOpen) : allGameTypes.filter(g => g.availableInClose);
+        document.getElementById('gameTypesGrid').innerHTML = games.map(g => `
+            <div class="game-type-card" onclick="selectGame('${g.name}')">
+                <span class="card-shape-icon ${g.color}">${g.shape}</span>
+                <div class="game-card-name">${g.name}</div>
+            </div>
+        `).join('');
+    }
+
+    function selectGame(type) {
+        currentGameType = type;
+        const check = isBettingAllowedFast(); 
+        if (!check.allowed) { alert(check.message); return; }
+        
+        document.getElementById('gameSelectionScreen').style.display = 'none';
+        document.getElementById('biddingPanel').classList.add('bidding-panel-active');
+        document.getElementById('bottomSummaryDeck').style.display = 'flex';
+        document.getElementById('headerBackBtn').innerText = "← Games";
+        
+        window.history.pushState({ inSubPanel: true }, "");
+        renderPanel();
+    }
+
+    function showGameSelection() {
+        currentGameType = '';
+        document.getElementById('biddingPanel').classList.remove('bidding-panel-active');
+        document.getElementById('bottomSummaryDeck').style.display = 'none';
+        document.getElementById('gameSelectionScreen').style.display = 'block';
+        document.getElementById('headerBackBtn').innerText = "← Markets";
+        bids = []; updateSummary();
+    }
+
+    function handleNavigationHeaderBack() {
+        const selectScreenVisibility = document.getElementById('gameSelectionScreen').style.display;
+        if(selectScreenVisibility === 'none' || selectScreenVisibility === '') {
+            showGameSelection();
+        } else {
+            window.location.href = 'dashboard.html';
+        }
+    }
+
+    window.addEventListener('popstate', function(event) {
+        const selectScreenVisibility = document.getElementById('gameSelectionScreen').style.display;
+        if (selectScreenVisibility === 'none' || selectScreenVisibility === '') {
+            showGameSelection();
+        } else {
+            window.location.href = 'dashboard.html';
+        }
+    });
+
+    function detectExplicitPanaType(val) {
+        if (validTriplePanaList.includes(val)) return 'Triple Pana';
+        if (validDoublePanaList.includes(val)) return 'Double Pana';
+        return 'Single Pana';
+    }
+
+    // 🔥 FIX 1: Prevent any new bids from being added during submission or confirmation
+    function addToBidsDirectly(resolvedGameType, val, pts) {
+        if (isSubmitting || (document.getElementById('confirmPopupModal') && document.getElementById('confirmPopupModal').style.display === 'flex')) {
+            return; // Block input silently if submission is in progress
+        }
+
+        const check = isBettingAllowedFast(); 
+        if (!check.allowed) { alert(check.message); return; }
+        if (isNaN(pts) || pts < 5) { alert('Min ₹5 required. Enter points first.'); return; }
+        
+        let targetType = (['Single Digit', 'Single Pana', 'Double Pana', 'Triple Pana', 'Family Pana'].includes(resolvedGameType)) ? ((currentStatus === 'close') ? 'Close' : selectedOpenClose) : 'Close';
+
+        const existingBid = bids.find(b => b.type === resolvedGameType && b.value === val && b.bidType === targetType);
+        if(existingBid) {
+            existingBid.points += pts;
+        } else {
+            bids.push({ type: resolvedGameType, gameType: resolvedGameType, bidType: targetType, value: val, points: pts, market: currentMarket, marketId: currentMarketId });
+        }
+        updateSummary(); 
+        const targetBlock = document.getElementById('bidsContainerTargetBlock');
+        if(targetBlock) targetBlock.innerHTML = renderBidsOnly();
+    }
+
+    function handleJodiInput(el) {
+        let val = el.value.replace(/\D/g, '');
+        el.value = val;
+        if (val.length === 2) {
+            const ptsInput = document.getElementById('pointsInput');
+            const pts = parseInt(ptsInput.value);
+            if (isNaN(pts) || pts < 5) {
+                alert('Min ₹5 required. Please enter points above.');
+                el.value = '';
+                return;
+            }
+            addToBidsDirectly('Jodi', val, pts);
+            el.value = ''; 
+        }
+    }
+
+    function handleAutoAddManualButton() {
+        let v1El = document.getElementById('v1'); if(!v1El) return;
+        const val = v1El.value.trim();
+        const pts = parseInt(document.getElementById('pointsInput').value);
+        if(isNaN(pts) || pts < 5) { alert('Min ₹5 required'); return; }
+        if(!val) { alert('Please enter a valid number'); return; }
+
+        if((currentGameType === 'Family Jodi' || currentGameType === 'Family Red Jodi') && val.length === 2) {
+            let matchedFamily = familyJodiGroups.find(arr => arr.includes(val));
+            if(matchedFamily) {
+                matchedFamily.forEach(num => addToBidsDirectly('Jodi', num, pts));
+                showMsg("✨ Family Jodi Group Added", false); v1El.value = ''; return;
+            }
+            let matchedRed = redJodiGroups.find(arr => arr.includes(val));
+            if(matchedRed) {
+                matchedRed.forEach(num => addToBidsDirectly('Jodi', num, pts));
+                showMsg("✨ Red Family Group Added", false); v1El.value = ''; return;
+            }
+            addToBidsDirectly('Jodi', val, pts); v1El.value = '';
+        } 
+        else if(currentGameType === 'Family Pana' && val.length === 3) {
+            let matchedPanaGroup = familyPanaGroups.find(arr => arr.includes(val));
+            if(matchedPanaGroup) {
+                matchedPanaGroup.forEach(num => {
+                    let exactPanaType = detectExplicitPanaType(num);
+                    addToBidsDirectly(exactPanaType, num, pts);
+                });
+                showMsg("✨ Pana Family Group Added", false); v1El.value = ''; return;
+            }
+            let exactPanaType = detectExplicitPanaType(val);
+            addToBidsDirectly(exactPanaType, val, pts); v1El.value = '';
+        }
+        else if(['Single Pana', 'Double Pana', 'Triple Pana'].includes(currentGameType) && val.length === 3) {
+            if(currentGameType==='Single Pana' && !validSinglePanaList.includes(val)){ alert('Invalid Single Pana'); return; }
+            if(currentGameType==='Double Pana' && !validDoublePanaList.includes(val)){ alert('Invalid Double Pana'); return; }
+            if(currentGameType==='Triple Pana' && !validTriplePanaList.includes(val)){ alert('Invalid Triple Pana'); return; }
+            addToBidsDirectly(currentGameType, val, pts); v1El.value = '';
+        } else {
+            addToBidsDirectly(currentGameType, val, pts); v1El.value = '';
+        }
+    }
+
+    function updateSummary() {
+        document.getElementById('totalBids').innerText = bids.length;
+        document.getElementById('totalPoints').innerText = bids.reduce((s,b)=>s+b.points,0);
+    }
+
+    function removeBid(i) { 
+        bids.splice(i,1); 
+        updateSummary(); 
+        const targetBlock = document.getElementById('bidsContainerTargetBlock');
+        if(targetBlock) targetBlock.innerHTML = renderBidsOnly();
+    }
+
+    // Step 1: Trigger Confirmation Popup
+    function triggerSubmitConfirmation() {
+        if (isSubmitting || bids.length === 0) return;
+
+        if (!navigator.onLine) {
+            alert("⚠️ No internet connection! Please check your network and try again.");
+            return;
+        }
+
+        const total = bids.reduce((s,b)=>s+b.points,0);
+        document.getElementById('popupDescText').innerText = `Are you sure you want to place ${bids.length} bets totaling ₹${total}?`;
+        document.getElementById('confirmPopupModal').style.display = 'flex';
+    }
+
+    function closeConfirmPopup() {
+        document.getElementById('confirmPopupModal').style.display = 'none';
+    }
+
+    // Step 2: Secure Transaction-Based Submit (Fixed snapshot protection)
+    async function executeConfirmedSubmit() {
+        closeConfirmPopup();
+        if (isSubmitting || bids.length === 0) return;
+        
+        const check = isBettingAllowedFast(); 
+        if (!check.allowed) { 
+            showMsg(check.message, true); 
+            alert(check.message); 
+            bids = []; 
+            updateSummary(); 
+            showGameSelection(); 
+            return; 
+        }
+        
+        // 🔥 FIX 2: Create a strict snapshot of the bids array at this exact moment
+        const snapshotBids = [...bids];
+        const total = snapshotBids.reduce((s, b) => s + b.points, 0);
+        
+        const userId = auth.currentUser.uid;
+        const userRef = db.collection('users').doc(userId);
+
+        isSubmitting = true;
+        const btn = document.getElementById('submitBtn'); 
+        btn.disabled = true; 
+        btn.innerText = 'Submitting...';
+
+        try {
+            await db.runTransaction(async (transaction) => {
+                const userDoc = await transaction.get(userRef);
+                if (!userDoc.exists) {
+                    throw "User does not exist!";
+                }
+
+                const currentBalance = userDoc.data().balance || 0;
+
+                if (currentBalance < total) {
+                    throw "Insufficient balance!";
+                }
+
+                transaction.update(userRef, { balance: firebase.firestore.FieldValue.increment(-total) });
+
+                // Create bids atomically using the snapshot
+                const ts = firebase.firestore.FieldValue.serverTimestamp();
+                snapshotBids.forEach(b => {
+                    const newDocRef = db.collection('bids').doc();
+                    transaction.set(newDocRef, { 
+                        ...b, 
+                        bidId: newDocRef.id, 
+                        userId: userId, 
+                        status: 'pending', 
+                        createdAt: ts 
+                    });
+                });
+            });
+
+            // Fetch fresh balance after transaction to update UI
+            const updatedUserDoc = await userRef.get();
+            document.getElementById('userBalance').innerText = (updatedUserDoc.data().balance || 0).toFixed(2);
+            
+            showMsg('✅ Bids Placed Successfully!', false); 
+            
+            // Clear the actual bids list only after success
+            bids = []; 
+            updateSummary(); 
+            renderPanel();
+
+        } catch (error) {
+            console.error("Transaction failed: ", error);
+            if (error === "Insufficient balance!") {
+                showMsg('Insufficient balance', true);
+            } else {
+                showMsg('Error placing bids. Try again.', true);
+            }
+        } finally {
+            isSubmitting = false; 
+            btn.disabled = false; 
+            btn.innerText = 'Submit'; 
+        }
+    }
+
+    function checkPanaLegality(p) {
+        return validSinglePanaList.includes(p) || validDoublePanaList.includes(p) || validTriplePanaList.includes(p);
+    }
+
+    function addSangamPlacements() {
+        let v1 = document.getElementById('v1').value.trim();
+        let v2 = document.getElementById('v2').value.trim();
+        let pts = parseInt(document.getElementById('pointsInput').value);
+        
+        if(isNaN(pts) || pts < 5) { alert('Min ₹5 required'); return; }
+        if(!v1 || !v2) { alert('Please enter both values'); return; }
+
+        if(currentGameType === 'Half Sangam A') {
+            if(!checkPanaLegality(v1)) { alert('Invalid Open Pana value'); return; }
+            if(!/^\d$/.test(v2)) { alert('Close digit must be 1-Digit'); return; }
+        } else if(currentGameType === 'Half Sangam B') {
+            if(!/^\d$/.test(v1)) { alert('Open digit must be 1-Digit'); return; }
+            if(!checkPanaLegality(v2)) { alert('Invalid Close Pana value'); return; }
+        } else if(currentGameType === 'Full Sangam') {
+            if(!checkPanaLegality(v1)) { alert('Invalid Open Pana value'); return; }
+            if(!checkPanaLegality(v2)) { alert('Invalid Close Pana value'); return; }
+        }
+
+        addToBidsDirectly(currentGameType, `${v1}-${v2}`, pts);
+    }
+
+    function renderPanel() {
+        const p = document.getElementById('gamePanel');
+        const pts = document.getElementById('pointsInput')?.value || '';
+        
+        let hasOpenClosePill = ['Single Digit', 'Single Pana', 'Double Pana', 'Triple Pana', 'Family Pana'].includes(currentGameType);
+        
+        let dropdownSelectionHeader = `
+            ${hasOpenClosePill && currentStatus === 'open' ? `
+            <div class="native-image-row">
+                <span class="native-image-label">Select Session</span>
+                <div class="select-native-dropdown-wrapper">
+                    <select class="select-native-input" onchange="selectedOpenClose=this.value;">
+                        <option value="Open" ${selectedOpenClose==='Open'?'selected':''}>${currentMarket} OPEN</option>
+                        <option value="Close" ${selectedOpenClose==='Close'?'selected':''}>${currentMarket} CLOSE</option>
+                    </select>
+                </div>
+            </div>` : ''}`;
+
+        let labelStringText = currentGameType;
+
+        if (currentGameType === 'Single Digit') {
+            let grid = ''; 
+            for(let i=0;i<=9;i++) grid += `<div class="digit-btn" onclick="addToBidsDirectly('Single Digit', '${i}', parseInt(document.getElementById('pointsInput').value))">${i}</div>`;
+            p.innerHTML = `
+                <div class="game-panel-content">
+                    ${dropdownSelectionHeader}
+                    <div class="native-image-row"><span class="native-image-label">Enter Points</span><div class="native-input-box-wrapper"><input type="number" id="pointsInput" class="native-form-input-field" value="${pts||''}" placeholder="Enter Points"></div></div>
+                    <div class="digit-grid">${grid}</div>
+                </div>
+                ${renderTableWrapper()}`;
+        } else if (currentGameType === 'Jodi') {
+            p.innerHTML = `
+                <div class="game-panel-content">
+                    ${dropdownSelectionHeader}
+                    <div class="native-image-row"><span class="native-image-label">Enter Points</span><div class="native-input-box-wrapper"><input type="number" id="pointsInput" class="native-form-input-field" value="${pts||''}" placeholder="Enter Points"></div></div>
+                    <div class="native-image-row"><span class="native-image-label">Enter Jodi Digit</span><div class="native-input-box-wrapper"><input type="tel" id="jodiDigitInput" class="native-form-input-field" maxlength="2" inputmode="numeric" placeholder="Enter Jodi (00-99)" oninput="handleJodiInput(this)"></div></div>
+                </div>
+                ${renderTableWrapper()}`;
+        } else if (currentGameType.includes('Sangam')) {
+            let labels = currentGameType === 'Half Sangam A' ? ['Open Pana', 'Close Digit'] : (currentGameType === 'Half Sangam B' ? ['Open Digit', 'Close Pana'] : ['Open Pana', 'Close Pana']);
+            p.innerHTML = `
+                <div class="game-panel-content">
+                    ${dropdownSelectionHeader}
+                    <div class="native-image-row"><span class="native-image-label">${labels[0]}</span><div class="native-input-box-wrapper"><input type="number" id="v1" class="native-form-input-field" placeholder="${labels[0]}"></div></div>
+                    <div class="native-image-row"><span class="native-image-label">${labels[1]}</span><div class="native-input-box-wrapper"><input type="number" id="v2" class="native-form-input-field" placeholder="${labels[1]}"></div></div>
+                    <div class="native-image-row"><span class="native-image-label">Enter Points</span><div class="native-input-box-wrapper"><input type="number" id="pointsInput" class="native-form-input-field" value="${pts||''}" placeholder="Enter Points"></div></div>
+                    <button class="native-add-more-btn" onclick="addSangamPlacements()">Add More</button>
+                </div>
+                ${renderTableWrapper()}`;
+        } else {
+            p.innerHTML = `
+                <div class="game-panel-content">
+                    ${dropdownSelectionHeader}
+                    <div class="native-image-row"><span class="native-image-label">${labelStringText}</span><div class="native-input-box-wrapper"><input type="number" id="v1" class="native-form-input-field" placeholder="${labelStringText}"></div></div>
+                    <div class="native-image-row"><span class="native-image-label">Enter Points</span><div class="native-input-box-wrapper"><input type="number" id="pointsInput" class="native-form-input-field" value="${pts||''}" placeholder="Enter Points"></div></div>
+                    <button class="native-add-more-btn" onclick="handleAutoAddManualButton()">Add More</button>
+                </div>
+                ${renderTableWrapper()}`;
+        }
+    }
+
+    function renderTableWrapper() {
+        return `
+            <div class="table-metadata-header-row">
+                <span class="meta-col-label" style="text-align: left;">${currentGameType}</span>
+                <span class="meta-col-label" style="text-align: center;">Points</span>
+                <span class="meta-col-label" style="text-align: right;">Type</span>
+            </div>
+            <div class="isolated-scroll-bids-window">
+                <div id="bidsContainerTargetBlock" class="bids-section">${renderBidsOnly()}</div>
+            </div>`;
+    }
+
+    function renderBidsOnly() { 
+        return bids.length ? bids.map((b,i)=>`
+            <div class="bid-item">
+                <div class="bid-info">
+                    <span class="bid-value">${b.value}</span>
+                    <span class="bid-points">₹${b.points}</span>
+                    <span class="bid-resolved-type-label">${b.type}</span>
+                </div>
+                <button class="remove-bid" onclick="removeBid(${i})">✕</button>
+            </div>`).join('') : ''; 
+    }
+    
+    function showMsg(m, e) { 
+        const d = document.getElementById('message'); 
+        d.innerText = m; 
+        d.className = `message ${e?'error':'success'}`; 
+        d.classList.remove('hidden'); 
+        setTimeout(()=>d.classList.add('hidden'), 2000); 
+    }
+    
+    function goBack() { window.location.href = 'dashboard.html'; }
+
+    const url = new URLSearchParams(window.location.search);
+    currentMarket = decodeURIComponent(url.get('market') || 'Market');
+    currentMarketId = url.get('marketId') || '';
+    currentStatus = url.get('status') || 'open';
+    document.getElementById('marketName').innerText = currentMarket;
+
+    db.collection('markets').doc(currentMarketId).get().then(d => {
+        if(d.exists) {
+            marketOpenEndTime = timeToMinutes(d.data().openBidEnd);
+            marketCloseEndTime = timeToMinutes(d.data().closeBidEnd);
+            renderGameTypeSelection();
+            hideSplashScreen();
+        } else {
+            hideSplashScreen();
+        }
+    }).catch(() => hideSplashScreen());
+
+    auth.onAuthStateChanged(user => { 
+        if(!user) {
+            location.href='index.html'; 
+        } else { 
+            syncServerOffset();
+            db.collection('users').doc(user.uid).get().then(d => { 
+                document.getElementById('userBalance').innerText = (d.data().balance || 0).toFixed(2); 
+            }); 
+        } 
+    });
+
+    setTimeout(hideSplashScreen, 2500);
+</script>
+</body>
+</html>
