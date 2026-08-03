@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WIN777 - Admin Panel</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+            border: none;
+        }
+
+        body { 
+            background: #000000; /* Black */
+            color: #ffffff; /* White */
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+
+        .login-screen { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            background: #000000; /* Black */
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 9999; 
+        }
+
+        .login-card { 
+            background: #111111; /* Dark Gray */
+            padding: 32px 24px; 
+            border-radius: 20px; 
+            width: 90%; 
+            max-width: 340px; 
+            text-align: center; 
+            box-shadow: 0 10px 25px rgba(255,215,0,0.15);
+            border: 1px solid #FFD700; /* Yellow */
+        }
+
+        .login-card img {
+            width: 130px;
+            height: auto;
+            margin-bottom: 20px;
+            object-fit: contain;
+        }
+
+        .login-card input { 
+            width: 100%; 
+            padding: 14px; 
+            margin: 12px 0; 
+            background: #000000; 
+            border-radius: 12px; 
+            color: #ffffff; 
+            font-size: 14px; 
+            text-align: center;
+            border: 1px solid #FFA07A; /* Light Orange */
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        .login-card button { 
+            width: 100%; 
+            padding: 14px; 
+            background: #FFD700; /* Yellow */
+            border-radius: 12px; 
+            color: #000000; /* Black Text */
+            font-weight: 700; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            margin-top: 6px;
+        }
+
+        .login-card button:active { background: #FFA07A; }
+
+        .admin-panel { 
+            display: none; 
+            width: 100%; 
+            min-height: 100vh; 
+            flex-direction: column;
+        }
+
+        .mobile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #111111;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #FFD700; /* Yellow */
+        }
+
+        .mobile-header .menu-btn {
+            background: none;
+            color: #FFD700; /* Yellow */
+            font-size: 24px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .menu-notification-dot {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 8px;
+            height: 8px;
+            background-color: #ff4444;
+            border-radius: 50%;
+            display: none;
+        }
+
+        .mobile-header img {
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            display: none;
+        }
+
+        .sidebar-overlay.active { display: block; }
+
+        .sidebar { 
+            width: 260px; 
+            background: #111111; /* Dark Gray */
+            height: 100vh; 
+            position: fixed; 
+            top: 0;
+            left: -260px;
+            z-index: 2100; 
+            display: flex; 
+            flex-direction: column; 
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 20px rgba(255,215,0,0.2);
+            overflow-y: auto;
+            border-right: 1px solid #FFD700; /* Yellow */
+        }
+
+        .sidebar-overlay.active .sidebar {
+            transform: translateX(260px);
+        }
+
+        .sidebar h2 { 
+            padding: 20px; 
+            text-align: center; 
+            border-bottom: 1px solid #333333; 
+            font-size: 15px; 
+            font-weight: 800; 
+            color: #FFD700; /* Yellow */
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-item { 
+            padding: 16px 20px; 
+            color: #ffffff; 
+            cursor: pointer; 
+            font-size: 13.5px; 
+            font-weight: 600; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            border-bottom: 1px solid #333333;
+        }
+
+        .sidebar-item:active { background: #222222; color: #FFD700; }
+
+        .notification-badge { 
+            background: #ff4444; 
+            color: #fff; 
+            border-radius: 10px; 
+            padding: 2px 8px; 
+            font-size: 10px; 
+            font-weight: 800; 
+        }
+
+        .main-content { 
+            padding: 16px; 
+            flex: 1; 
+            background: #000000; 
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card { 
+            background: #111111; /* Dark Gray */
+            border-radius: 18px; 
+            padding: 18px; 
+            margin-bottom: 16px; 
+            border: 1px solid #FFD700; /* Yellow Border */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .card h3 { 
+            margin-bottom: 16px; 
+            color: #FFD700; /* Yellow */
+            font-size: 14px; 
+            font-weight: 700; 
+            letter-spacing: 0.5px; 
+            text-transform: uppercase; 
+            border-left: 4px solid #FFA07A; /* Light Orange */
+            padding-left: 10px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input, select, textarea { 
+            padding: 12px 14px; 
+            margin: 6px 0; 
+            background: #000000; 
+            border-radius: 10px; 
+            width: 100%; 
+            color: #ffffff; 
+            font-size: 13.5px; 
+            font-weight: 500; 
+            border: 1px solid #FFA07A; /* Light Orange */
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        label { 
+            font-size: 11px; 
+            font-weight: 700; 
+            color: #aaaaaa; 
+            text-transform: uppercase; 
+            display: inline-block; 
+            margin-top: 6px; 
+        }
+
+        button { 
+            background: #FFD700; /* Yellow */
+            padding: 12px; 
+            border-radius: 10px; 
+            color: #000000; /* Black */
+            font-weight: 700; 
+            cursor: pointer; 
+            margin: 4px 0; 
+            font-size: 12px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            border: none;
+        }
+
+        .btn-success { background: #00e676; color: #000; }
+        .btn-danger { background: #ff4444; color: #fff; }
+        .btn-warning { background: #FFA07A; color: #000; }
+        .btn-reset { background: #555555; color: #fff; }
+        .btn-info { background: #2196f3; color: #fff; }
+        .btn-delete { background: #8B0000; color: #ffcccc; }
+        .hidden { display: none !important; }
+
+        .market-item { 
+            background: #000000; 
+            padding: 8px 10px; 
+            margin: 6px 0; 
+            border-radius: 10px; 
+            border: 1px solid #FFA07A;
+        }
+
+        .market-header-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            cursor: pointer; 
+            background: #111111; 
+            padding: 8px 10px; 
+            border-radius: 8px; 
+            border: 1px solid #333333; 
+            font-size: 13px;
+        }
+
+        .market-detail-row { 
+            display: none; 
+            background: #111111; 
+            padding: 10px; 
+            border-radius: 8px; 
+            margin-top: 6px; 
+            border: 1px solid #333333;
+            font-size: 12.5px;
+        }
+
+        .market-detail-row.open { display: block; }
+        .market-serial { font-family: monospace; color: #FFA07A; font-weight: 700; }
+
+        .status-badge { padding: 2px 6px; border-radius: 4px; font-size: 9.5px; font-weight: 800; text-transform: uppercase; }
+        .status-open { background: rgba(0, 230, 118, 0.2); color: #00e676; }
+        .status-close { background: rgba(255, 160, 122, 0.2); color: #FFA07A; }
+        .status-closed { background: rgba(255, 68, 68, 0.2); color: #ff4444; }
+        .status-holiday { background: rgba(213, 0, 249, 0.2); color: #d500f9; }
+
+        .results-container { display: flex; gap: 6px; margin: 6px 0; }
+        .result-card { background: #000000; border-radius: 6px; padding: 6px; text-align: center; flex: 1; border: 1px solid #333333; }
+        .result-pana { font-size: 15px; font-weight: 800; color: #FFA07A; font-family: monospace; }
+        .jodi-display { font-size: 11px; color: #aaaaaa; margin-top: 4px; }
+        .jodi-display strong { color: #FFD700; font-size: 13px; font-family: monospace; }
+
+        .user-item {
+            background: #000000;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 14px;
+            border: 1px solid #FFA07A;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .user-item:active { background: #111111; }
+        .user-item-blocked {
+            border: 1px solid #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+        .user-summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-collapsible-details {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #333333;
+        }
+        .user-collapsible-details.open { display: block; }
+
+        .user-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .request-tabs { display: flex; gap: 6px; margin-bottom: 12px; background: #000000; padding: 4px; border-radius: 10px; border: 1px solid #333333; }
+        .request-tab { flex: 1; padding: 8px; cursor: pointer; border-radius: 8px; font-size: 11px; font-weight: 700; text-align: center; color: #aaaaaa; text-transform: uppercase; }
+        .request-tab.active { background: #FFD700; color: #000; }
+
+        .search-container { display: flex; gap: 8px; margin-bottom: 12px; }
+        .sort-bar { display: flex; gap: 8px; flex-direction: column; margin: 12px 0; padding: 10px; background: #000000; border-radius: 10px; font-size: 12px; color: #aaaaaa; font-weight: 600; border: 1px solid #333333; }
+        
+        .today-bidder-badge { background: #FFD700; color: #000; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 700; }
+        .bid-highlight { border-left: 3px solid #FFD700; }
+        .user-count { font-size: 12px; font-weight: 700; color: #aaaaaa; margin-bottom: 10px; }
+        .user-status { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 800; margin-left: 6px; display: inline-block; }
+        .status-online { background: rgba(0, 230, 118, 0.2); color: #00e676; }
+        .status-offline { background: rgba(136, 136, 136, 0.2); color: #888888; }
+        .last-login { font-size: 11px; color: #aaaaaa; margin-top: 4px; }
+
+        .chat-iframe { width: 100%; height: 60vh; border: none; border-radius: 10px; background: #000000; border: 1px solid #FFA07A; }
+        .bank-details-box { background: #111111; border-radius: 8px; padding: 10px; margin-top: 8px; font-size: 11px; color: #dddddd; line-height: 1.5; border: 1px solid #333333; }
+        .bank-details-box span { font-weight: 700; color: #FFA07A; }
+
+        .total-bids-market-card { background: #111111; padding: 14px; border-radius: 14px; margin-bottom: 12px; border: 1px solid #FFD700; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        .total-bids-market-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 14px; font-weight: 800; color: #ffffff; text-transform: uppercase; }
+        .total-bids-market-body { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #333333; }
+        .total-bids-market-body.open { display: block; }
+        .game-type-block { margin-top: 8px; background: #000000; padding: 10px; border-radius: 10px; border: 1px solid #333333; }
+        .game-type-title { font-size: 12px; font-weight: 700; color: #FFD700; text-transform: uppercase; margin-bottom: 6px; }
+        .bid-detail-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+        .bid-badge-pill { background: #111111; border: 1px solid #FFA07A; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; color: #ffffff; font-family: monospace; }
+        .bid-badge-pill span { color: #FFD700; font-weight: 800; }
+
+        .collapsible-card-header { cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
+        .collapsible-card-body { display: none; margin-top: 14px; }
+        .collapsible-card-body.open { display: block; }
+
+        /* OVERALL STATS DASHBOARD */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+            margin-top: 14px; 
+        }
+        .stat-box { 
+            background: #000000; 
+            padding: 16px 12px; 
+            border-radius: 14px; 
+            text-align: center; 
+            border: 1px solid #FFA07A; 
+        }
+        .stat-box .label { 
+            color: #aaaaaa; 
+            font-size: 11px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            margin-bottom: 6px; 
+        }
+        .stat-box .value { 
+            color: #ffffff; 
+            font-size: 20px; 
+            font-weight: 800; 
+        }
+        .stat-box .value.positive { color: #00e676; }
+        .stat-box .value.negative { color: #ff4444; }
+
+        @media (min-width: 769px) {
+            .admin-panel { flex-direction: row; }
+            .mobile-header { display: none; }
+            .sidebar-overlay { display: block !important; position: static; width: 260px; height: auto; }
+            .sidebar { position: fixed; left: 0; transform: none !important; }
+            .main-content { margin-left: 260px; max-width: 100%; padding: 24px; }
+            .user-actions-grid { grid-template-columns: repeat(4, 1fr); }
+            .sort-bar { flex-direction: row; align-items: center; }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-screen">
+    <div class="login-card">
+        <img src="https://i.imgur.com/01g5mvk.png" alt="WIN777 Logo">
+        <input type="password" id="adminPass" placeholder="Enter Control Password">
+        <button onclick="login()">Sign In</button>
+        <div id="loginError" style="color:#ff4444; margin-top:12px; font-size:12px; font-weight:600;"></div>
+    </div>
+</div>
+
+<div id="adminPanel" class="admin-panel">
+    <div class="mobile-header">
+        <button class="menu-btn" onclick="toggleSidebar(true)">
+            ☰
+            <div class="menu-notification-dot" id="menuNotificationDot"></div>
+        </button>
+        <img src="https://i.imgur.com/01g5mvk.png" alt="WIN777 Logo">
+        <div style="width: 24px;"></div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)">
+        <div class="sidebar" onclick="event.stopPropagation()">
+            <h2>WIN777 ADMIN</h2>
+            <div class="sidebar-item" onclick="showSection('markets')">🎮 Markets</div>
+            <div class="sidebar-item" onclick="showSection('users')" id="usersMenuItem">👥 Users</div>
+            <div class="sidebar-item" onclick="showSection('totalBids')">📈 Total Bids</div>
+            <div class="sidebar-item" onclick="showSection('totalTransactions')">📊 Total Transactions</div>
+            <div class="sidebar-item" onclick="showSection('deposits')" id="depositsMenuItem">💰 Deposits <span id="depositBadge" class="notification-badge" style="display:none;">0</span></div>
+            <div class="sidebar-item" onclick="showSection('withdrawals')" id="withdrawalsMenuItem">💸 Withdrawals <span id="withdrawalBadge" class="notification-badge" style="display:none;">0</span></div>
+            <div class="sidebar-item" onclick="showSection('notice')">📢 Notice</div>
+            <div class="sidebar-item" onclick="showSection('settings')">⚙️ Settings</div>
+            <div class="sidebar-item" onclick="showSection('livechat')" id="livechatMenuItem">💬 Live Chat <span id="chatBadge" class="notification-badge" style="display:none;">0</span></div>
+            <div class="sidebar-item" onclick="logout()" style="color:#ff4444;">🚪 Logout</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div id="marketsSection">
+            <div class="card">
+                <div class="collapsible-card-header" onclick="toggleAddMarketCard()">
+                    <h3 style="margin-bottom:0; border:none; padding-left:0;">➕ Add New Market</h3>
+                    <span id="addMarketToggleArrow" style="font-size:12px; font-weight:700; color:#aaaaaa;">▶ Expand</span>
+                </div>
+                <div id="addMarketBody" class="collapsible-card-body">
+                    <input type="text" id="marketNameInput" placeholder="Market Name">
+                    <input type="text" id="marketNumbersInput" placeholder="Numbers (e.g., 440-8*-***)">
+                    <div><label>🟢 Open Bid End Time:</label> <input type="time" id="openBidEnd" step="60"></div>
+                    <div><label>🟡 Close Bid End Time:</label> <input type="time" id="closeBidEnd" step="60"></div>
+                    <div><label>🔴 Market Closed Time:</label> <input type="time" id="closedTime" step="60"></div>
+                    <select id="marketStatus">
+                        <option value="open">🟢 OPEN</option>
+                        <option value="close">🟡 CLOSE</option>
+                        <option value="closed">🔴 CLOSED</option>
+                        <option value="holiday">🎪 HOLIDAY</option>
+                    </select>
+                    <button onclick="addMarket()">Add Market</button>
+                    <button onclick="deleteAllMarkets()" class="btn-danger">🗑️ Delete All</button>
+                    <button onclick="resetAllMarketsResults()" class="btn-warning">🔄 Reset All Results</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3>📋 Manage Markets</h3>
+                <div id="marketsList">Loading...</div>
+            </div>
+        </div>
+        
+        <div id="usersSection" class="hidden">
+            <div class="card">
+                <h3>👥 Users Management 
+                    <button onclick="deleteAllUsers()" class="btn-delete" style="font-size:10px; padding:6px 10px;">🗑️ DELETE ALL</button>
+                </h3>
+                <div style="margin-bottom:12px; color:#ff4444; font-size:11px; font-weight:600;">⚠️ Deleting users removes all bids, history & chat data!</div>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="🔍 Search name or phone...">
+                    <button onclick="searchUsers()" class="btn-info">Search</button>
+                    <button onclick="clearSearch()" class="btn-reset">Clear</button>
+                </div>
+                <div class="sort-bar">
+                    <label>Sort By:</label>
+                    <select id="sortUsersSelect" onchange="applyUserSort()">
+                        <option value="todayBidders">📈 Today Bidders</option>
+                        <option value="newest">🕒 Newest First</option>
+                        <option value="balanceHigh">💰 Balance High-Low</option>
+                        <option value="balanceLow">💰 Balance Low-High</option>
+                        <option value="lastActive">⏰ Last Active</option>
+                    </select>
+                    <button onclick="refreshTodayBidsForUsers()" class="btn-info">🔄 Refresh Bids</button>
+                </div>
+                <div id="userCount" class="user-count"></div>
+                <div id="usersList">Loading...</div>
+            </div>
+        </div>
+
+        <div id="totalBidsSection" class="hidden">
+            <div class="card">
+                <h3>📈 Total Bids Overview (Today)
+                    <button onclick="loadTotalBidsSummary()" class="btn-info" style="font-size:10px; padding:6px 10px;">🔄 Refresh</button>
+                </h3>
+                <div id="totalBidsContent">Loading total bids calculation...</div>
+            </div>
+        </div>
+        
+        <div id="totalTransactionsSection" class="hidden">
+            <div class="card">
+                <h3>📊 Overall App Summary
+                    <button id="calcStatsBtn" onclick="calculateOverallStats()" class="btn-info" style="font-size:10px; padding:6px 10px;">🔄 Calculate Now</button>
+                </h3>
+                <div style="margin-bottom:12px; color:#aaaaaa; font-size:11px;">(This calculates Total Balance, Spent, and Earnings combining all users)</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="label">Total Users Balance</div>
+                        <div class="value" id="appTotalBalance">₹0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="label">Total Spent (Bids)</div>
+                        <div class="value" id="appTotalSpent">₹0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="label">Total Won</div>
+                        <div class="value positive" id="appTotalWon">₹0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="label">Overall Plus/Minus</div>
+                        <div class="value" id="appNetProfit">₹0</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 16px; border-top: 1px solid #333333; padding-top: 16px;">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="clearAllUsersBidHistory()" class="btn-danger" style="flex: 1;">🗑️ All Users Bid History Clear</button>
+                        <button onclick="clearAllUsersTransactionHistory()" class="btn-danger" style="flex: 1;">🗑️ All Users Transaction History Clear</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div id="depositsSection" class="hidden">
+            <div class="card">
+                <h3>💰 Deposit Requests</h3>
+                <div class="request-tabs">
+                    <div class="request-tab active" onclick="showDepositTab('pending')">⏳ Pending</div>
+                    <div class="request-tab" onclick="showDepositTab('completed')">✅ Approved</div>
+                    <div class="request-tab" onclick="showDepositTab('rejected')">❌ Rejected</div>
+                </div>
+                <div id="depositsList">Loading...</div>
+            </div>
+        </div>
+        
+        <div id="withdrawalsSection" class="hidden">
+            <div class="card">
+                <h3>💸 Withdrawal Requests</h3>
+                <div class="request-tabs">
+                    <div class="request-tab active" onclick="showWithdrawalTab('pending')">⏳ Pending</div>
+                    <div class="request-tab" onclick="showWithdrawalTab('completed')">✅ Approved</div>
+                    <div class="request-tab" onclick="showWithdrawalTab('rejected')">❌ Rejected</div>
+                </div>
+                <div id="withdrawalsList">Loading...</div>
+            </div>
+        </div>
+        
+        <div id="noticeSection" class="hidden">
+            <div class="card">
+                <h3>📢 Notice Board</h3>
+                <textarea id="noticeText" rows="3" style="width:100%; padding:12px;"></textarea>
+                <button onclick="updateNotice()">Update Broadcast Notice</button>
+                <div id="noticeMsg" style="margin-top:6px; color:#00e676; font-weight:700; font-size:12px;"></div>
+            </div>
+        </div>
+        
+        <div id="settingsSection" class="hidden">
+            <div class="card">
+                <h3>🔐 Change Password</h3>
+                <input type="password" id="oldPass" placeholder="Old Password">
+                <input type="password" id="newPass" placeholder="New Password">
+                <button onclick="changePassword()">Update Password</button>
+                <div id="passMsg" style="margin-top:6px; font-weight:600; font-size:12px;"></div>
+            </div>
+            <div class="card">
+                <h3>🏧 UPI ID Settings</h3>
+                <input type="text" id="upiId" placeholder="UPI ID" value="gogami@axl">
+                <button onclick="updateUPI()">Update UPI ID</button>
+                <div id="upiMsg"></div>
+            </div>
+        </div>
+        
+        <div id="livechatSection" class="hidden">
+            <div class="card">
+                <h3>💬 Live Support Chat</h3>
+                <iframe src="admin-chat.html" class="chat-iframe" id="chatIframe"></iframe>
+                <div style="margin-top:10px;">
+                    <button onclick="clearAllChats()" class="btn-danger">🗑️ Delete All Chat History</button>
+                    <button onclick="refreshChat()" class="btn-info">🔄 Refresh Chat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5",
+        measurementId: "G-R9CZ493377"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    let dbPassword = "Gani99@@", allUsers = [], currentSearchTerm = "", currentSortType = "todayBidders", todayBidMap = new Map(), userLastBidTime = new Map();
+    let depositCount = 0, withdrawalCount = 0, chatUnreadCount = 0, depositListener = null, withdrawalListener = null, chatListener = null, currentDepositTab = "pending", currentWithdrawalTab = "pending", openMarketId = null;
+    let userLastActive = new Map();
+    let onlineStatusListener = null;
+    let openTotalBidsMarketId = null;
+    
+    const gameRates = { 'Single Digit':10, 'Jodi':100, 'Single Pana':160, 'Double Pana':320, 'Triple Pana':1000, 'Half Sangam A':1000, 'Half Sangam B':1000, 'Full Sangam':10000 };
+    
+    function toggleSidebar(open) {
+        const overlay = document.getElementById('sidebarOverlay');
+        if (open) overlay.classList.add('active');
+        else overlay.classList.remove('active');
+    }
+
+    function toggleAddMarketCard() {
+        let body = document.getElementById('addMarketBody');
+        let arrow = document.getElementById('addMarketToggleArrow');
+        if(body.classList.contains('open')) {
+            body.classList.remove('open');
+            arrow.innerText = "▶ Expand";
+        } else {
+            body.classList.add('open');
+            arrow.innerText = "▼ Collapse";
+        }
+    }
+
+    async function syncAdminCredentials() {
+        try {
+            const adminDoc = await db.collection('settings').doc('admin').get();
+            if(adminDoc.exists && adminDoc.data().password) {
+                dbPassword = adminDoc.data().password;
+            } else {
+                await db.collection('settings').doc('admin').set({ password: dbPassword });
+            }
+        } catch(e) { console.error("Database connection fault during credential processing."); }
+    }
+
+    syncAdminCredentials().then(() => {
+        if (localStorage.getItem('adminLoggedIn') === 'true') { 
+            document.getElementById('loginScreen').style.display = 'none'; 
+            document.getElementById('adminPanel').style.display = 'flex'; 
+            loadMarkets(); loadUsersWithTodayBids(); loadDeposits(); loadWithdrawals(); loadNotice(); loadSettings(); startNotificationListeners(); startAutoCleanup(); startOnlineStatusTracking(); 
+        }
+    });
+    
+    function startOnlineStatusTracking() {
+        if (onlineStatusListener) onlineStatusListener();
+        onlineStatusListener = db.collection('users').onSnapshot((snapshot) => {
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.lastActive) {
+                    let lastActive = data.lastActive.toDate ? data.lastActive.toDate() : new Date(data.lastActive);
+                    userLastActive.set(doc.id, lastActive);
+                }
+            });
+            if (!document.getElementById('usersSection').classList.contains('hidden')) {
+                displayFilteredUsers();
+            }
+        });
+    }
+    
+    function isUserOnline(user) {
+        return user.isOnline === true;
+    }
+    
+    function formatLastLogin(userId) {
+        const lastActive = userLastActive.get(userId);
+        if (!lastActive) return 'Never';
+        const now = new Date();
+        const diffMinutes = Math.floor((now - lastActive) / (1000 * 60));
+        const diffHours = Math.floor(diffMinutes / 60);
+        const diffDays = Math.floor(diffHours / 24);
+        if (diffMinutes < 1) return 'Just now';
+        if (diffMinutes < 60) return `${diffMinutes} min ago`;
+        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    }
+    
+    async function login() { 
+        let pwd = document.getElementById('adminPass').value; 
+        await syncAdminCredentials();
+        if(pwd === dbPassword){ 
+            localStorage.setItem('adminLoggedIn','true');
+            document.getElementById('loginScreen').style.display='none'; 
+            document.getElementById('adminPanel').style.display='flex'; 
+            loadMarkets(); loadUsersWithTodayBids(); loadDeposits(); loadWithdrawals(); loadNotice(); loadSettings(); startNotificationListeners(); startAutoCleanup(); startOnlineStatusTracking(); 
+        } else { 
+            document.getElementById('loginError').innerText='Invalid password!'; 
+        } 
+    }
+    
+    function startNotificationListeners(){ 
+        if(depositListener) depositListener(); 
+        depositListener = db.collection('transactions').where('type','==','credit').where('status','==','Pending').onSnapshot(s=>{ depositCount=s.size; updateDepositBadge(); updateMenuDot(); if(currentDepositTab==='pending') loadDeposits(); }); 
+        if(withdrawalListener) withdrawalListener(); 
+        withdrawalListener = db.collection('withdrawRequests').where('status','==','Pending').onSnapshot(s=>{ withdrawalCount=s.size; updateWithdrawalBadge(); updateMenuDot(); if(currentWithdrawalTab==='pending') loadWithdrawals(); }); 
+        if(chatListener) chatListener(); 
+        chatListener = db.collection('chats').where('unread','==',true).onSnapshot(s=>{ chatUnreadCount=s.size; updateChatBadge(); updateMenuDot(); }); 
+    }
+
+    function updateDepositBadge(){ let b=document.getElementById('depositBadge'); if(depositCount>0){ b.style.display='inline-block'; b.innerText=depositCount>99?'99+':depositCount; } else b.style.display='none'; }
+    function updateWithdrawalBadge(){ let b=document.getElementById('withdrawalBadge'); if(withdrawalCount>0){ b.style.display='inline-block'; b.innerText=withdrawalCount>99?'99+':withdrawalCount; } else b.style.display='none'; }
+    function updateChatBadge(){ let b=document.getElementById('chatBadge'); if(chatUnreadCount>0){ b.style.display='inline-block'; b.innerText=chatUnreadCount>99?'99+':chatUnreadCount; } else b.style.display='none'; }
+
+    function updateMenuDot() {
+        const dot = document.getElementById('menuNotificationDot');
+        if (depositCount > 0 || withdrawalCount > 0 || chatUnreadCount > 0) {
+            dot.style.display = 'block';
+        } else {
+            dot.style.display = 'none';
+        }
+    }
+
+    function showDepositTab(tab){ currentDepositTab=tab; document.querySelectorAll('#depositsSection .request-tab').forEach(t=>t.classList.remove('active')); event.target.classList.add('active'); loadDeposits(); }
+    function showWithdrawalTab(tab){ currentWithdrawalTab=tab; document.querySelectorAll('#withdrawalsSection .request-tab').forEach(t=>t.classList.remove('active')); event.target.classList.add('active'); loadWithdrawals(); }
+    
+    async function deleteAllUsers() {
+        if (confirm("⚠️ DANGER: Delete ALL USERS permanently?")) {
+            const confirmText = prompt('Type "DELETE ALL USERS" to confirm:');
+            if (confirmText === 'DELETE ALL USERS') {
+                const loadingMsg = document.getElementById('usersList');
+                loadingMsg.innerHTML = '<div style="text-align:center;padding:30px;">🗑️ Deleting all users...</div>';
+                try {
+                    const usersSnapshot = await db.collection('users').get();
+                    let totalDeleted = 0;
+                    for (const userDoc of usersSnapshot.docs) {
+                        const userId = userDoc.id;
+                        await db.collection('users').doc(userId).delete();
+                        totalDeleted++;
+                    }
+                    alert(`✅ Deleted ${totalDeleted} users!`);
+                    loadUsersWithTodayBids();
+                } catch (error) { alert("❌ Error: " + error.message); }
+            }
+        }
+    }
+    
+    async function deleteOldRecords(){ 
+        let thirtyDaysAgo=new Date(); 
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate()-30); 
+        try{ 
+            let oldDeposits=await db.collection('transactions').where('type','==','credit').where('status','in',['Completed','Rejected']).get(); 
+            let batch=db.batch(); 
+            let count=0; 
+            oldDeposits.forEach(doc=>{ 
+                let d=doc.data(); 
+                let reqDate=d.date?.toDate?d.date.toDate():(d.date?.seconds?new Date(d.date.seconds*1000):null); 
+                if(reqDate && reqDate<thirtyDaysAgo){ batch.delete(doc.ref); count++; } 
+            }); 
+            if(count>0) await batch.commit(); 
+        }catch(e){ console.error(e); } 
+    }
+
+    function startAutoCleanup(){ setInterval(()=>deleteOldRecords(),86400000); deleteOldRecords(); }
+    
+    async function clearAllChats(){ 
+        if(confirm("DELETE ALL CHAT HISTORY?")){ 
+            if(prompt('Type "DELETE" to confirm:')==='DELETE'){ 
+                let chats=await db.collection('chats').get(); 
+                let batch=db.batch(); 
+                for(let c of chats.docs){ 
+                    let msgs=await db.collection('chats').doc(c.id).collection('messages').get(); 
+                    for(let m of msgs.docs) batch.delete(m.ref); 
+                    batch.delete(c.ref); 
+                } 
+                await batch.commit(); 
+                alert('✅ Deleted chat history!'); 
+                refreshChat(); 
+            } 
+        } 
+    }
+
+    function refreshChat(){ let iframe=document.getElementById('chatIframe'); if(iframe) iframe.src=iframe.src; }
+    
+    async function resetAllMarketsResults(){ 
+        if(confirm("RESET ALL MARKETS RESULTS?")){ 
+            if(prompt('Type "RESET" to confirm:')==='RESET'){ 
+                let markets=await db.collection('markets').get(); 
+                let batch=db.batch(); 
+                markets.forEach(d=>batch.update(d.ref,{openPana:'***',openDigit:'*',closePana:'***',closeDigit:'*',jodi:'**',closeDeclared:false})); 
+                await batch.commit(); 
+                alert(`✅ Reset ${markets.size} markets!`); 
+                loadMarkets(); 
+            } 
+        } 
+    }
+    
+    async function loadUsersWithTodayBids(){ 
+        let today=new Date(); 
+        today.setHours(0,0,0,0); 
+        let bids=await db.collection('bids').where('createdAt','>=',today).get(); 
+        todayBidMap.clear(); 
+        userLastBidTime.clear(); 
+        bids.forEach(d=>{ 
+            let bid=d.data(); 
+            let uid=bid.userId; 
+            let pts=bid.points||0; 
+            todayBidMap.set(uid,(todayBidMap.get(uid)||0)+pts); 
+            let bidDate=bid.createdAt?.toDate?bid.createdAt.toDate():(bid.createdAt?.seconds?new Date(bid.createdAt.seconds*1000):null); 
+            if(bidDate){ 
+                let existing=userLastBidTime.get(uid); 
+                if(!existing || bidDate>existing) userLastBidTime.set(uid,bidDate); 
+            } 
+        }); 
+        db.collection('users').orderBy('createdAt','desc').onSnapshot(s=>{ 
+            allUsers=[]; 
+            s.forEach(d=>{ 
+                let ud=d.data(); 
+                allUsers.push({uid:d.id,...ud,todayBidTotal:todayBidMap.get(d.id)||0,lastBidTime:userLastBidTime.get(d.id)||null}); 
+            }); 
+            displayFilteredUsers(); 
+        }); 
+    }
+
+    async function refreshTodayBidsForUsers(){ 
+        let today=new Date(); 
+        today.setHours(0,0,0,0); 
+        let bids=await db.collection('bids').where('createdAt','>=',today).get(); 
+        todayBidMap.clear(); 
+        userLastBidTime.clear(); 
+        bids.forEach(d=>{ 
+            let bid=d.data(); 
+            let uid=bid.userId; 
+            todayBidMap.set(uid,(todayBidMap.get(uid)||0)+(bid.points||0)); 
+            let bidDate=bid.createdAt?.toDate?bid.createdAt.toDate():(bid.createdAt?.seconds?new Date(bid.createdAt.seconds*1000):null); 
+            if(bidDate){ 
+                let existing=userLastBidTime.get(uid); 
+                if(!existing || bidDate>existing) userLastBidTime.set(uid,bidDate); 
+            } 
+        }); 
+        allUsers=allUsers.map(u=>({...u,todayBidTotal:todayBidMap.get(u.uid)||0,lastBidTime:userLastBidTime.get(u.uid)||null})); 
+        displayFilteredUsers(); 
+    }
+
+    function applyUserSort(){ let sel=document.getElementById('sortUsersSelect'); currentSortType=sel.value; displayFilteredUsers(); }
+    function searchUsers(){ currentSearchTerm=document.getElementById('searchInput').value.trim().toLowerCase(); displayFilteredUsers(); }
+    function clearSearch(){ document.getElementById('searchInput').value=''; currentSearchTerm=''; displayFilteredUsers(); }
+    
+    function toggleUserDetails(uid) {
+        let detailsDiv = document.getElementById(`user_detail_${uid}`);
+        if(detailsDiv) {
+            detailsDiv.classList.toggle('open');
+        }
+    }
+
+    function displayFilteredUsers(){ 
+        let filtered=[...allUsers]; 
+        if(currentSearchTerm) filtered=filtered.filter(u=>(u.name||'').toLowerCase().includes(currentSearchTerm)||(u.phone||'').toLowerCase().includes(currentSearchTerm)); 
+        if(currentSortType==='todayBidders') filtered.sort((a,b)=>{ if(a.todayBidTotal!==b.todayBidTotal) return (b.todayBidTotal||0)-(a.todayBidTotal||0); let ta=a.lastBidTime?a.lastBidTime.getTime():0, tb=b.lastBidTime?b.lastBidTime.getTime():0; return tb-ta; }); 
+        else if(currentSortType==='newest') filtered.sort((a,b)=>(b.createdAt?.toDate?.()||new Date(0))-(a.createdAt?.toDate?.()||new Date(0))); 
+        else if(currentSortType==='balanceHigh') filtered.sort((a,b)=>(b.balance||0)-(a.balance||0)); 
+        else if(currentSortType==='balanceLow') filtered.sort((a,b)=>(a.balance||0)-(b.balance||0)); 
+        else if(currentSortType==='lastActive') filtered.sort((a,b)=>{ let la=a.lastActive?.toDate?a.lastActive.toDate():new Date(0); let lb=b.lastActive?.toDate?b.lastActive.toDate():new Date(0); return lb-la; }); 
+        
+        let todayBidders=filtered.filter(u=>u.todayBidTotal>0).length; 
+        document.getElementById('userCount').innerHTML=`👥 Total: ${filtered.length} ${currentSortType==='todayBidders'?`| 🎲 Today: ${todayBidders}`:''}`; 
+        
+        if(filtered.length===0){ document.getElementById('usersList').innerHTML='<p style="color:#aaaaaa; text-align:center; padding:30px;">No users found</p>'; return; } 
+        
+        let html=''; 
+        filtered.forEach(u=>{ 
+            let isBlocked = u.blocked === true; 
+            let hasBid = (u.todayBidTotal||0) > 0; 
+            let online = isUserOnline(u); 
+            let lastLogin = formatLastLogin(u.uid); 
+            
+            html += `
+                <div class="user-item ${isBlocked ? 'user-item-blocked' : ''} ${hasBid ? 'bid-highlight' : ''}" onclick="toggleUserDetails('${u.uid}')">
+                    <div class="user-summary-row">
+                        <div>
+                            <b>👤 ${escapeHtml(u.name||'Unknown')}</b>
+                            ${hasBid ? `<span class="today-bidder-badge">🎲 Today: ₹${u.todayBidTotal}</span>` : ''}
+                            <span class="user-status ${online ? 'status-online' : 'status-offline'}">${online ? 'ONLINE' : 'OFFLINE'}</span>
+                            <br><span style="color:#aaaaaa;">📞 ${u.phone||'No phone'}</span>
+                        </div>
+                        <div style="font-size:12px; color:#aaaaaa; font-weight:700;">▼ Tap</div>
+                    </div>
+                    <div id="user_detail_${u.uid}" class="user-collapsible-details" onclick="event.stopPropagation()">
+                        <div style="color:#FFD700; font-weight:700;">💰 Wallet: ₹${u.balance||0}</div>
+                        <div class="last-login">📅 Last active: ${lastLogin}</div>
+                        ${isBlocked ? '<span style="color:#ff4444; font-weight:800; font-size:11px;">🚫 USER BLOCKED</span><br>' : ''}
+                        <div class="user-actions-grid">
+                            <button onclick="updateBalance('${u.uid}','add')" class="btn-success">➕ Add</button>
+                            <button onclick="updateBalance('${u.uid}','remove')" class="btn-danger">➖ Remove</button>
+                            <button onclick="openUserBidsPage('${u.uid}','${escapeHtml(u.name)}')" class="btn-info">📋 Bids</button>
+                            <button onclick="openUserChat('${u.uid}','${escapeHtml(u.name)}','${u.phone||''}')" class="btn-info" style="background:#d500f9;">💬 Message</button>
+                            <button onclick="toggleBlockUser('${u.uid}','${escapeHtml(u.name)}', ${isBlocked})" class="btn-warning">${isBlocked ? 'Unblock' : 'Block'}</button>
+                            <button onclick="clearUserBids('${u.uid}','${escapeHtml(u.name)}')" class="btn-reset">Clr Bids</button>
+                            <button onclick="clearUserTransactions('${u.uid}','${escapeHtml(u.name)}')" class="btn-reset">Clr Txn</button>
+                            <button onclick="deleteUser('${u.uid}','${escapeHtml(u.name)}')" class="btn-delete" style="grid-column: span 2;">❌ Delete User</button>
+                        </div>
+                    </div>
+                </div>`; 
+        }); 
+        document.getElementById('usersList').innerHTML = html; 
+    }
+ 
+    async function loadTotalBidsSummary() {
+        const container = document.getElementById('totalBidsContent');
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:#aaaaaa;">Calculating total bids...</div>';
+        try {
+            let today = new Date();
+            today.setHours(0, 0, 0, 0);
+            let marketsSnap = await db.collection('markets').orderBy('serialNo', 'asc').get();
+            let marketsList = [];
+            marketsSnap.forEach(doc => { marketsList.push({ id: doc.id, name: doc.data().name || 'Unknown Market' }); });
+            let bidsSnap = await db.collection('bids').where('createdAt', '>=', today).get();
+            let bidsData = [];
+            bidsSnap.forEach(doc => { bidsData.push(doc.data()); });
+            if (marketsList.length === 0) { container.innerHTML = '<p style="color:#aaaaaa; text-align:center; padding:30px;">No markets available</p>'; return; }
+            let html = '';
+            marketsList.forEach(marketObj => {
+                let mName = marketObj.name;
+                let mBids = bidsData.filter(b => (b.market || '').toLowerCase() === mName.toLowerCase());
+                let summary = { 'Single Digit Open': {}, 'Single Digit Close': {}, 'Jodi': {}, 'Single Pana Open': {}, 'Single Pana Close': {}, 'Double Pana Open': {}, 'Double Pana Close': {}, 'Triple Pana Open': {}, 'Triple Pana Close': {}, 'Half Sangam A': {}, 'Half Sangam B': {}, 'Full Sangam': {} };
+                let marketTotalPts = 0;
+                mBids.forEach(b => {
+                    let gType = b.gameType || b.type || 'Other';
+                    let bType = b.bidType || 'Open';
+                    let val = b.value || '';
+                    let pts = b.points || 0;
+                    marketTotalPts += pts;
+                    let key = gType;
+                    if (['Single Digit', 'Single Pana', 'Double Pana', 'Triple Pana'].includes(gType)) { key = `${gType} ${bType}`; }
+                    if (!summary[key]) summary[key] = {};
+                    summary[key][val] = (summary[key][val] || 0) + pts;
+                });
+                let isOpen = openTotalBidsMarketId === marketObj.id;
+                html += `<div class="total-bids-market-card"><div class="total-bids-market-header" onclick="toggleTotalBidsMarket('${marketObj.id}')"><span>🎮 ${escapeHtml(mName)} (Total: ₹${marketTotalPts})</span><span style="color:#FFA07A;">${isOpen ? '▼' : '▶'}</span></div><div id="total_bids_market_${marketObj.id}" class="total-bids-market-body ${isOpen ? 'open' : ''}">`;
+                let hasAnyBid = mBids.length > 0;
+                if (!hasAnyBid) { html += `<p style="color:#aaaaaa; font-size:11px; text-align:center; padding:8px;">No bids placed for this market today.</p>`; } else {
+                    for (let gameKey in summary) {
+                        let gameObj = summary[gameKey];
+                        let keysArr = Object.keys(gameObj);
+                        if (keysArr.length > 0) {
+                            html += `<div class="game-type-block"><div class="game-type-title">${gameKey}</div><div class="bid-detail-grid">`;
+                            keysArr.sort().forEach(val => { html += `<div class="bid-badge-pill">${val}: <span>₹${gameObj[val]}</span></div>`; });
+                            html += `</div></div>`;
+                        }
+                    }
+                }
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+      } catch (e) { container.innerHTML = `<div style="color:#ff4444; text-align:center;">Error: ${e.message}</div>`; }
+    }
+
+    function toggleTotalBidsMarket(mid) {
+        let bodyDiv = document.getElementById(`total_bids_market_${mid}`);
+        if(bodyDiv) {
+            if(openTotalBidsMarketId === mid) { bodyDiv.classList.remove('open'); openTotalBidsMarketId = null; } else {
+                if(openTotalBidsMarketId) { let prevDiv = document.getElementById(`total_bids_market_${openTotalBidsMarketId}`); if(prevDiv) prevDiv.classList.remove('open'); }
+                bodyDiv.classList.add('open'); openTotalBidsMarketId = mid;
+            }
+      }
+    }
+  
+    // CALCULATE APP OVERALL STATS
+    async function calculateOverallStats() {
+        let btn = document.getElementById('calcStatsBtn');
+        if(btn) btn.innerText = "⏳ Calculating...";
+        
+        try {
+            // 1. Calculate Total Users Balance
+            let totalBal = 0;
+            let usersSnap = await db.collection('users').get();
+            usersSnap.forEach(doc => {
+                let ud = doc.data();
+                totalBal += (ud.balance || 0);
+            });
+            document.getElementById('appTotalBalance').innerText = `₹${totalBal.toLocaleString()}`;
+
+            // 2. Calculate Total Spent & Total Won from all Bids
+            let bidsSnap = await db.collection('bids').get();
+            let totalSpent = 0;
+            let totalWon = 0;
+
+            bidsSnap.forEach(doc => {
+                let b = doc.data();
+                let pts = b.points || 0;
+                totalSpent += pts;
+                
+                if (b.status === 'won') {
+                    let gameDisplay = b.gameType || b.type || '-';
+                    let rate = gameRates[gameDisplay] || 10;
+                    totalWon += (pts * rate);
+                }
+            });
+
+            document.getElementById('appTotalSpent').innerText = `₹${totalSpent.toLocaleString()}`;
+            document.getElementById('appTotalWon').innerText = `₹${totalWon.toLocaleString()}`;
+
+            // Calculate Overall Plus/Minus (Net Users Profit/Loss)
+            let net = totalWon - totalSpent; 
+            let netEl = document.getElementById('appNetProfit');
+            netEl.innerText = `₹${net.toLocaleString()}`;
+            netEl.className = 'value ' + (net > 0 ? 'positive' : (net < 0 ? 'negative' : ''));
+
+        } catch (e) {
+            alert("Error calculating stats: " + e.message);
+        }
+
+        if(btn) btn.innerText = "🔄 Calculate Now";
+    }
+
+    function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g,m=>m==='&'?'&amp;':(m==='<'?'&lt;':'&gt;')); }
+    function openUserBidsPage(uid,name){ window.open(`user-bids.html?uid=${uid}&name=${encodeURIComponent(name)}`,'_blank'); }
+    
+    async function openUserChat(uid, name, phone) {
+        const chatRoomId = `chat_${uid}`;
+        try {
+            const chatDocRef = db.collection('chats').doc(chatRoomId);
+            const doc = await chatDocRef.get();
+            if (!doc.exists) {
+                await chatDocRef.set({
+                    userId: uid,
+                    userName: name,
+                    userPhone: phone || '',
+                    lastMessage: 'Chat initialized by admin',
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                    unread: false,
+                    adminUnread: false
+                });
+            }
+            window.open(`admin-chat.html?uid=${uid}&name=${encodeURIComponent(name)}`, '_blank');
+        } catch (e) {
+            alert("Could not open chat: " + e.message);
+        }
+    }
+
+    function toggleMarketDetails(mid){ let div=document.getElementById(`market_detail_${mid}`); if(div){ if(openMarketId===mid){ div.classList.remove('open'); openMarketId=null; }else{ if(openMarketId){ let prev=document.getElementById(`market_detail_${openMarketId}`); if(prev) prev.classList.remove('open'); } div.classList.add('open'); openMarketId=mid; } } }
+    function formatTimeTo12Hour(t){ if(!t) return '--:--'; let [h,m]=t.split(':'); let hr=parseInt(h); let ampm=hr>=12?'PM':'AM'; hr=hr%12||12; return `${hr}:${m} ${ampm}`; }
+  
+    function loadMarkets(){ 
+        db.collection('markets').orderBy('serialNo','asc').onSnapshot(s=>{ 
+            let html=''; 
+            s.forEach(d=>{ 
+                let m=d.data(); 
+                let statusClass='',statusText=''; 
+                if(m.status==='open'){ statusClass='status-open'; statusText='OPEN'; }
+                else if(m.status==='close'){ statusClass='status-close'; statusText='CLOSE'; }
+                else if(m.status==='holiday'){ statusClass='status-holiday'; statusText='HOLIDAY'; }
+                else{ statusClass='status-closed'; statusText='CLOSED'; } 
+                let openPana=m.openPana||'***', openDigit=m.openDigit||'*', closePana=m.closePana||'***', closeDigit=m.closeDigit||'*', jodi=m.jodi||'**', isCloseDeclared=m.closeDeclared||false; 
+                let jodiDisplay=(!isCloseDeclared && openPana!=='***')?openDigit+'*':jodi; 
+                html+=`<div class="market-item"><div class="market-header-row" onclick="toggleMarketDetails('${d.id}')"><span class="toggle-icon" style="color:#FFA07A;">${openMarketId===d.id?'▼':'▶'}</span><span><span class="market-serial" onclick="event.stopPropagation(); changeSerialNumber('${d.id}',${m.serialNo||0})">#${m.serialNo||'?'}</span> <span style="color:#ffffff;">${m.name||'No name'}</span></span><span class="status-badge ${statusClass}">${statusText}</span><button onclick="event.stopPropagation(); deleteMarket('${d.id}')" class="btn-danger" style="padding:3px 6px; font-size:10px;">🗑️</button></div><div id="market_detail_${d.id}" class="market-detail-row"><div><div style="color:#FFD700;">🎲 Numbers: ${m.numbers||'***'}</div><div style="color:#aaaaaa;">⏰ Open: ${formatTimeTo12Hour(m.openBidEnd)} | Close: ${formatTimeTo12Hour(m.closeBidEnd)}</div><div class="results-container"><div class="result-card"><div class="result-pana">${openPana}</div><div style="color:#ffffff;">Open: ${openDigit}</div></div><div class="result-card"><div class="result-pana">${closePana}</div><div style="color:#ffffff;">Close: ${closeDigit}</div></div></div><div class="jodi-display">JODI: <strong>${jodiDisplay}</strong></div><div><input type="time" id="openBidEnd_${d.id}" value="${m.openBidEnd||''}" step="60"><button onclick="updateMarketTime('${d.id}','openBidEnd',document.getElementById('openBidEnd_${d.id}').value)">Save Open</button></div><div><input type="time" id="closeBidEnd_${d.id}" value="${m.closeBidEnd||''}" step="60"><button onclick="updateMarketTime('${d.id}','closeBidEnd',document.getElementById('closeBidEnd_${d.id}').value)">Save Close</button></div><div style="display:flex; gap:4px; flex-wrap:wrap;"><button onclick="setMarketStatus('${d.id}','open')" class="btn-success">🟢 OPEN</button><button onclick="setMarketStatus('${d.id}','close')" class="btn-warning">🟡 CLOSE</button><button onclick="setMarketStatus('${d.id}','closed')" class="btn-danger">🔴 CLOSED</button><button onclick="setMarketHoliday('${d.id}','${m.name}','${m.status}')" class="btn-warning" style="background:#d500f9; color:#fff;">🎪 ${m.status==='holiday'?'Remove':'Set Holiday'}</button></div><div><input type="text" id="openPana_${d.id}" placeholder="Open Pana" maxlength="3" value="${openPana!=='***'?openPana:''}"><input type="text" id="openDigit_${d.id}" placeholder="Digit" maxlength="1" value="${openDigit!=='*'?openDigit:''}"><button onclick="declareOpenResult('${d.id}','${m.name}')">Declare OPEN</button></div><div><input type="text" id="closePana_${d.id}" placeholder="Close Pana" maxlength="3" value="${closePana!=='***'?closePana:''}"><input type="text" id="closeDigit_${d.id}" placeholder="Digit" maxlength="1" value="${closeDigit!=='*'?closeDigit:''}"><button onclick="declareCloseResult('${d.id}','${m.name}')">Declare CLOSE</button></div><div><button onclick="editMarket('${d.id}','${m.name}','${m.numbers||''}')">✏️ Edit</button><button onclick="resetMarketResult('${d.id}','${m.name}')" class="btn-reset">⟳ Reset</button></div></div></div></div>`; 
+            }); 
+            if(s.empty) html='<p style="color:#aaaaaa; text-align:center; padding:30px;">No markets available</p>'; 
+            document.getElementById('marketsList').innerHTML=html; 
+    }); 
+   }
+
+   async function setMarketStatus(mid,st){ await db.collection('markets').doc(mid).update({status:st,isHoliday:st==='holiday'}); alert(`✅ Status changed to ${st.toUpperCase()}`); }
+   async function updateMarketTime(mid,fld,val){ await db.collection('markets').doc(mid).update({[fld]:val}); alert(`✅ ${fld} updated`); }
+   async function changeSerialNumber(mid,curr){ let newS=prompt(`New serial number (current #${curr})`,curr); if(newS && !isNaN(newS) && parseInt(newS)>0){ await db.collection('markets').doc(mid).update({serialNo:parseInt(newS)}); alert('✅ Changed!'); loadMarkets(); } }
+   async function deleteAllMarkets(){ if(confirm("DELETE ALL MARKETS?")){ await db.collection('markets').get().then(s=>s.forEach(d=>d.ref.delete())); alert('Deleted!'); loadMarkets(); } }
+   async function setMarketHoliday(mid,name,st){ let isH=st==='holiday'; await db.collection('markets').doc(mid).update({status:isH?'closed':'holiday',isHoliday:!isH}); loadMarkets(); }
+  
+   async function declareOpenResult(mid,name){ 
+        let openPana=document.getElementById(`openPana_${mid}`).value.trim(), openDigit=document.getElementById(`openDigit_${mid}`).value.trim(); 
+        if(!openPana||!/^\d{3}$/.test(openPana)){ alert('Enter valid 3-digit Open Pana'); return; } 
+        if(!openDigit||!/^\d$/.test(openDigit)){ alert('Enter valid Open Digit'); return; } 
+        if(confirm(`Declare OPEN result for ${name}?\nPana: ${openPana}\nDigit: ${openDigit}`)){ 
+            await db.collection('markets').doc(mid).update({openPana,openDigit,closeDeclared:false}); 
+            await creditOpenWinners(mid,name,openPana,openDigit); 
+            alert('✅ OPEN result declared!'); 
+        } 
+   }
+  
+   async function declareCloseResult(mid,name){ 
+        let closePana=document.getElementById(`closePana_${mid}`).value.trim(), closeDigit=document.getElementById(`closeDigit_${mid}`).value.trim(); 
+        if(!closePana||!/^\d{3}$/.test(closePana)){ alert('Enter valid 3-digit Close Pana'); return; } 
+        if(!closeDigit||!/^\d$/.test(closeDigit)){ alert('Enter valid Close Digit'); return; } 
+        let market=await db.collection('markets').doc(mid).get(); 
+        let m=market.data(); 
+        if(m.openPana==='***'){ alert('Please declare OPEN result first!'); return; } 
+        let jodi=m.openDigit+closeDigit; 
+        if(confirm(`Declare CLOSE result for ${name}?\nClose Pana: ${closePana}\nClose Digit: ${closeDigit}\nJODI: ${jodi}`)){ 
+            await db.collection('markets').doc(mid).update({closePana,closeDigit,jodi,closeDeclared:true}); 
+            await creditCloseWinners(mid,name,m.openPana,m.openDigit,closePana,closeDigit,jodi); 
+            alert('✅ CLOSE result declared!'); 
+        } 
+   }
+  
+   async function resetMarketResult(mid,name){ if(confirm(`Reset "${name}" results?`)){ await db.collection('markets').doc(mid).update({openPana:'***',openDigit:'*',closePana:'***',closeDigit:'*',jodi:'**',closeDeclared:false}); alert(`✅ Reset!`); } }
+  
+   async function creditOpenWinners(mid,name,openPana,openDigit){ 
+        let bids=await db.collection('bids').where('marketId','==',mid).where('status','==','pending').get(); 
+        for(let b of bids.docs){ 
+            let bid=b.data(); let winning=false; 
+            let normalizedGame = (bid.gameType || bid.type || '').trim();
+            if (bid.bidType === 'Open') {
+                if(normalizedGame==='Single Digit' && bid.value===openDigit) winning=true;
+                if(['Single Pana','Double Pana','Triple Pana'].includes(normalizedGame) && bid.value===openPana) winning=true;
+            }
+            if(winning){ 
+                let win=bid.points*(gameRates[normalizedGame]||10); 
+                await b.ref.update({status:'won'}); 
+                let user=await db.collection('users').doc(bid.userId).get(); 
+                await db.collection('users').doc(bid.userId).update({balance:(user.data().balance||0)+win}); 
+                await db.collection('transactions').add({userId:bid.userId,type:'credit',amount:win,status:'Completed',description:`Won on ${name} (OPEN) - ${normalizedGame}: ${bid.value}`,date:new Date()}); 
+            } else { if (bid.bidType === 'Open') { await b.ref.update({status:'lost'}); } } 
+        } 
+   }
+  
+   async function creditCloseWinners(mid,name,openPana,openDigit,closePana,closeDigit,jodi){ 
+        let bids=await db.collection('bids').where('marketId','==',mid).where('status','==','pending').get(); 
+        for(let b of bids.docs){ 
+            let bid=b.data(); let winning=false; 
+            let normalizedGame = (bid.gameType || bid.type || '').trim();
+            if(normalizedGame==='Single Digit' && bid.bidType==='Close' && bid.value===closeDigit) winning=true; 
+            else if(normalizedGame==='Jodi' && bid.value===jodi) winning=true; 
+            else if(['Single Pana','Double Pana','Triple Pana'].includes(normalizedGame) && bid.bidType==='Close' && bid.value===closePana) winning=true; 
+            else if(normalizedGame==='Half Sangam A' && bid.value===''+openPana+'-'+closeDigit) winning=true; 
+            else if(normalizedGame==='Half Sangam B' && bid.value===''+openDigit+'-'+closePana) winning=true; 
+            else if(normalizedGame==='Full Sangam' && bid.value===''+openPana+'-'+closePana) winning=true; 
+            if(winning){ 
+                let win=bid.points*(gameRates[normalizedGame]||10); 
+                await b.ref.update({status:'won'}); 
+                let user=await db.collection('users').doc(bid.userId).get(); 
+                await db.collection('users').doc(bid.userId).update({balance:(user.data().balance||0)+win}); 
+                await db.collection('transactions').add({userId:bid.userId,type:'credit',amount:win,status:'Completed',description:`Won on ${name} - ${normalizedGame}: ${bid.value}`,date:new Date()}); 
+            }else{ await b.ref.update({status:'lost'}); } 
+        } 
+   }
+  
+   async function addMarket(){ let name=document.getElementById('marketNameInput').value; if(!name){ alert('Enter market name'); return; } await db.collection('markets').add({name, numbers:document.getElementById('marketNumbersInput').value||'***-**-***', openBidEnd:document.getElementById('openBidEnd').value, closeBidEnd:document.getElementById('closeBidEnd').value, closedTime:document.getElementById('closedTime').value, status:document.getElementById('marketStatus').value, serialNo:1, isHoliday:false, openPana:'***', openDigit:'*', closePana:'***', closeDigit:'*', jodi:'**', closeDeclared:false }); alert('Market added!'); }
+   async function editMarket(id,oldName,oldNumbers){ let newName=prompt('New name',oldName); if(newName) await db.collection('markets').doc(id).update({name:newName}); }
+   async function deleteMarket(id){ if(confirm('Delete market?')) await db.collection('markets').doc(id).delete(); }
+  
+   async function loadDeposits(){ 
+        let status=currentDepositTab==='pending'?'Pending':(currentDepositTab==='completed'?'Completed':'Rejected'); 
+        let snap=await db.collection('transactions').where('type','==','credit').where('status','==',status).get(); 
+        let deposits=[]; 
+        for(let d of snap.docs){ 
+            let t=d.data(); 
+            let user=await db.collection('users').doc(t.userId).get(); 
+            deposits.push({id:d.id,userId:t.userId,amount:t.amount,userUTR:t.utr,date:t.date?.toDate()||new Date(0),userName:user.data()?.name||'Unknown'}); 
+        } 
+        deposits.sort((a,b)=>b.date-a.date); 
+        let html=''; 
+        for(let d of deposits){ 
+            let isPending=currentDepositTab==='pending'; 
+            html+=`<div class="card" style="padding:14px; margin-bottom:10px;"><div><b style="color:#FFD700;">👤 ${d.userName}</b><br><b style="color:#aaaaaa;">💰 Amount:</b> ₹${d.amount}<br><b style="color:#aaaaaa;">📋 UTR/Ref:</b> ${d.userUTR||'N/A'}<br><b style="color:#aaaaaa;">📅 Date:</b> ${d.date.toLocaleString()}</div><div style="margin-top:8px;">${isPending?`<button onclick="approveDeposit('${d.id}',${d.amount},'${d.userId}')" class="btn-success">Approve</button><button onclick="rejectDeposit('${d.id}')" class="btn-danger">Reject</button>`:`<button onclick="deleteDepositRecord('${d.id}')" class="btn-delete">Delete</button>`}</div></div>`; 
+        } 
+        document.getElementById('depositsList').innerHTML=html||'<p style="color:#aaaaaa; text-align:center;">No deposits found</p>'; 
+   }
+
+   async function approveDeposit(id,amount,uid){ if(confirm(`Approve deposit of ₹${amount}?`)){ let user=await db.collection('users').doc(uid).get(); await db.collection('users').doc(uid).update({balance:(user.data().balance||0)+amount}); await db.collection('transactions').doc(id).update({status:'Completed'}); alert('✅ Deposit approved!'); loadDeposits(); } }
+   async function rejectDeposit(id){ if(confirm('Reject this deposit?')){ await db.collection('transactions').doc(id).update({status:'Rejected'}); alert('❌ Deposit rejected!'); loadDeposits(); } }
+   async function deleteDepositRecord(id){ if(confirm('Delete record?')){ await db.collection('transactions').doc(id).delete(); loadDeposits(); } }
+  
+   async function loadWithdrawals(){ 
+        let status=currentWithdrawalTab==='pending'?'Pending':(currentWithdrawalTab==='completed'?'Completed':'Rejected'); 
+        let snap=await db.collection('withdrawRequests').where('status','==',status).get(); 
+        let withdrawals=[]; 
+        for(let d of snap.docs){ 
+            let w=d.data(); 
+            let user=await db.collection('users').doc(w.userId).get(); 
+            withdrawals.push({id:d.id, userId:w.userId, amount:w.amount, bankDetails:w.bankDetails||{}, date:w.date?.toDate()||new Date(0), userName:user.data()?.name||'Unknown', userPhone:user.data()?.phone||'N/A'}); 
+        } 
+        withdrawals.sort((a,b)=>b.date-a.date); 
+        let html=''; 
+        for(let w of withdrawals){ 
+            let isPending=currentWithdrawalTab==='pending'; 
+            html+=`<div class="card" style="padding:14px; margin-bottom:10px;"><div><b style="color:#FFD700;">👤 ${w.userName}</b><br><b style="color:#aaaaaa;">📞 Phone:</b> ${w.userPhone}<br><b style="color:#aaaaaa;">💰 Amount:</b> ₹${w.amount}<br><div class="bank-details-box"><span>🏦 BANK DETAILS:</span><br><span>Holder:</span> ${w.bankDetails.accountHolder||'N/A'}<br><span>Bank:</span> ${w.bankDetails.bankName||'N/A'}<br><span>Account:</span> <span style="color:#ffffff;">${w.bankDetails.accountNumber||'N/A'}</span><br><span>IFSC:</span> ${w.bankDetails.ifscCode||'N/A'}</div><b style="color:#aaaaaa;">📅 ${w.date.toLocaleString()}</b></div><div style="margin-top:8px;">${isPending?`<button onclick="approveWithdraw('${w.id}',${w.amount},'${w.userId}')" class="btn-success">Approve</button><button onclick="rejectWithdraw('${w.id}')" class="btn-danger">Reject</button>`:`<button onclick="deleteWithdrawalRecord('${w.id}')" class="btn-delete">Delete</button>`}</div></div>`; 
+        } 
+        document.getElementById('withdrawalsList').innerHTML=html||'<p style="color:#aaaaaa; text-align:center;">No withdrawals found</p>'; 
+   }
+
+   async function approveWithdraw(id,amount,uid){ if(confirm(`Approve withdrawal of ₹${amount}?`)){ let user=await db.collection('users').doc(uid).get(); if((user.data().balance||0)<amount){ alert('User has insufficient balance!'); return; } await db.collection('users').doc(uid).update({balance:(user.data().balance||0)-amount}); await db.collection('withdrawRequests').doc(id).update({status:'Completed'}); alert('✅ Withdrawal approved!'); loadWithdrawals(); } }
+   async function rejectWithdraw(id){ if(confirm('Reject withdrawal?')){ await db.collection('withdrawRequests').doc(id).update({status:'Rejected'}); alert('❌ Rejected!'); loadWithdrawals(); } }
+   async function deleteWithdrawalRecord(id){ if(confirm('Delete record?')){ await db.collection('withdrawRequests').doc(id).delete(); loadWithdrawals(); } }
+  
+   async function updateBalance(uid,action){ 
+        let amt=prompt(`Enter amount to ${action==='add'?'ADD':'REMOVE'}:`); 
+        if(!amt||isNaN(amt)||parseInt(amt)<=0) return; 
+        let amtNum=parseInt(amt); 
+        let user=await db.collection('users').doc(uid).get(); 
+        let curr=user.data().balance||0; 
+        let newBal=action==='add'?curr+amtNum:curr-amtNum; 
+        await db.collection('users').doc(uid).update({balance:newBal}); 
+        alert(`✅ Balance updated to ₹${newBal}`); 
+   }
+
+   async function toggleBlockUser(uid, name, isBlocked) { 
+        let targetState = !isBlocked; 
+        let actionText = targetState ? "BLOCK" : "UNBLOCK"; 
+        if (confirm(`Are you sure you want to ${actionText} user "${name}"?`)) { 
+            try {
+                await db.collection('users').doc(uid).update({ blocked: targetState }); 
+                alert(`✅ User "${name}" has been ${targetState ? 'BLOCKED' : 'UNBLOCKED'} successfully!`); 
+                loadUsersWithTodayBids(); 
+            } catch(e) { alert("❌ Failed to update user status: " + e.message); }
+        } 
+   }
+
+   async function clearUserBids(uid,name){ if(confirm(`Clear bid history for "${name}"?`)){ let bids=await db.collection('bids').where('userId','==',uid).get(); bids.forEach(d=>d.ref.delete()); alert('✅ Cleared!'); } }
+   async function clearUserTransactions(uid,name){ if(confirm(`Clear transactions for "${name}"?`)){ let trans=await db.collection('transactions').where('userId','==',uid).get(); trans.forEach(d=>d.ref.delete()); alert('✅ Cleared!'); } }
+   async function deleteUser(uid,name){ if(confirm(`Delete user "${name}"?`)){ await db.collection('users').doc(uid).delete(); alert('User deleted!'); loadUsersWithTodayBids(); } }
+  
+   function loadSettings(){ db.collection('settings').doc('upi').get().then(d=>{ if(d.exists) document.getElementById('upiId').value=d.data().upiId; }); }
+   async function updateUPI(){ await db.collection('settings').doc('upi').set({upiId:document.getElementById('upiId').value}); alert("UPI Updated"); }
+   function loadNotice(){ db.collection('settings').doc('notice').onSnapshot(d=>{ document.getElementById('noticeText').value=d.exists?d.data().text:'Welcome to WIN777!'; }); }
+   async function updateNotice(){ await db.collection('settings').doc('notice').set({text:document.getElementById('noticeText').value,updatedAt:new Date()}); alert('✅ Notice updated!'); }
+  
+   async function changePassword(){ 
+        let old=document.getElementById('oldPass').value, newP=document.getElementById('newPass').value; 
+        if(old===dbPassword){ 
+            await db.collection('settings').doc('admin').set({ password: newP.trim() }); 
+            dbPassword=newP.trim(); 
+            localStorage.removeItem('adminLoggedIn');
+            alert('✅ Password updated successfully! Please login again.'); 
+            document.getElementById('loginScreen').style.display='flex'; 
+            document.getElementById('adminPanel').style.display='none'; 
+        } else { alert('❌ Wrong old password!'); } 
+   }
+  
+   function showSection(section){ 
+        toggleSidebar(false);
+        ['markets','users','totalBids','totalTransactions','deposits','withdrawals','notice','settings','livechat'].forEach(s=>document.getElementById(`${s}Section`).classList.add('hidden')); 
+        document.getElementById(`${section}Section`).classList.remove('hidden'); 
+        
+        if(section==='users') refreshTodayBidsForUsers(); 
+        if(section==='totalBids') loadTotalBidsSummary();
+        if(section==='totalTransactions') calculateOverallStats();
+        if(section==='deposits') loadDeposits(); 
+        if(section==='withdrawals') loadWithdrawals(); 
+        if(section==='livechat') markAllChatsAsRead(); 
+   }
+
+   async function markAllChatsAsRead(){ let unread=await db.collection('chats').where('unread','==',true).get(); unread.forEach(d=>d.ref.update({unread:false})); updateChatBadge(); updateMenuDot(); }
+   function logout(){ 
+        localStorage.removeItem('adminLoggedIn');
+        document.getElementById('loginScreen').style.display='flex'; 
+        document.getElementById('adminPanel').style.display='none'; 
+   }
+
+   async function clearAllUsersBidHistory(){
+       if(confirm("⚠️ DANGER: Are you sure you want to delete ALL bid history for ALL users?")){
+           if(prompt('Type "CLEAR ALL BIDS" to confirm:') === 'CLEAR ALL BIDS'){
+               try {
+                   let bids = await db.collection('bids').get();
+                   let count = 0;
+                   bids.forEach(d => {
+                       d.ref.delete();
+                       count++;
+                   });
+                   alert(`✅ Successfully cleared ${count} bid records from all users!`);
+               } catch(e) {
+                   alert("❌ Error: " + e.message);
+               }
+           }
+       }
+   }
+
+   async function clearAllUsersTransactionHistory(){
+       if(confirm("⚠️ DANGER: Are you sure you want to delete ALL transaction history for ALL users?")){
+           if(prompt('Type "CLEAR ALL TRANSACTIONS" to confirm:') === 'CLEAR ALL TRANSACTIONS'){
+               try {
+                   let trans = await db.collection('transactions').get();
+                   let count = 0;
+                   trans.forEach(d => {
+                       d.ref.delete();
+                       count++;
+                   });
+                   alert(`✅ Successfully cleared ${count} transaction records from all users!`);
+               } catch(e) {
+                   alert("❌ Error: " + e.message);
+               }
+           }
+       }
+   }
+</script>
+</body>
+</html>
