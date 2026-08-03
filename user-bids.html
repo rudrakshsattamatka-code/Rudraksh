@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WIN777 - User Bid Details</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+            border: none;
+        }
+
+        body { 
+            background: #000000; /* Black */
+            color: #ffffff; /* White text */
+            padding-bottom: 30px; 
+            min-height: 100vh;
+        }
+
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 14px; 
+        }
+
+        .back-btn { 
+            background: #111111; /* Dark Gray */
+            color: #FFD700; /* Yellow */
+            border: 1px solid #FFD700; 
+            padding: 10px 18px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            margin-bottom: 14px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            box-shadow: 0 1px 3px rgba(255,215,0,0.2);
+            transition: background 0.2s;
+        }
+
+        .back-btn:active { background: #222222; }
+
+        /* Android App Style Splash Screen */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000; /* Black */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 30px;
+        }
+
+        .loader-bar {
+            width: 120px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #FFD700; /* Yellow */
+            border-radius: 10px;
+            animation: loading 1.2s infinite linear;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0%; }
+            100% { left: 100%; }
+        }
+
+        /* Header Card */
+        .header { 
+            background: #111111; /* Dark Gray */
+            padding: 16px 18px; 
+            border-radius: 16px; 
+            margin-bottom: 14px; 
+            color: #ffffff; 
+            border: 1px solid #FFD700; /* Yellow */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .header h1 { 
+            color: #FFD700; /* Yellow */
+            font-size: 16px; 
+            font-weight: 800; 
+            margin-bottom: 6px; 
+            text-transform: uppercase;
+        }
+
+        .header p { 
+            color: #aaaaaa; 
+            font-size: 12px; 
+            font-weight: 600; 
+            margin-top: 2px; 
+        }
+
+        /* Stats Grid */
+        .stats { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 10px; 
+            margin-bottom: 14px; 
+        }
+
+        .stat-card { 
+            background: #111111; /* Dark Gray */
+            padding: 12px 10px; 
+            border-radius: 14px; 
+            text-align: center; 
+            border: 1px solid #FFA07A; /* Light Orange */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .stat-card .label { 
+            color: #aaaaaa; 
+            font-size: 10px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 4px; 
+        }
+
+        .stat-card .value { 
+            color: #ffffff; 
+            font-size: 16px; 
+            font-weight: 800; 
+        }
+
+        .stat-card .value.positive { color: #00e676; } /* Green */
+        .stat-card .value.negative { color: #ff4444; } /* Red */
+
+        /* Filter Controls */
+        .filters { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 14px; 
+            flex-wrap: wrap; 
+            align-items: center; 
+        }
+
+        .filter-select { 
+            padding: 10px 12px; 
+            border-radius: 10px; 
+            background: #000000; 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #ffffff; 
+            outline: none; 
+            border: 1px solid #FFA07A; /* Light Orange */
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        .search-input { 
+            flex: 1; 
+            padding: 10px 14px; 
+            border-radius: 10px; 
+            background: #000000; 
+            min-width: 160px; 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #ffffff;
+            border: 1px solid #FFA07A;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        .search-input::placeholder { color: #888888; }
+
+        .refresh-btn { 
+            background: #FFD700; /* Yellow */
+            color: #000000; /* Black */
+            border: none; 
+            padding: 10px 16px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-size: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+        }
+
+        .refresh-btn:active { background: #FFA07A; } /* Light Orange */
+
+        /* Table Box */
+        .bids-table { 
+            background: #111111; /* Dark Gray */
+            border-radius: 16px; 
+            overflow-x: auto; 
+            border: 1px solid #FFD700; /* Yellow */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            min-width: 800px; 
+        }
+
+        th { 
+            background: #111111; 
+            padding: 12px 10px; 
+            text-align: left; 
+            font-weight: 700; 
+            color: #FFD700; /* Yellow */
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            border-bottom: 1px solid #FFD700;
+        }
+
+        td { 
+            padding: 12px 10px; 
+            border-bottom: 1px solid #333333; 
+            color: #ffffff; 
+            font-size: 12px; 
+            font-weight: 600; 
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        .bid-id-text {
+            color: #FFA07A; /* Light Orange */
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+        .status-won { color: #00e676; font-weight: 800; }
+        .status-lost { color: #ff4444; font-weight: 800; }
+        .status-pending { color: #FFA07A; font-weight: 800; }
+
+        .bid-type-open { background: rgba(0, 230, 118, 0.2); color: #00e676; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; }
+        .bid-type-close { background: rgba(255, 160, 122, 0.2); color: #FFA07A; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; }
+        .no-data { text-align: center; padding: 40px; color: #aaaaaa; font-size: 13px; font-weight: 600; }
+
+        @media (max-width: 768px) { 
+            .stats { grid-template-columns: repeat(2, 1fr); } 
+            th, td { padding: 10px 8px; font-size: 11px; } 
+        }
+    </style>
+</head>
+<body>
+
+<!-- Android App Style Splash Screen Loader -->
+<div id="splashScreen">
+    <img src="https://i.imgur.com/01g5mvk.png" alt="Logo" class="splash-logo">
+    <div class="loader-bar"></div>
+</div>
+
+<div class="container">
+    <button class="back-btn" onclick="window.close()">← Close Monitor</button>
+    <div class="header">
+        <h1 id="userName">Loading Profile...</h1>
+        <p id="userPhone">📞 Phone: Loading...</p>
+        <p id="userBalance">💰 Balance: ₹0</p>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-card"><div class="label">Total Bids</div><div class="value" id="totalBids">0</div></div>
+        <div class="stat-card"><div class="label">Total Spent</div><div class="value" id="totalSpent">₹0</div></div>
+        <div class="stat-card"><div class="label">Total Won</div><div class="value positive" id="totalWon">₹0</div></div>
+        <div class="stat-card"><div class="label">Net Profit/Loss</div><div class="value" id="netProfit">₹0</div></div>
+    </div>
+    
+    <div class="filters">
+        <select id="statusFilter" class="filter-select" onchange="filterBids()">
+            <option value="all">All Status</option>
+            <option value="won">Won</option>
+            <option value="lost">Lost</option>
+            <option value="pending">Pending</option>
+        </select>
+        <select id="gameTypeFilter" class="filter-select" onchange="filterBids()">
+            <option value="all">All Games</option>
+            <option value="Single Digit">Single Digit</option>
+            <option value="Jodi">Jodi</option>
+            <option value="Single Pana">Single Pana</option>
+            <option value="Double Pana">Double Pana</option>
+            <option value="Triple Pana">Triple Pana</option>
+            <option value="Half Sangam A">Half Sangam A</option>
+            <option value="Half Sangam B">Half Sangam B</option>
+            <option value="Full Sangam">Full Sangam</option>
+        </select>
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search market or number..." onkeyup="filterBids()">
+        <button class="refresh-btn" onclick="refreshData()">Refresh</button>
+    </div>
+    
+    <div class="bids-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Bidding ID</th>
+                    <th>Date & Time</th>
+                    <th>Market</th>
+                    <th>Session</th>
+                    <th>Game</th>
+                    <th>Number</th>
+                    <th>Points</th>
+                    <th>Rate</th>
+                    <th>Possible Win</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="bidsList">
+                <tr><td colspan="10" class="no-data">Loading user placements...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5",
+        measurementId: "G-R9CZ493377"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    const gameRates = { 'Single Digit':10, 'Jodi':100, 'Single Pana':160, 'Double Pana':320, 'Triple Pana':1000, 'Half Sangam A':1000, 'Half Sangam B':1000, 'Full Sangam':10000 };
+    let allBids = [], userId = null, userName = "";
+    
+    function hideSplashScreen() {
+        const splash = document.getElementById('splashScreen');
+        if (splash && splash.style.opacity !== '0') {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.visibility = 'hidden';
+            }, 300);
+        }
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    userId = urlParams.get('uid');
+    userName = urlParams.get('name') || 'User';
+
+    if (userId) { 
+        document.getElementById('userName').innerHTML = `👤 User: ${escapeHtml(userName)}`; 
+        init(); 
+    } else { 
+        document.getElementById('userName').innerHTML = '❌ No User Selected'; 
+        document.getElementById('bidsList').innerHTML = '<tr><td colspan="10" class="no-data">No user ID provided</td></tr>'; 
+        hideSplashScreen();
+    }
+    
+    async function init() { await loadUserData(); await loadBids(); listenToBidUpdates(); }
+    
+    async function loadUserData() { 
+        if(!userId) return; 
+        try { 
+            let userDoc = await db.collection('users').doc(userId).get(); 
+            if(userDoc.exists) { 
+                let ud = userDoc.data(); 
+                document.getElementById('userPhone').innerHTML = `📞 Phone: ${ud.phone || 'Not provided'}`; 
+                document.getElementById('userBalance').innerHTML = `💰 Wallet: ₹${(ud.balance || 0).toLocaleString()}`; 
+            } 
+        } catch(e) { console.error(e); } 
+    }
+    
+    async function loadBids() { 
+        if(!userId) return; 
+        document.getElementById('bidsList').innerHTML = '<tr><td colspan="10" class="no-data">Loading...</td></tr>'; 
+        try { 
+            let snapshot = await db.collection('bids').where('userId', '==', userId).get(); 
+            allBids = []; 
+            snapshot.forEach(doc => { 
+                let b = doc.data(); 
+                let bidDate = b.createdAt?.toDate ? b.createdAt.toDate() : (b.createdAt?.seconds ? new Date(b.createdAt.seconds*1000) : new Date(0)); 
+                allBids.push({ id: doc.id, ...b, dateObj: bidDate, bidType: b.bidType || null }); 
+            }); 
+            allBids.sort((a,b) => b.dateObj - a.dateObj); 
+            if(allBids.length === 0) document.getElementById('bidsList').innerHTML = '<tr><td colspan="10" class="no-data">No bids found for this user</td></tr>'; 
+            updateStats(); 
+            filterBids(); 
+            hideSplashScreen();
+        } catch(e) { 
+            document.getElementById('bidsList').innerHTML = `<tr><td colspan="10" class="no-data" style="color:#ff4444;">❌ Error: ${e.message}</td></tr>`; 
+            hideSplashScreen();
+        } 
+    }
+    
+    function filterBids() { 
+        let status = document.getElementById('statusFilter').value;
+        let game = document.getElementById('gameTypeFilter').value;
+        let search = document.getElementById('searchInput').value.trim().toLowerCase(); 
+        let filtered = [...allBids]; 
+        
+        if(status !== 'all') filtered = filtered.filter(b => b.status === status); 
+        if(game !== 'all') filtered = filtered.filter(b => (b.gameType || b.type) === game); 
+        if(search) filtered = filtered.filter(b => (b.market||'').toLowerCase().includes(search) || (b.value||'').toLowerCase().includes(search) || b.id.toLowerCase().includes(search)); 
+        
+        displayBidsTable(filtered); 
+    }
+    
+    function displayBidsTable(bids){ 
+        let tbody = document.getElementById('bidsList'); 
+        if(bids.length === 0){ tbody.innerHTML = '<tr><td colspan="10" class="no-data">No bids match your filters</td></tr>'; return; } 
+        let html = ''; 
+        for(let b of bids){ 
+            let dateStr = b.dateObj && b.dateObj.getTime() > 0 ? b.dateObj.toLocaleString() : 'Unknown'; 
+            let gameDisplay = b.gameType || b.type || '-';
+            let rate = gameRates[gameDisplay] || 10; 
+            let possibleWin = (b.points || 0) * rate; 
+            let statusClass = b.status === 'won' ? 'status-won' : (b.status === 'lost' ? 'status-lost' : 'status-pending'); 
+            let statusText = b.status ? b.status.toUpperCase() : 'PENDING'; 
+            let bidTypeBadge = b.bidType ? (b.bidType === 'Open' ? '<span class="bid-type-open">OPEN</span>' : '<span class="bid-type-close">CLOSE</span>') : '<span style="color:#aaaaaa;">—</span>'; 
+            
+            html += `<tr>
+                <td class="bid-id-text">#${b.id.substring(0, 8).toUpperCase()}</td>
+                <td>${dateStr}</td>
+                <td>${escapeHtml(b.market||'Unknown')}</td>
+                <td>${bidTypeBadge}</td>
+                <td>${escapeHtml(gameDisplay)}</td>
+                <td><strong style="font-family:monospace; font-size:13px; color:#ff4444;">${escapeHtml(b.value||'-')}</strong></td>
+                <td style="color:#FFD700;">₹${(b.points||0).toLocaleString()}</td>
+                <td>${rate}x</td>
+                <td>₹${possibleWin.toLocaleString()}</td>
+                <td class="${statusClass}">${statusText}</td>
+            </tr>`; 
+        } 
+        tbody.innerHTML = html; 
+    }
+    
+    function updateStats(){ 
+        let total = allBids.length, spent = 0, won = 0; 
+        for(let b of allBids){ 
+            spent += b.points || 0; 
+            if(b.status === 'won'){ 
+                let gameDisplay = b.gameType || b.type || '-';
+                let rate = gameRates[gameDisplay] || 10; 
+                won += (b.points || 0) * rate; 
+            } 
+        } 
+        let net = won - spent; 
+        document.getElementById('totalBids').innerHTML = total; 
+        document.getElementById('totalSpent').innerHTML = `₹${spent.toLocaleString()}`; 
+        document.getElementById('totalWon').innerHTML = `₹${won.toLocaleString()}`; 
+        let netEl = document.getElementById('netProfit'); 
+        netEl.innerHTML = `₹${net.toLocaleString()}`; 
+        netEl.className = 'value ' + (net > 0 ? 'positive' : (net < 0 ? 'negative' : '')); 
+    }
+    
+    function escapeHtml(str){ if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
+    async function refreshData(){ await loadUserData(); await loadBids(); }
+    function listenToBidUpdates(){ if(!userId) return; db.collection('bids').where('userId','==',userId).onSnapshot(()=>{ loadBids(); }); }
+    
+    window.filterBids = filterBids; 
+    window.refreshData = refreshData;
+
+    // Optional fail-safe for splash screen if data loading takes too long
+    setTimeout(hideSplashScreen, 3000);
+</script>
+</body>
+</html>
