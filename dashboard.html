@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WIN777 - Dashboard</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent; 
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+            border: none;
+        }
+        
+        body { 
+            background: #ffffff; /* White Background */
+            color: #000000; /* Black Text */
+            padding-bottom: 85px; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+
+        .app-container { 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #ffffff; /* White */
+            min-height: 100vh; 
+            position: relative; 
+        }
+        
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff; /* White */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .splash-logo {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 25px;
+        }
+
+        .loader-bar {
+            width: 110px;
+            height: 3px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #FFD700; /* Yellow Loader */
+            border-radius: 10px;
+            animation: loading 1.2s infinite linear;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0%; }
+            100% { left: 100%; }
+        }
+        
+        .sticky-top-panel {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 480px; 
+            margin: 0 auto;
+            height: 12vh; 
+            min-height: 85px;
+            background: #ffffff; /* White */
+            color: #000000; 
+            z-index: 1000;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+            padding: 10px 14px; 
+            border-bottom: 1px solid #FFD700; /* Yellow Border */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header-action-line { 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            width: 100%; 
+            height: 30px; 
+        }
+
+        .menu-toggle-btn { 
+            background: none; 
+            border: none; 
+            color: #FFD700; /* Yellow Icon */
+            font-size: 24px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+        }
+        
+        .header-logo-img {
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .panel-shortcuts-row { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            width: 100%; 
+            padding-top: 2px; 
+        }
+
+        .action-shortcuts-box { 
+            display: flex; 
+            gap: 8px; 
+        }
+        
+        .shortcut-action-btn { 
+            color: #000000; 
+            padding: 5px 14px; 
+            border-radius: 10px; 
+            font-size: 11px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            border: none;
+            display: inline-flex; 
+            align-items: center;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-deposit-pill { background: #FFD700; } /* Yellow */
+        .btn-withdraw-pill { background: #FFA07A; } /* Light Orange */
+        .shortcut-action-btn:active { transform: scale(0.96); }
+        
+        .balance-pill { 
+            background: #ffffff; 
+            padding: 5px 12px; 
+            border-radius: 10px; 
+            color: #000000; 
+            font-weight: 800; 
+            font-size: 12px; 
+            cursor: pointer; 
+            border: 1px solid #FFD700;
+        }
+
+        .marquee-notice-banner {
+            margin-top: 12vh; 
+            background: #f9f9f9; /* Light Gray */
+            height: 32px; 
+            display: flex; 
+            align-items: center;
+            border-bottom: 1px solid #eeeeee; 
+            overflow: hidden; 
+            position: relative; 
+            cursor: pointer;
+        }
+
+        .marquee-scroll-container { 
+            display: inline-block; 
+            white-space: nowrap; 
+            padding-left: 100%; 
+            animation: marqueeLinear 22s linear infinite; 
+        }
+
+        .notice-msg-text { 
+            font-size: 11px; 
+            color: #e85d04; /* Orange */
+            font-weight: 600; 
+            display: inline-block; 
+        }
+
+        @keyframes marqueeLinear { 
+            0% { transform: translate3d(0, 0, 0); } 
+            100% { transform: translate3d(-100%, 0, 0); } 
+        }
+        
+        .main-scroll-view { padding: 10px; }
+
+        .market-skeleton {
+            background: #FFFDD0; /* Cream Color */
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            height: 90px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+        .market-skeleton::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            height: 100%; width: 150%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(200%); }
+        }
+
+        .market-card-wrapper { 
+            background: #FFFDD0; /* Cream Color for Game Cards */
+            border-radius: 12px; 
+            padding: 12px 14px; 
+            margin-bottom: 10px; 
+            position: relative; 
+            border: 1px solid #FFD700; /* Yellow Border */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .market-card-wrapper:active {
+            transform: scale(0.98);
+        }
+
+        .market-main-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .market-identity-box { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            text-align: center;
+            gap: 2px; 
+        }
+
+        .market-title-line { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            width: 100%;
+        }
+
+        .market-name-label { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #000000; 
+            background: #FFD700; /* Yellow BG */
+            padding: 3px 12px;
+            border-radius: 6px;
+            letter-spacing: 0.3px; 
+            text-transform: uppercase; 
+        }
+
+        .market-numbers-display { 
+            font-size: 17px; 
+            font-weight: 800; 
+            color: #000000; /* Black numbers to show on Cream */
+            letter-spacing: 0.5px; 
+            font-family: monospace; 
+            margin: 4px 0 1px 0; 
+        }
+        
+        .market-status-text { font-size: 11px; font-weight: 700; }
+        .status-running-open { color: #d97706; } /* Darker Yellow/Orange */
+        .status-running-close { color: #ea580c; } /* Dark Orange */
+        .status-closed-today { color: #dc2626; }
+        .status-holiday-today { color: #9333ea; }
+
+        .market-action-btn-circle { 
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border: none; 
+            cursor: pointer; 
+            flex-shrink: 0; 
+            transition: transform 0.1s ease; 
+        }
+
+        .market-action-btn-circle:active { transform: scale(0.95); }
+        .btn-active-play { background: #FFD700; color: #000; }
+        .btn-active-play::after { 
+            content: ''; 
+            display: block; 
+            width: 0; 
+            height: 0; 
+            border-top: 5px solid transparent; 
+            border-bottom: 5px solid transparent; 
+            border-left: 8px solid #000; 
+            margin-left: 2px; 
+        }
+
+        .btn-inactive-stop { background: #e5e5e5; color: #777; opacity: 0.8; }
+        .btn-inactive-stop::after { 
+            content: ''; 
+            display: block; 
+            width: 0; 
+            height: 0; 
+            border-top: 5px solid transparent; 
+            border-bottom: 5px solid transparent; 
+            border-left: 8px solid #777; 
+            margin-left: 2px; 
+        }
+
+        .market-timing-footer-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 8px; 
+            padding-top: 8px; 
+            border-top: 1px solid #e0e0e0; 
+            font-size: 11px; 
+            font-weight: 600; 
+            color: #555555; 
+        }
+
+        .time-node span { color: #d97706; font-weight: 700; }
+
+        .drawer-nav-backdrop { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: 2000; 
+            visibility: hidden; 
+            opacity: 0; 
+            transition: all 0.3s ease; 
+        }
+
+        .drawer-nav-backdrop.drawer-active { visibility: visible; opacity: 1; }
+
+        .native-android-drawer { 
+            position: fixed; 
+            top: 0; 
+            left: -270px; 
+            width: 270px; 
+            height: 100%; 
+            background: #ffffff; /* White */
+            color: #000000; 
+            z-index: 2100; 
+            display: flex; 
+            flex-direction: column; 
+            transition: transform 0.3s ease; 
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            border-right: 1px solid #eeeeee;
+        }
+
+        .drawer-nav-backdrop.drawer-active .native-android-drawer { transform: translateX(270px); }
+
+        .drawer-profile-banner { padding: 20px 16px; background: #ffffff; border-bottom: 1px solid #FFD700; }
+        .drawer-avatar-badge { 
+            width: 40px; 
+            height: 40px; 
+            background: #FFD700; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 16px; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            color: #000; 
+        }
+
+        .drawer-user-name { font-size: 15px; font-weight: 700; color: #000000; }
+        .drawer-user-phone { font-size: 11px; color: #555555; margin-top: 2px; }
+        .drawer-user-bal { font-size: 14px; font-weight: 800; color: #d97706; margin-top: 5px; }
+
+        .drawer-menu-scroller { flex: 1; overflow-y: auto; padding: 6px 0; }
+        .drawer-menu-item { 
+            padding: 12px 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            color: #000000; 
+            font-size: 13px; 
+            font-weight: 600; 
+            text-decoration: none; 
+            cursor: pointer; 
+        }
+
+        .drawer-menu-item:active { background: #f0f0f0; color: #000000; }
+        .drawer-arrow-label { color: #d97706; font-weight: bold; font-size: 11px; }
+        .drawer-logout-btn { color: #ff4444; border-top: 1px solid #eeeeee; margin-top: 10px; }
+
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #ffffff; /* White */
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            padding: 6px 10px 8px 10px; 
+            border-top: none; /* Line Removed */
+            z-index: 1000; 
+            height: 72px; 
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* NEW RECTANGULAR BOTTOM NAV DESIGN */
+        .nav-item { 
+            text-align: center; 
+            cursor: pointer; 
+            font-size: 10px; 
+            flex: 1; 
+            font-weight: 800; 
+            text-decoration: none; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative;
+            top: -10px; 
+            background: #ffffff; 
+            color: #000000 !important; 
+            width: 68px;  
+            height: 52px; 
+            max-width: 68px; 
+            border-radius: 12px; 
+            border: 1px solid #FFD700; 
+            text-transform: uppercase; 
+            transition: all 0.2s ease; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-item:active { transform: scale(0.95); background: #FFD700; color: #000000 !important; }
+        
+        .nav-item span { 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-top: 0; 
+            color: inherit;
+        }
+
+        .notification-dot {
+            position: absolute; 
+            top: 2px; 
+            right: 4px; 
+            width: 8px; 
+            height: 8px;
+            background-color: #ff4444; 
+            border-radius: 50%; 
+            display: none;
+            z-index: 10;
+        }
+
+        .modal-popup-layer { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: 3000; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        .modal-popup-body { 
+            background: #ffffff; /* White */
+            border-radius: 16px; 
+            padding: 20px; 
+            width: 90%; 
+            max-width: 320px; 
+            color: #000000; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #FFD700;
+        }
+
+        .modal-popup-body h3 { margin-bottom: 14px; text-align: center; font-size: 16px; font-weight: 700; color: #d97706; }
+        .modal-action-button { 
+            width: 100%; 
+            padding: 12px; 
+            background: #FFD700; 
+            border: none; 
+            border-radius: 10px; 
+            color: #000000; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            font-size: 12px; 
+            text-transform: uppercase; 
+        }
+
+        .modal-close-trigger { background: #f0f0f0; color: #333333; }
+        .popup-input-element { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 6px 0; 
+            background: #ffffff; 
+            border-radius: 10px; 
+            font-size: 13px; 
+            outline: none; 
+            font-weight: 600; 
+            color: #000000; 
+            border: 1px solid #cccccc;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        .popup-rate-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eeeeee; font-size: 13px; font-weight: 600; color: #333333; }
+
+        .alert-popup-layer { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: 5000; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        .alert-popup-body { 
+            background: #ffffff; 
+            border-radius: 16px; 
+            padding: 20px; 
+            width: 85%; 
+            max-width: 300px; 
+            text-align: center; 
+            color: #000000; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #FFD700;
+        }
+
+        .alert-popup-title { font-size: 15px; font-weight: 800; color: #d97706; margin-bottom: 6px; }
+        .alert-popup-desc { font-size: 12px; color: #555555; line-height: 1.4; margin-bottom: 16px; }
+        .alert-action-row { display: flex; flex-direction: column; gap: 6px; }
+        .alert-btn-primary { background: #FFD700; border: none; padding: 10px; border-radius: 10px; color: #000; font-weight: 700; font-size: 12px; text-transform: uppercase; cursor: pointer; width: 100%; }
+        .alert-btn-secondary { background: #f0f0f0; border: none; padding: 10px; border-radius: 10px; color: #333333; font-weight: 600; font-size: 12px; text-transform: uppercase; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div id="splashScreen">
+    <img src="https://i.imgur.com/01g5mvk.png" alt="Logo" class="splash-logo">
+    <div class="loader-bar"></div>
+</div>
+
+<div class="app-container">
+    
+    <div class="sticky-top-panel">
+        <div class="header-action-line">
+            <button class="menu-toggle-btn" onclick="toggleDrawerMenu(true)">☰</button>
+            <img src="https://i.imgur.com/01g5mvk.png" alt="WIN777 Logo" class="header-logo-img">
+            <div style="width: 24px;"></div> 
+        </div>
+        
+        <div class="panel-shortcuts-row">
+            <div class="action-shortcuts-box">
+                <a href="deposit.html" class="shortcut-action-btn btn-deposit-pill">Deposit</a>
+                <a href="withdraw.html" class="shortcut-action-btn btn-withdraw-pill">Withdraw</a>
+            </div>
+            <div class="balance-pill" onclick="triggerWalletAlert()">₹<span id="userWalletBalance">0</span></div>
+        </div>
+    </div>
+
+    <div class="marquee-notice-banner" id="noticeContainerElement" onclick="triggerNoticePopup()">
+        <div class="marquee-scroll-container">
+            <div class="notice-msg-text" id="dashboardNoticeTextField">Loading broadcast updates...</div>
+        </div>
+    </div>
+    
+    <div class="main-scroll-view">
+        <div id="marketListElementContainer">
+            <div class="market-skeleton"></div>
+            <div class="market-skeleton"></div>
+            <div class="market-skeleton"></div>
+        </div>
+    </div>
+    
+    <div class="drawer-nav-backdrop" id="drawerBackdropLayer" onclick="toggleDrawerMenu(false)">
+        <div class="native-android-drawer" onclick="event.stopPropagation()">
+            <div class="drawer-profile-banner">
+                <div class="drawer-avatar-badge">👤</div>
+                <div class="drawer-user-name" id="drawerLabelName">Loading...</div>
+                <div class="drawer-user-phone" id="drawerLabelPhone">...</div>
+                <div class="drawer-user-bal">Wallet: ₹<span id="drawerLabelBalance">0</span></div>
+            </div>
+            <div class="drawer-menu-scroller">
+                <div class="drawer-menu-item" onclick="redirectPage('deposit.html')"><span>Add Funds (Deposit)</span><span class="drawer-arrow-label">→</span></div>
+                <div class="drawer-menu-item" onclick="redirectPage('withdraw.html')"><span>Request Cash Out (Withdraw)</span><span class="drawer-arrow-label">→</span></div>
+                <div class="drawer-menu-item" onclick="redirectPage('chart.html')"><span>Market Panel Charts</span><span class="drawer-arrow-label">→</span></div>
+                <div class="drawer-menu-item" onclick="redirectPage('mybids.html')"><span>My Bidding Passbook</span><span class="drawer-arrow-label">→</span></div>
+                <div class="drawer-menu-item" onclick="redirectPage('funds.html')"><span>Manage Bank Cards</span><span class="drawer-arrow-label">→</span></div>
+                <div class="drawer-menu-item" onclick="redirectPage('chat.html')"><span>Live Help & Support</span><span class="drawer-arrow-label">→</span></div>
+                <div class="drawer-menu-item" onclick="openPopupModal('ratesModalPopup')"><span>🎲 Game Payout Rates</span><span class="drawer-arrow-label">→</span></div>
+                <div class="drawer-menu-item" onclick="openPopupModal('bankModalPopup')"><span>🏦 Update Bank Account</span><span class="drawer-arrow-label">→</span></div>
+                <div class="drawer-menu-item drawer-logout-btn" onclick="executeSecureSignout()"><span>🚪 Secure Logout</span><span class="drawer-arrow-label">→</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="chart.html" class="nav-item"><span>Chart</span></a>
+        <a href="mybids.html" class="nav-item"><span>My Bids</span></a>
+        <a href="dashboard.html" class="nav-item"><span>Home</span></a>
+        <a href="funds.html" class="nav-item"><span>Fund</span></a>
+        <a href="chat.html" class="nav-item">
+            <div class="notification-dot" id="chatAlertDot"></div>
+            <span>Support</span>
+        </a>
+    </div>
+</div>
+
+<div id="ratesModalPopup" class="modal-popup-layer">
+    <div class="modal-popup-body">     
+        <h3>🎲 GAME RATES</h3>     
+        <div class="popup-rate-row"><span>Single Digit</span><span>10x</span></div>     
+        <div class="popup-rate-row"><span>Jodi</span><span>100x</span></div>     
+        <div class="popup-rate-row"><span>Single Pana</span><span>160x</span></div>     
+        <div class="popup-rate-row"><span>Double Pana</span><span>320x</span></div>     
+        <div class="popup-rate-row"><span>Triple Pana</span><span>1000x</span></div>     
+        <div class="popup-rate-row"><span>Half Sangam A</span><span>1000x</span></div>     
+        <div class="popup-rate-row"><span>Half Sangam B</span><span>1000x</span></div>     
+        <div class="popup-rate-row"><span>Full Sangam</span><span>10000x</span></div>     
+        <button class="modal-action-button modal-close-trigger" onclick="closePopupModal('ratesModalPopup')">Close</button> 
+    </div>
+</div>
+
+<div id="bankModalPopup" class="modal-popup-layer">
+    <div class="modal-popup-body">     
+        <h3>🏦 Bank Details</h3>     
+        <input type="text" id="bankHolderNameField" class="popup-input-element" placeholder="Account Holder Name">     
+        <input type="text" id="bankTitleField" class="popup-input-element" placeholder="Bank Name">     
+        <input type="text" id="bankNumberField" class="popup-input-element" placeholder="Account Number">     
+        <input type="text" id="bankIfscField" class="popup-input-element" placeholder="IFSC Code">     
+        <button class="modal-action-button" onclick="commitBankingUpdate()">Save Coordinates</button>     
+        <button class="modal-action-button modal-close-trigger" onclick="closePopupModal('bankModalPopup')">Cancel</button>     
+        <div id="bankCallbackLog" style="text-align:center; font-size:11px; margin-top:6px; font-weight:700;"></div> 
+    </div>
+</div>
+
+<div id="chatMessageAlertPopup" class="alert-popup-layer">
+    <div class="alert-popup-body">
+        <div class="alert-popup-title">💬 NEW SUPPORT MESSAGE</div>
+        <div class="alert-popup-desc">You have an unread message from our support team. Please check or reply now.</div>
+        <div class="alert-action-row">
+            <button class="alert-btn-primary" onclick="window.location.href='chat.html'">Read Message</button>
+            <button class="alert-btn-secondary" onclick="document.getElementById('chatMessageAlertPopup').style.display='none'">Read Later</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5",
+        measurementId: "G-R9CZ493377"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth(), db = firebase.firestore();
+    
+    let currentUserData = null;
+    let hasAlertedForCurrentMessage = false;
+
+    try {
+        const cachedBal = localStorage.getItem('gogami_cached_balance');
+        const cachedName = localStorage.getItem('gogami_cached_name');
+        if (cachedBal) {
+            document.getElementById('userWalletBalance').innerText = cachedBal;
+            document.getElementById('drawerLabelBalance').innerText = cachedBal;
+        }
+        if (cachedName) {
+            document.getElementById('drawerLabelName').innerText = cachedName;
+        }
+    } catch(e) {}
+
+    function hideSplashScreenFast() {
+        const splash = document.getElementById('splashScreen');
+        if (splash && splash.style.opacity !== '0') {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.visibility = 'hidden';
+            }, 250);
+        }
+    }
+    
+    async function syncUserContext() {
+        const user = auth.currentUser; 
+        if (!user) { window.location.href = 'index.html'; return; }
+        
+        db.collection('chats').doc(`chat_${user.uid}`).onSnapshot(doc => {
+            const dot = document.getElementById('chatAlertDot');
+            const alertPopup = document.getElementById('chatMessageAlertPopup');
+            
+            if (doc.exists && doc.data().adminUnread === true) {
+                if (dot) dot.style.display = 'block';
+                if (alertPopup && !hasAlertedForCurrentMessage) {
+                    alertPopup.style.display = 'flex';
+                    hasAlertedForCurrentMessage = true;
+                }
+            } else {
+                if (dot) dot.style.display = 'none';
+                if (alertPopup) alertPopup.style.display = 'none';
+                hasAlertedForCurrentMessage = false;
+            }
+        });
+
+        db.collection('users').doc(user.uid).onSnapshot(doc => {
+            if (doc.exists) {
+                if (doc.data().blocked === true) {
+                    alert('🚫 Your account has been blocked by Admin.');
+                    auth.signOut().then(() => {
+                        window.location.href = 'index.html';
+                    });
+                    return;
+                }
+
+                currentUserData = doc.data();
+                const bal = currentUserData.balance || 0;
+                const name = currentUserData.name || 'User Account';
+
+                document.getElementById('userWalletBalance').innerText = bal;
+                document.getElementById('drawerLabelBalance').innerText = bal;
+                document.getElementById('drawerLabelName').innerText = name;
+                document.getElementById('drawerLabelPhone').innerText = currentUserData.phone ? `📞 ${currentUserData.phone}` : '';
+                
+                try {
+                    localStorage.setItem('gogami_cached_balance', bal);
+                    localStorage.setItem('gogami_cached_name', name);
+                } catch(e) {}
+                
+                if(currentUserData.bankDetails) {
+                    document.getElementById('bankHolderNameField').value = currentUserData.bankDetails.accountHolder || '';
+                    document.getElementById('bankTitleField').value = currentUserData.bankDetails.bankName || '';
+                    document.getElementById('bankNumberField').value = currentUserData.bankDetails.accountNumber || '';
+                    document.getElementById('bankIfscField').value = currentUserData.bankDetails.ifscCode || '';
+                }
+            }
+            hideSplashScreenFast();
+        });
+    }
+
+    function formatTimeTo12Hour(t) {
+        if (!t) return '--:--'; let [h, m] = t.split(':'); let hr = parseInt(h);
+        let ampm = hr >= 12 ? 'PM' : 'AM'; hr = hr % 12 || 12;
+        return `${hr.toString().padStart(2, '0')}:${m} ${ampm}`;
+    }
+
+    function timeToMinutes(t) { if (!t) return 0; const p = t.split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); }
+
+    function computeMarketCurrentStatus(m, curMin) {
+        if (m.status === 'holiday') return { text: 'Holiday Today', css: 'status-holiday-today', allow: false, statusParam: 'holiday' };
+        if (m.status === 'closed') return { text: 'Market Closed For Today', css: 'status-closed-today', allow: false, statusParam: 'closed' };
+        
+        let opEnd = timeToMinutes(m.openBidEnd);
+        let clEnd = timeToMinutes(m.closeBidEnd);
+        
+        if (curMin < opEnd) {
+            return { text: 'Running For Bidding', css: 'status-running-open', allow: true, statusParam: 'open' };
+        } else if (curMin < clEnd) {
+            return { text: 'Running For Close Bidding', css: 'status-running-close', allow: true, statusParam: 'close' };
+        } else {
+            return { text: 'Market Closed For Today', css: 'status-closed-today', allow: false, statusParam: 'closed' };
+        }
+    }
+
+    async function syncMarketFeeds() {
+        const serverTime = new Date();
+        
+        db.collection('markets').orderBy('serialNo', 'asc').onSnapshot(snapshot => {
+            const container = document.getElementById('marketListElementContainer');
+            if (snapshot.empty) { 
+                container.innerHTML = '<div style="text-align:center; padding:25px; color:#94a3b8;">No active panels.</div>'; 
+                hideSplashScreenFast();
+                return; 
+            }
+            
+            const curMin = serverTime.getHours() * 60 + serverTime.getMinutes();
+            
+            container.innerHTML = snapshot.docs.map(doc => {
+                let m = doc.data();
+                let op = m.openPana || '***', od = m.openDigit || '*', cp = m.closePana || '***', cd = m.closeDigit || '*';
+                let combinedNumbers = `${op}-${od}${cd}-${cp}`;
+                
+                let calculatedState = computeMarketCurrentStatus(m, curMin);
+                let buttonStyleClass = calculatedState.allow ? 'btn-active-play' : 'btn-inactive-stop';
+                
+                return `
+                    <div class="market-card-wrapper" onclick="navigateTradingSuite('${doc.id}', '${encodeURIComponent(m.name || '')}', '${calculatedState.statusParam}')">
+                        <div class="market-main-row">
+                            <div class="market-identity-box">
+                                <div class="market-title-line">
+                                    <span class="market-name-label">${m.name || 'Market'}</span>
+                                </div>
+                                <div class="market-numbers-display">${combinedNumbers}</div>
+                                <span class="market-status-text ${calculatedState.css}">${calculatedState.text}</span>
+                            </div>
+                            <button class="market-action-btn-circle ${buttonStyleClass}" onclick="event.stopPropagation(); navigateTradingSuite('${doc.id}', '${encodeURIComponent(m.name || '')}', '${calculatedState.statusParam}')"></button>
+                        </div>
+                        <div class="market-timing-footer-row" onclick="event.stopPropagation()">
+                            <div class="time-node">Open Bids : <span>${formatTimeTo12Hour(m.openBidEnd)}</span></div>
+                            <div class="time-node">Close Bids : <span>${formatTimeTo12Hour(m.closeBidEnd)}</span></div>
+                        </div>
+                    </div>`;
+            }).join('');
+
+            hideSplashScreenFast();
+        });
+    }
+
+    function navigateTradingSuite(mid, name, statusParam) {
+        if(statusParam === 'holiday' || statusParam === 'closed') { alert('⚠️ Market bidding windows for this card are currently closed.'); return; }
+        window.location.href = `betting.html?marketId=${mid}&market=${name}&status=${statusParam}`;
+    }
+
+    function toggleDrawerMenu(open) {
+        const backdrop = document.getElementById('drawerBackdropLayer');
+        if (open) backdrop.classList.add('drawer-active');
+        else backdrop.classList.remove('drawer-active');
+    }
+
+    function redirectPage(target) { toggleDrawerMenu(false); window.location.href = target; }
+    function openPopupModal(id) { toggleDrawerMenu(false); document.getElementById(id).style.display = 'flex'; }
+    function closePopupModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    async function commitBankingUpdate() {
+        let ah = document.getElementById('bankHolderNameField').value.trim();
+        let bn = document.getElementById('bankTitleField').value.trim();
+        let an = document.getElementById('bankNumberField').value.trim();
+        let ifsc = document.getElementById('bankIfscField').value.trim();
+        let log = document.getElementById('bankCallbackLog');
+
+        if(!ah || !bn || !an || !ifsc) { log.innerText = "Fill required entries."; log.style.color = "#ff4444"; return; }
+
+        try {
+            await db.collection('users').doc(auth.currentUser.uid).update({ bankDetails: { accountHolder: ah, bankName: bn, accountNumber: an, ifscCode: ifsc } });
+            log.innerText = "✅ Banking coordinates saved!"; log.style.color = "#059669";
+            setTimeout(() => { closePopupModal('bankModalPopup'); log.innerText = ""; }, 1200);
+        } catch(e) { log.innerText = "Update exception."; log.style.color = "#ff4444"; }
+    }
+
+    function triggerWalletAlert() { alert(`💰 Wallet Assets Summary: ₹${currentUserData?.balance || 0}`); }
+    function triggerNoticePopup() { alert(document.getElementById('dashboardNoticeTextField').innerText); }
+    
+    function executeSecureSignout() { 
+        if (auth.currentUser) {
+            db.collection('users').doc(auth.currentUser.uid).update({ isOnline: false })
+            .then(() => {
+                auth.signOut().then(() => { localStorage.removeItem('current_session_id'); sessionStorage.clear(); window.location.href = 'index.html'; });
+            });
+        } else {
+            window.location.href = 'index.html';
+        }
+    }
+
+    function clearOnlineStatusSync() {
+        if (auth.currentUser) {
+            db.collection('users').doc(auth.currentUser.uid).update({
+                isOnline: false,
+                lastActive: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(() => {});
+        }
+    }
+    
+    db.collection('settings').doc('notice').onSnapshot(doc => {
+        document.getElementById('dashboardNoticeTextField').innerText = doc.exists ? doc.data().text : 'Welcome to WIN777 Platform!';
+    });
+
+    document.addEventListener('visibilitychange', () => { 
+        if (document.hidden) {
+            clearOnlineStatusSync();
+        } else {
+            if (auth.currentUser) {
+                db.collection('users').doc(auth.currentUser.uid).update({ isOnline: true, lastActive: firebase.firestore.FieldValue.serverTimestamp() });
+            }
+        }
+    });
+    window.addEventListener('pagehide', clearOnlineStatusSync);
+    window.addEventListener('beforeunload', clearOnlineStatusSync);
+
+    setTimeout(() => {
+        hideSplashScreenFast();
+    }, 1000);
+
+    // Single Session Enforcement Listener (Dashboard Level)
+    auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+            window.location.href = 'index.html';
+        } else {
+            const userId = user.uid;
+            const localSessionId = localStorage.getItem('current_session_id');
+
+            // 1. Block Check Guard
+            const doc = await db.collection('users').doc(userId).get();
+            if (doc.exists && doc.data().blocked === true) {
+                alert('🚫 Your account has been blocked by Admin.');
+                await auth.signOut();
+                localStorage.removeItem('current_session_id');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // 2. Real-time Single Session Monitor
+            db.collection('users').doc(userId).onSnapshot(userDoc => {
+                if (userDoc.exists) {
+                    const serverSessionId = userDoc.data().activeSessionId;
+                    if (serverSessionId && localSessionId && serverSessionId !== localSessionId) {
+                        alert("⚠️ Your account has been logged in from another device or browser.");
+                        auth.signOut().then(() => {
+                            localStorage.removeItem('current_session_id');
+                            window.location.href = 'index.html';
+                        });
+                    }
+                }
+            });
+
+            db.collection('users').doc(userId).update({
+                isOnline: true,
+                lastActive: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(e => console.log("Init offline trace caught."));
+
+            syncUserContext();
+            syncMarketFeeds();
+        }
+    });
+</script>
+</body>
+</html>
