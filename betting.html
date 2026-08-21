@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WIN777 - Betting Suite</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent; 
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+            border: none;
+        }
+
+        body { 
+            background: #0f172a; 
+            color: #f8fafc; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+
+        .app-container { 
+            max-width: 480px; 
+            margin: 0 auto; 
+            background: #0f172a; 
+            min-height: 100vh; 
+            position: relative; 
+        }
+
+        /* Server Simulation Loading / Error Screen */
+        #serverLoadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0f172a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .server-loader-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 30px 20px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .server-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 16px;
+        }
+
+        .server-status-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #f59e0b;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .server-status-desc {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 6px;
+            background: #0f172a;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: #f59e0b;
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        .progress-percentage {
+            font-size: 13px;
+            font-weight: 800;
+            color: #f8fafc;
+            font-family: monospace;
+        }
+
+        /* Stylish Error Box (Triggered at 48%) */
+        .connection-error-box {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-icon-badge {
+            width: 50px;
+            height: 50px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+
+        .error-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ef4444;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .error-message {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .retry-btn {
+            background: #f59e0b;
+            color: #0f172a;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .retry-btn:active { transform: scale(0.96); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Actual Betting Suite UI (Hidden until error/bypass) */
+        .betting-main-content {
+            display: none;
+            padding: 16px;
+        }
+
+        .top-nav-bar {
+            background: #1e293b;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #334155;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #334155;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="serverLoadingScreen">
+    <div class="server-loader-card">
+        <img src="https://i.imgur.com/01g5mvk.png" alt="Logo" class="server-logo">
+        
+        <!-- Loading Phase View -->
+        <div id="loadingPhaseView">
+            <div class="server-status-title">Establishing Secure Gateway</div>
+            <div class="server-status-desc" id="loadingStatusText">Connecting to market server cluster...</div>
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+            <div class="progress-percentage" id="progressPercentageText">0%</div>
+        </div>
+
+        <!-- Connection Error View (Shown at ~48%) -->
+        <div class="connection-error-box" id="connectionErrorView">
+            <div class="error-icon-badge">⚠️</div>
+            <div class="error-title">Gateway Connection Failure</div>
+            <div class="error-message">
+                Secure handshake with the market server was interrupted. Encrypted socket connection could not be established at this port. Please check your network or try reconnecting.
+            </div>
+            <button class="retry-btn" onclick="retryConnection()">Retry Connection</button>
+        </div>
+    </div>
+</div>
+
+<div class="app-container">
+    <div class="top-nav-bar">
+        <a href="dashboard.html" class="back-btn">← Back</a>
+        <div id="marketTitleHeader" style="font-size: 14px; font-weight: 800; color: #f59e0b; text-transform: uppercase;">Market Suite</div>
+        <div style="width: 45px;"></div>
+    </div>
+
+    <div class="betting-main-content" id="bettingMainContent">
+        <!-- Betting interface elements go here -->
+        <div style="text-align: center; padding: 40px 20px; color: #94a3b8;">
+            Betting dashboard interface loaded successfully.
+        </div>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
+        authDomain: "win777play.firebaseapp.com",
+        projectId: "win777play",
+        storageBucket: "win777play.firebasestorage.app",
+        messagingSenderId: "392486380608",
+        appId: "1:392486380608:web:75a8e60a7699d13bd72ba5",
+        measurementId: "G-R9CZ493377"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const marketName = urlParams.get('market') || 'Market';
+    document.getElementById('marketTitleHeader').innerText = decodeURIComponent(marketName);
+
+    // Server Technician Simulation Logic (Stops at 48% with Connection Error)
+    let currentProgress = 0;
+    const fillEl = document.getElementById('progressBarFill');
+    const textEl = document.getElementById('progressPercentageText');
+    const statusTextEl = document.getElementById('loadingStatusText');
+    const loadingView = document.getElementById('loadingPhaseView');
+    const errorView = document.getElementById('connectionErrorView');
+
+    const statusSteps = [
+        { at: 15, text: "Authenticating security token..." },
+        { at: 30, text: "Fetching active market socket nodes..." },
+        { at: 45, text: "Synchronizing encryption cipher..." }
+    ];
+
+    function startServerSimulation() {
+        currentProgress = 0;
+        loadingView.style.display = 'block';
+        errorView.style.display = 'none';
+
+        const interval = setInterval(() => {
+            // Fast initial progress up to 48%
+            if (currentProgress < 48) {
+                currentProgress += Math.floor(Math.random() * 4) + 2; // Fast increment
+                if (currentProgress > 48) currentProgress = 48;
+
+                fillEl.style.width = currentProgress + '%';
+                textEl.innerText = currentProgress + '%';
+
+                // Update status text based on progress
+                statusSteps.forEach(step => {
+                    if (currentProgress >= step.at) {
+                        statusTextEl.innerText = step.text;
+                    }
+                });
+            } else {
+                // Reached ~48%, halt loading and display stylish connection error
+                clearInterval(interval);
+                loadingView.style.display = 'none';
+                errorView.style.display = 'flex';
+            }
+        }, 60);
+    }
+
+    function retryConnection() {
+        startServerSimulation();
+    }
+
+    // Run simulation on page load
+    window.onload = () => {
+        startServerSimulation();
+    };
+</script>
+</body>
+</html>
