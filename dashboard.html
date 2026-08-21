@@ -87,7 +87,7 @@
             100% { left: 100%; }
         }
 
-        /* Simplified Top Action Bar */
+        /* Simplified Top Action Bar with Deposit, Withdraw & Balance */
         .sticky-top-panel {
             position: fixed; 
             top: 0; 
@@ -102,7 +102,7 @@
             display: flex; 
             align-items: center; 
             justify-content: space-between;
-            padding: 0 16px; 
+            padding: 0 14px; 
             border-bottom: 1px solid #334155; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
@@ -110,7 +110,7 @@
         .header-left-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .menu-toggle-btn { 
@@ -124,26 +124,26 @@
         }
 
         .header-logo-img {
-            height: 32px;
+            height: 30px;
             object-fit: contain;
         }
 
         .panel-shortcuts-row { 
             display: flex; 
             align-items: center; 
-            gap: 10px;
+            gap: 8px;
         }
 
         .action-shortcuts-box { 
             display: flex; 
-            gap: 8px; 
+            gap: 6px; 
         }
 
         .shortcut-action-btn { 
             color: #0f172a; 
-            padding: 6px 12px; 
+            padding: 5px 10px; 
             border-radius: 8px; 
-            font-size: 11px; 
+            font-size: 10px; 
             font-weight: 700; 
             text-decoration: none; 
             text-transform: uppercase; 
@@ -156,6 +156,20 @@
         .btn-deposit-pill { background: #f59e0b; } /* Professional Gold */
         .btn-withdraw-pill { background: #38bdf8; color: #0f172a; } /* Cyan Blue */
         .shortcut-action-btn:active { transform: scale(0.95); }
+
+        .balance-pill { 
+            background: #0f172a; 
+            padding: 5px 10px; 
+            border-radius: 8px; 
+            color: #f59e0b; 
+            font-weight: 800; 
+            font-size: 11px; 
+            cursor: pointer; 
+            border: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
 
         /* Market Category Tabs Bar */
         .market-category-tabs {
@@ -245,7 +259,7 @@
         }
 
         .market-card-wrapper { 
-            background: #1e293b; /* Sleek Card BG */
+            background: #1e293b; 
             border-radius: 12px; 
             padding: 14px; 
             margin-bottom: 12px; 
@@ -287,7 +301,7 @@
             text-transform: uppercase; 
         }
 
-        /* Small OTC Box next to Market Name */
+        /* OTC Box next to Market Name */
         .otc-badge-box {
             background: #0f172a;
             border: 1px solid #f59e0b;
@@ -299,6 +313,7 @@
             display: inline-flex;
             align-items: center;
             gap: 3px;
+            cursor: pointer;
         }
 
         .market-numbers-display { 
@@ -599,7 +614,7 @@
 
 <div class="app-container">
 
-    <!-- Simplified Fixed Top Bar with Only Deposit and Withdraw Buttons -->
+    <!-- Top Bar with Deposit, Withdraw and Live Wallet Balance Pill -->
     <div class="sticky-top-panel">
         <div class="header-left-group">
             <button class="menu-toggle-btn" onclick="toggleDrawerMenu(true)">☰</button>
@@ -611,6 +626,7 @@
                 <a href="deposit.html" class="shortcut-action-btn btn-deposit-pill">Deposit</a>
                 <a href="withdraw.html" class="shortcut-action-btn btn-withdraw-pill">Withdraw</a>
             </div>
+            <div class="balance-pill" onclick="triggerWalletAlert()">₹<span id="userWalletBalance">0</span></div>
         </div>
     </div>
 
@@ -741,6 +757,7 @@
         const cachedBal = localStorage.getItem('gogami_cached_balance');
         const cachedName = localStorage.getItem('gogami_cached_name');
         if (cachedBal) {
+            document.getElementById('userWalletBalance').innerText = cachedBal;
             document.getElementById('drawerLabelBalance').innerText = cachedBal;
         }
         if (cachedName) {
@@ -793,6 +810,7 @@
                 const bal = currentUserData.balance || 0;
                 const name = currentUserData.name || 'User Account';
 
+                document.getElementById('userWalletBalance').innerText = bal;
                 document.getElementById('drawerLabelBalance').innerText = bal;
                 document.getElementById('drawerLabelName').innerText = name;
                 document.getElementById('drawerLabelPhone').innerText = currentUserData.phone ? `📞 ${currentUserData.phone}` : '';
@@ -837,9 +855,20 @@
         }
     }
 
+    // Function to handle OTC click with minimum balance verification (₹200)
+    function handleOtcClick(event, otcRealVal) {
+        event.stopPropagation();
+        const currentBalance = currentUserData ? (parseFloat(currentUserData.balance) || 0) : 0;
+        
+        if (currentBalance < 200) {
+            alert('⚠️ आपके पास मिनिमम 200 रुपये मुख्य बैलेंस में नहीं हैं, इसलिए आपको OTC शो नहीं होंगे।');
+        } else {
+            alert(`🔍 OTC Number: ${otcRealVal}`);
+        }
+    }
+
     async function syncMarketFeeds() {
         const serverTime = new Date();
-        // Support dynamic category collection or filter property 'category' (default 'main')
         let queryRef = db.collection('markets').orderBy('serialNo', 'asc');
 
         queryRef.onSnapshot(snapshot => {
@@ -852,7 +881,6 @@
 
             const curMin = serverTime.getHours() * 60 + serverTime.getMinutes();
 
-            // Filter markets based on selected tab (Main Markets vs Gali Disawar)
             const filteredDocs = snapshot.docs.filter(doc => {
                 let m = doc.data();
                 let marketCat = m.category || 'main';
@@ -869,7 +897,10 @@
                 let m = doc.data();
                 let op = m.openPana || '***', od = m.openDigit || '*', cp = m.closePana || '***', cd = m.closeDigit || '*';
                 let combinedNumbers = `${op}-${od}${cd}-${cp}`;
-                let otcValue = m.otcNumber || '00'; // Admin can manage OTC number in Firestore
+                
+                // Default OTC set to '***' as requested, admin real value stored safely
+                let otcDisplay = '***'; 
+                let otcRealVal = m.otcNumber || '00';
 
                 let calculatedState = computeMarketCurrentStatus(m, curMin);
                 let buttonStyleClass = calculatedState.allow ? 'btn-active-play' : 'btn-inactive-stop';
@@ -880,7 +911,7 @@
                             <div class="market-identity-box">
                                 <div class="market-title-line">
                                     <span class="market-name-label">${m.name || 'Market'}</span>
-                                    <div class="otc-badge-box">OTC: ${otcValue}</div>
+                                    <div class="otc-badge-box" onclick="handleOtcClick(event, '${otcRealVal}')">OTC: ${otcDisplay}</div>
                                 </div>
                                 <div class="market-numbers-display">${combinedNumbers}</div>
                                 <span class="market-status-text ${calculatedState.css}">${calculatedState.text}</span>
@@ -929,6 +960,7 @@
         } catch(e) { log.innerText = "Update exception."; log.style.color = "#ef4444"; }
     }
 
+    function triggerWalletAlert() { alert(`💰 Wallet Assets Summary: ₹${currentUserData?.balance || 0}`); }
     function triggerNoticePopup() { alert(document.getElementById('dashboardNoticeTextField').innerText); }
 
     function executeSecureSignout() { 
