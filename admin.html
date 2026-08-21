@@ -473,6 +473,14 @@
                 <div id="addMarketBody" class="collapsible-card-body">
                     <input type="text" id="marketNameInput" placeholder="Market Name">
                     <input type="text" id="marketNumbersInput" placeholder="Numbers (e.g., 440-8*-***)">
+                    <input type="text" id="marketOtcInput" placeholder="OTC Number (e.g., 5)">
+                    <div>
+                        <label>Category:</label>
+                        <select id="marketCategoryInput">
+                            <option value="main">Main Markets</option>
+                            <option value="gali">Gali Disawar</option>
+                        </select>
+                    </div>
                     <div><label>🟢 Open Bid End Time:</label> <input type="time" id="openBidEnd" step="60"></div>
                     <div><label>🟡 Close Bid End Time:</label> <input type="time" id="closeBidEnd" step="60"></div>
                     <div><label>🔴 Market Closed Time:</label> <input type="time" id="closedTime" step="60"></div>
@@ -627,7 +635,6 @@
 </div>
 
 <script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
         apiKey: "AIzaSyDVJJUsqvGmiXEhB319SBMwOJVa-kVxojg",
         authDomain: "win777play.firebaseapp.com",
@@ -986,7 +993,7 @@
                 html += `</div></div>`;
             });
             container.innerHTML = html;
-      } catch (e) { container.innerHTML = `<div style="color:#ff4444; text-align:center;">Error: ${e.message}</div>`; }
+        } catch (e) { container.innerHTML = `<div style="color:#ff4444; text-align:center;">Error: ${e.message}</div>`; }
     }
 
     function toggleTotalBidsMarket(mid) {
@@ -999,13 +1006,11 @@
       }
     }
   
-    // CALCULATE APP OVERALL STATS
     async function calculateOverallStats() {
         let btn = document.getElementById('calcStatsBtn');
         if(btn) btn.innerText = "⏳ Calculating...";
         
         try {
-            // 1. Calculate Total Users Balance
             let totalBal = 0;
             let usersSnap = await db.collection('users').get();
             usersSnap.forEach(doc => {
@@ -1014,7 +1019,6 @@
             });
             document.getElementById('appTotalBalance').innerText = `₹${totalBal.toLocaleString()}`;
 
-            // 2. Calculate Total Spent & Total Won from all Bids
             let bidsSnap = await db.collection('bids').get();
             let totalSpent = 0;
             let totalWon = 0;
@@ -1034,7 +1038,6 @@
             document.getElementById('appTotalSpent').innerText = `₹${totalSpent.toLocaleString()}`;
             document.getElementById('appTotalWon').innerText = `₹${totalWon.toLocaleString()}`;
 
-            // Calculate Overall Plus/Minus (Net Users Profit/Loss)
             let net = totalWon - totalSpent; 
             let netEl = document.getElementById('appNetProfit');
             netEl.innerText = `₹${net.toLocaleString()}`;
@@ -1087,7 +1090,57 @@
                 else{ statusClass='status-closed'; statusText='CLOSED'; } 
                 let openPana=m.openPana||'***', openDigit=m.openDigit||'*', closePana=m.closePana||'***', closeDigit=m.closeDigit||'*', jodi=m.jodi||'**', isCloseDeclared=m.closeDeclared||false; 
                 let jodiDisplay=(!isCloseDeclared && openPana!=='***')?openDigit+'*':jodi; 
-                html+=`<div class="market-item"><div class="market-header-row" onclick="toggleMarketDetails('${d.id}')"><span class="toggle-icon" style="color:#FFA07A;">${openMarketId===d.id?'▼':'▶'}</span><span><span class="market-serial" onclick="event.stopPropagation(); changeSerialNumber('${d.id}',${m.serialNo||0})">#${m.serialNo||'?'}</span> <span style="color:#ffffff;">${m.name||'No name'}</span></span><span class="status-badge ${statusClass}">${statusText}</span><button onclick="event.stopPropagation(); deleteMarket('${d.id}')" class="btn-danger" style="padding:3px 6px; font-size:10px;">🗑️</button></div><div id="market_detail_${d.id}" class="market-detail-row"><div><div style="color:#FFD700;">🎲 Numbers: ${m.numbers||'***'}</div><div style="color:#aaaaaa;">⏰ Open: ${formatTimeTo12Hour(m.openBidEnd)} | Close: ${formatTimeTo12Hour(m.closeBidEnd)}</div><div class="results-container"><div class="result-card"><div class="result-pana">${openPana}</div><div style="color:#ffffff;">Open: ${openDigit}</div></div><div class="result-card"><div class="result-pana">${closePana}</div><div style="color:#ffffff;">Close: ${closeDigit}</div></div></div><div class="jodi-display">JODI: <strong>${jodiDisplay}</strong></div><div><input type="time" id="openBidEnd_${d.id}" value="${m.openBidEnd||''}" step="60"><button onclick="updateMarketTime('${d.id}','openBidEnd',document.getElementById('openBidEnd_${d.id}').value)">Save Open</button></div><div><input type="time" id="closeBidEnd_${d.id}" value="${m.closeBidEnd||''}" step="60"><button onclick="updateMarketTime('${d.id}','closeBidEnd',document.getElementById('closeBidEnd_${d.id}').value)">Save Close</button></div><div style="display:flex; gap:4px; flex-wrap:wrap;"><button onclick="setMarketStatus('${d.id}','open')" class="btn-success">🟢 OPEN</button><button onclick="setMarketStatus('${d.id}','close')" class="btn-warning">🟡 CLOSE</button><button onclick="setMarketStatus('${d.id}','closed')" class="btn-danger">🔴 CLOSED</button><button onclick="setMarketHoliday('${d.id}','${m.name}','${m.status}')" class="btn-warning" style="background:#d500f9; color:#fff;">🎪 ${m.status==='holiday'?'Remove':'Set Holiday'}</button></div><div><input type="text" id="openPana_${d.id}" placeholder="Open Pana" maxlength="3" value="${openPana!=='***'?openPana:''}"><input type="text" id="openDigit_${d.id}" placeholder="Digit" maxlength="1" value="${openDigit!=='*'?openDigit:''}"><button onclick="declareOpenResult('${d.id}','${m.name}')">Declare OPEN</button></div><div><input type="text" id="closePana_${d.id}" placeholder="Close Pana" maxlength="3" value="${closePana!=='***'?closePana:''}"><input type="text" id="closeDigit_${d.id}" placeholder="Digit" maxlength="1" value="${closeDigit!=='*'?closeDigit:''}"><button onclick="declareCloseResult('${d.id}','${m.name}')">Declare CLOSE</button></div><div><button onclick="editMarket('${d.id}','${m.name}','${m.numbers||''}')">✏️ Edit</button><button onclick="resetMarketResult('${d.id}','${m.name}')" class="btn-reset">⟳ Reset</button></div></div></div></div>`; 
+                let marketCat = m.category || 'main';
+                let otcVal = m.otcNumber || '';
+                
+                html+=`<div class="market-item">
+                    <div class="market-header-row" onclick="toggleMarketDetails('${d.id}')">
+                        <span class="toggle-icon" style="color:#FFA07A;">${openMarketId===d.id?'▼':'▶'}</span>
+                        <span><span class="market-serial" onclick="event.stopPropagation(); changeSerialNumber('${d.id}',${m.serialNo||0})">#${m.serialNo||'?'}</span> <span style="color:#ffffff;">${m.name||'No name'}</span> <span style="font-size:10px; color:#f59e0b;">[${marketCat.toUpperCase()}]</span></span>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                        <button onclick="event.stopPropagation(); deleteMarket('${d.id}')" class="btn-danger" style="padding:3px 6px; font-size:10px;">🗑️</button>
+                    </div>
+                    <div id="market_detail_${d.id}" class="market-detail-row">
+                        <div>
+                            <div style="color:#FFD700;">🎲 Numbers: ${m.numbers||'***'}</div>
+                            <div style="color:#f59e0b; font-weight:700; margin:4px 0;">🔍 OTC Number: ${otcVal || 'Not Set'}</div>
+                            <div style="color:#aaaaaa;">⏰ Open: ${formatTimeTo12Hour(m.openBidEnd)} | Close: ${formatTimeTo12Hour(m.closeBidEnd)}</div>
+                            
+                            <div style="margin: 8px 0;">
+                                <label style="font-size:10px;">Update OTC:</label>
+                                <div style="display:flex; gap:6px;">
+                                    <input type="text" id="otcVal_${d.id}" value="${otcVal}" placeholder="OTC Num" style="margin:0; padding:6px;">
+                                    <button onclick="updateMarketField('${d.id}', 'otcNumber', document.getElementById('otcVal_${d.id}').value)" style="margin:0; padding:6px 10px;">Save OTC</button>
+                                </div>
+                            </div>
+
+                            <div style="margin: 8px 0;">
+                                <label style="font-size:10px;">Category:</label>
+                                <select id="catVal_${d.id}" style="margin:0; padding:6px;" onchange="updateMarketField('${d.id}', 'category', this.value)">
+                                    <option value="main" ${marketCat==='main'?'selected':''}>Main Markets</option>
+                                    <option value="gali" ${marketCat==='gali'?'selected':''}>Gali Disawar</option>
+                                </select>
+                            </div>
+
+                            <div class="results-container">
+                                <div class="result-card"><div class="result-pana">${openPana}</div><div style="color:#ffffff;">Open: ${openDigit}</div></div>
+                                <div class="result-card"><div class="result-pana">${closePana}</div><div style="color:#ffffff;">Close: ${closeDigit}</div></div>
+                            </div>
+                            <div class="jodi-display">JODI: <strong>${jodiDisplay}</strong></div>
+                            <div><input type="time" id="openBidEnd_${d.id}" value="${m.openBidEnd||''}" step="60"><button onclick="updateMarketTime('${d.id}','openBidEnd',document.getElementById('openBidEnd_${d.id}').value)">Save Open</button></div>
+                            <div><input type="time" id="closeBidEnd_${d.id}" value="${m.closeBidEnd||''}" step="60"><button onclick="updateMarketTime('${d.id}','closeBidEnd',document.getElementById('closeBidEnd_${d.id}').value)">Save Close</button></div>
+                            <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                                <button onclick="setMarketStatus('${d.id}','open')" class="btn-success">🟢 OPEN</button>
+                                <button onclick="setMarketStatus('${d.id}','close')" class="btn-warning">🟡 CLOSE</button>
+                                <button onclick="setMarketStatus('${d.id}','closed')" class="btn-danger">🔴 CLOSED</button>
+                                <button onclick="setMarketHoliday('${d.id}','${m.name}','${m.status}')" class="btn-warning" style="background:#d500f9; color:#fff;">🎪 ${m.status==='holiday'?'Remove':'Set Holiday'}</button>
+                            </div>
+                            <div><input type="text" id="openPana_${d.id}" placeholder="Open Pana" maxlength="3" value="${openPana!=='***'?openPana:''}"><input type="text" id="openDigit_${d.id}" placeholder="Digit" maxlength="1" value="${openDigit!=='*'?openDigit:''}"><button onclick="declareOpenResult('${d.id}','${m.name}')">Declare OPEN</button></div>
+                            <div><input type="text" id="closePana_${d.id}" placeholder="Close Pana" maxlength="3" value="${closePana!=='***'?closePana:''}"><input type="text" id="closeDigit_${d.id}" placeholder="Digit" maxlength="1" value="${closeDigit!=='*'?closeDigit:''}"><button onclick="declareCloseResult('${d.id}','${m.name}')">Declare CLOSE</button></div>
+                            <div><button onclick="editMarket('${d.id}','${m.name}','${m.numbers||''}')">✏️ Edit</button><button onclick="resetMarketResult('${d.id}','${m.name}')" class="btn-reset">⟳ Reset</button></div>
+                        </div>
+                    </div>
+                </div>`; 
             }); 
             if(s.empty) html='<p style="color:#aaaaaa; text-align:center; padding:30px;">No markets available</p>'; 
             document.getElementById('marketsList').innerHTML=html; 
@@ -1096,6 +1149,7 @@
 
    async function setMarketStatus(mid,st){ await db.collection('markets').doc(mid).update({status:st,isHoliday:st==='holiday'}); alert(`✅ Status changed to ${st.toUpperCase()}`); }
    async function updateMarketTime(mid,fld,val){ await db.collection('markets').doc(mid).update({[fld]:val}); alert(`✅ ${fld} updated`); }
+   async function updateMarketField(mid,fld,val){ await db.collection('markets').doc(mid).update({[fld]:val}); alert(`✅ Market updated`); }
    async function changeSerialNumber(mid,curr){ let newS=prompt(`New serial number (current #${curr})`,curr); if(newS && !isNaN(newS) && parseInt(newS)>0){ await db.collection('markets').doc(mid).update({serialNo:parseInt(newS)}); alert('✅ Changed!'); loadMarkets(); } }
    async function deleteAllMarkets(){ if(confirm("DELETE ALL MARKETS?")){ await db.collection('markets').get().then(s=>s.forEach(d=>d.ref.delete())); alert('Deleted!'); loadMarkets(); } }
    async function setMarketHoliday(mid,name,st){ let isH=st==='holiday'; await db.collection('markets').doc(mid).update({status:isH?'closed':'holiday',isHoliday:!isH}); loadMarkets(); }
@@ -1168,7 +1222,32 @@
         } 
    }
   
-   async function addMarket(){ let name=document.getElementById('marketNameInput').value; if(!name){ alert('Enter market name'); return; } await db.collection('markets').add({name, numbers:document.getElementById('marketNumbersInput').value||'***-**-***', openBidEnd:document.getElementById('openBidEnd').value, closeBidEnd:document.getElementById('closeBidEnd').value, closedTime:document.getElementById('closedTime').value, status:document.getElementById('marketStatus').value, serialNo:1, isHoliday:false, openPana:'***', openDigit:'*', closePana:'***', closeDigit:'*', jodi:'**', closeDeclared:false }); alert('Market added!'); }
+   async function addMarket(){ 
+        let name=document.getElementById('marketNameInput').value.trim(); 
+        if(!name){ alert('Enter market name'); return; } 
+        let category = document.getElementById('marketCategoryInput').value;
+        let otcNumber = document.getElementById('marketOtcInput').value.trim();
+
+        await db.collection('markets').add({
+            name, 
+            category,
+            otcNumber: otcNumber || '00',
+            numbers:document.getElementById('marketNumbersInput').value||'***-**-***', 
+            openBidEnd:document.getElementById('openBidEnd').value, 
+            closeBidEnd:document.getElementById('closeBidEnd').value, 
+            closedTime:document.getElementById('closedTime').value, 
+            status:document.getElementById('marketStatus').value, 
+            serialNo:1, 
+            isHoliday:false, 
+            openPana:'***', 
+            openDigit:'*', 
+            closePana:'***', 
+            closeDigit:'*', 
+            jodi:'**', 
+            closeDeclared:false 
+        }); 
+        alert('Market added successfully!'); 
+   }
    async function editMarket(id,oldName,oldNumbers){ let newName=prompt('New name',oldName); if(newName) await db.collection('markets').doc(id).update({name:newName}); }
    async function deleteMarket(id){ if(confirm('Delete market?')) await db.collection('markets').doc(id).delete(); }
   
@@ -1281,39 +1360,39 @@
    }
 
    async function clearAllUsersBidHistory(){
-       if(confirm("⚠️ DANGER: Are you sure you want to delete ALL bid history for ALL users?")){
-           if(prompt('Type "CLEAR ALL BIDS" to confirm:') === 'CLEAR ALL BIDS'){
-               try {
-                   let bids = await db.collection('bids').get();
-                   let count = 0;
-                   bids.forEach(d => {
-                       d.ref.delete();
-                       count++;
-                   });
-                   alert(`✅ Successfully cleared ${count} bid records from all users!`);
-               } catch(e) {
-                   alert("❌ Error: " + e.message);
-               }
-           }
-       }
+        if(confirm("⚠️ DANGER: Are you sure you want to delete ALL bid history for ALL users?")){
+            if(prompt('Type "CLEAR ALL BIDS" to confirm:') === 'CLEAR ALL BIDS'){
+                try {
+                    let bids = await db.collection('bids').get();
+                    let count = 0;
+                    bids.forEach(d => {
+                        d.ref.delete();
+                        count++;
+                    });
+                    alert(`✅ Successfully cleared ${count} bid records from all users!`);
+                } catch(e) {
+                    alert("❌ Error: " + e.message);
+                }
+            }
+        }
    }
 
    async function clearAllUsersTransactionHistory(){
-       if(confirm("⚠️ DANGER: Are you sure you want to delete ALL transaction history for ALL users?")){
-           if(prompt('Type "CLEAR ALL TRANSACTIONS" to confirm:') === 'CLEAR ALL TRANSACTIONS'){
-               try {
-                   let trans = await db.collection('transactions').get();
-                   let count = 0;
-                   trans.forEach(d => {
-                       d.ref.delete();
-                       count++;
-                   });
-                   alert(`✅ Successfully cleared ${count} transaction records from all users!`);
-               } catch(e) {
-                   alert("❌ Error: " + e.message);
-               }
-           }
-       }
+        if(confirm("⚠️ DANGER: Are you sure you want to delete ALL transaction history for ALL users?")){
+            if(prompt('Type "CLEAR ALL TRANSACTIONS" to confirm:') === 'CLEAR ALL TRANSACTIONS'){
+                try {
+                    let trans = await db.collection('transactions').get();
+                    let count = 0;
+                    trans.forEach(d => {
+                        d.ref.delete();
+                        count++;
+                    });
+                    alert(`✅ Successfully cleared ${count} transaction records from all users!`);
+                } catch(e) {
+                    alert("❌ Error: " + e.message);
+                }
+            }
+        }
    }
 </script>
 </body>
